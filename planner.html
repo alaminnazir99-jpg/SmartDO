@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Focus Planner (Cloud Sync)</title>
+  
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: #334155;
+      --danger: #ef4444;
+      --success: #22c55e;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 16px; display: flex; justify-content: center; }
+    .container { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 20px; }
+    
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); }
+    h2, h3 { color: var(--accent); margin-bottom: 12px; font-weight: 600; }
+    
+    .header-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .auth-status { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+    .sync-badge { font-size: 11px; padding: 3px 8px; border-radius: 12px; background: #334155; color: var(--muted); }
+    .sync-badge.online { background: rgba(34, 197, 94, 0.2); color: var(--success); border: 1px solid var(--success); }
+
+    .namaz-bar { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; margin-top: 10px; }
+    .namaz-pill { background: #0f172a; border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px; font-size: 13px; text-align: center; flex: 1 1 80px; }
+
+    .input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
+    .input-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    input, select, button { border-radius: 8px; border: 1px solid var(--border); background: #0f172a; color: var(--text); padding: 10px 14px; font-size: 14px; outline: none; }
+    input:focus, select:focus { border-color: var(--accent); }
+    input[type="text"] { flex: 1; min-width: 180px; }
+    
+    button { background: var(--accent); color: #0f172a; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    button:hover { background: var(--accent-hover); }
+    .btn-secondary { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+    .btn-secondary:hover { background: rgba(56, 189, 248, 0.1); }
+    .btn-danger { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
+    .btn-danger:hover { background: rgba(239, 68, 68, 0.1); }
+
+    .task-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .task-item { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .task-left { display: flex; align-items: center; gap: 10px; flex: 1; }
+    .task-meta { font-size: 12px; color: var(--muted); display: block; margin-top: 4px; }
+    .badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+    .badge-teaching { background: #0284c7; color: white; }
+    .badge-personal { background: #10b981; color: white; }
+    .badge-admin { background: #f59e0b; color: white; }
+    .completed { text-decoration: line-through; opacity: 0.5; }
+
+    .rule-of-3-header { display: flex; justify-content: space-between; align-items: center; }
+    .count-tag { font-size: 13px; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- গুগল লগইন ও ক্লাউড স্ট্যাটাস বার -->
+    <div class="card header-bar">
+      <div>
+        <h2 style="margin: 0; font-size: 1.25rem;">Smart Focus Planner</h2>
+        <span class="sync-badge" id="syncStatus">🔄 অফলাইন / লোকাল সেভ</span>
+      </div>
+      <div class="auth-status" id="authSection">
+        <button id="loginBtn" onclick="googleLogin()" style="font-size: 12px; padding: 8px 12px;">🔑 Google দিয়ে ক্লাউড সিঙ্ক করুন</button>
+      </div>
+    </div>
+
+    <!-- ওয়াক্ত ও নামাজের সময়সূচি -->
+    <div class="card">
+      <h3>🕌 নামাজের সময়সূচি</h3>
+      <div class="namaz-bar">
+        <div class="namaz-pill">ফজর<br><b>০৪:৩০ AM</b></div>
+        <div class="namaz-pill">যোহর<br><b>০১:১৫ PM</b></div>
+        <div class="namaz-pill">আসর<br><b>০৪:৪৫ PM</b></div>
+        <div class="namaz-pill">মাগরিব<br><b>০৬:২০ PM</b></div>
+        <div class="namaz-pill">ইশা<br><b>০৮:০০ PM</b></div>
+      </div>
+    </div>
+
+    <!-- মূল কাজ: The Rule of 3 -->
+    <div class="card">
+      <div class="rule-of-3-header">
+        <h2>🎯 The Rule of 3 (আজকের শীর্ষ ৩টি কাজ)</h2>
+        <span class="count-tag" id="ruleCount">০ / ৩ টি কাজ যুক্ত</span>
+      </div>
+      <p style="color: var(--muted); font-size: 13px; margin-bottom: 14px;">
+        আজকের সবচেয়ে গুরুত্বপূর্ণ ৩টি কাজ শেষ না হওয়া পর্যন্ত অন্য কাজে হাত দেবেন না।
+      </p>
+
+      <div class="input-group">
+        <div class="input-row">
+          <input type="text" id="todayTaskInput" placeholder="জরুরি কাজের নাম লিখুন..." />
+          <select id="todayCategory">
+            <option value="teaching">ক্লাস/টিচিং</option>
+            <option value="admin">অ্যাডমিন</option>
+            <option value="personal">ব্যক্তিগত</option>
+          </select>
+        </div>
+        <div class="input-row">
+          <input type="time" id="todayTime" title="শুরুর সময়" />
+          <input type="number" id="todayDuration" placeholder="স্থায়িত্ব (মিনিট)" style="width: 130px;" />
+          <button onclick="addTodayTask()">+ যুক্ত করুন</button>
+        </div>
+      </div>
+
+      <ul class="task-list" id="todayList"></ul>
+    </div>
+
+    <!-- মাস্টার লিস্ট -->
+    <div class="card">
+      <h2>📋 মাস্টার লিস্ট (সব কাজের ভাণ্ডার)</h2>
+      <p style="color: var(--muted); font-size: 13px; margin-bottom: 14px;">
+        ভবিষ্যতের যেকোনো কাজ মনে পড়লে এখানে টুকে রাখুন।
+      </p>
+
+      <div class="input-row" style="margin-bottom: 15px;">
+        <input type="text" id="masterTaskInput" placeholder="পরবর্তী কাজের বিবরণ..." />
+        <select id="masterCategory">
+          <option value="teaching">ক্লাস/টিচিং</option>
+          <option value="admin">অ্যাডমিন</option>
+          <option value="personal">ব্যক্তিগত</option>
+        </select>
+        <button onclick="addMasterTask()">তালিকায় রাখুন</button>
+      </div>
+
+      <ul class="task-list" id="masterList"></ul>
+    </div>
+
+  </div>
+
+  <script>
+    // --- ১. ফায়ারবেস কনফিগারেশন ---
+    // (এখানে আপনার নিজস্ব Firebase Config বসিয়ে নিতে পারেন)
+    const firebaseConfig = {
+      apiKey: "AIzaSyYOUR_API_KEY_HERE",
+      authDomain: "your-app.firebaseapp.com",
+      projectId: "your-project-id",
+      storageBucket: "your-app.appspot.com",
+      messagingSenderId: "123456789",
+      appId: "1:123456789:web:abcdef"
+    };
+
+    let auth, db, currentUser = null;
+    let isFirebaseReady = false;
+
+    try {
+      if (firebaseConfig.apiKey !== "AIzaSyYOUR_API_KEY_HERE") {
+        firebase.initializeApp(firebaseConfig);
+        auth = firebase.auth();
+        db = firebase.firestore();
+        isFirebaseReady = true;
+      }
+    } catch(e) {
+      console.log("Firebase setup pending:", e);
+    }
+
+    // লোকাল মেমোরি ইনিশিয়ালাইজেশন
+    let todayTasks = JSON.parse(localStorage.getItem('todayTasks')) || [];
+    let masterTasks = JSON.parse(localStorage.getItem('masterTasks')) || [];
+
+    // ব্যবহারকারীর অথেনটিকেশন চেক
+    if (isFirebaseReady) {
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          currentUser = user;
+          document.getElementById('authSection').innerHTML = `
+            <span>👤 ${user.displayName || user.email}</span>
+            <button class="btn-danger" onclick="googleLogout()" style="padding: 4px 8px; font-size: 11px;">লগআউট</button>
+          `;
+          document.getElementById('syncStatus').innerText = "☁️ গুগল ক্লাউডে অটো-সিঙ্ক হচ্ছে";
+          document.getElementById('syncStatus').className = "sync-badge online";
+          loadFromCloud();
+        } else {
+          currentUser = null;
+          document.getElementById('authSection').innerHTML = `
+            <button id="loginBtn" onclick="googleLogin()" style="font-size: 12px; padding: 8px 12px;">🔑 Google দিয়ে ক্লাউড সিঙ্ক করুন</button>
+          `;
+          document.getElementById('syncStatus').innerText = "🔄 লোকাল মেমোরিতে সেভ হচ্ছে";
+          document.getElementById('syncStatus').className = "sync-badge";
+        }
+      });
+    }
+
+    function googleLogin() {
+      if (!isFirebaseReady) {
+        alert("ক্লাউড সিঙ্ক চালু করতে নিচে দেওয়া নির্দশনানুযায়ী Firebase কনফিগ বসিয়ে নিন। বর্তমানে লোকাল মেমোরিতে নিরাপদে সেভ হচ্ছে।");
+        return;
+      }
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider).catch(err => alert("লগইন ত্রুটি: " + err.message));
+    }
+
+    function googleLogout() {
+      if (auth) auth.signOut();
+    }
+
+    // ডেটা সেভ (লোকাল + ক্লাউড)
+    function saveState() {
+      localStorage.setItem('todayTasks', JSON.stringify(todayTasks));
+      localStorage.setItem('masterTasks', JSON.stringify(masterTasks));
+      render();
+
+      // ক্লাউডে অটো-সেভ
+      if (currentUser && db) {
+        db.collection("user_planners").doc(currentUser.uid).set({
+          todayTasks: todayTasks,
+          masterTasks: masterTasks,
+          lastUpdated: new Date()
+        }).catch(err => console.error("Cloud save error:", err));
+      }
+    }
+
+    // ক্লাউড থেকে ডেটা আনা
+    function loadFromCloud() {
+      if (currentUser && db) {
+        db.collection("user_planners").doc(currentUser.uid).get().then(doc => {
+          if (doc.exists) {
+            const data = doc.data();
+            todayTasks = data.todayTasks || [];
+            masterTasks = data.masterTasks || [];
+            localStorage.setItem('todayTasks', JSON.stringify(todayTasks));
+            localStorage.setItem('masterTasks', JSON.stringify(masterTasks));
+            render();
+          }
+        });
+      }
+    }
+
+    // টাস্ক যোগ ও পরিচালনা
+    function addTodayTask() {
+      if (todayTasks.length >= 3) {
+        alert("The Rule of 3: দিনে সর্বোচ্চ ৩টি প্রধান কাজ রাখা যাবে! বাকিগুলো শেষ করে নতুন আনুন।");
+        return;
+      }
+      const t = document.getElementById('todayTaskInput').value.trim();
+      const c = document.getElementById('todayCategory').value;
+      const tm = document.getElementById('todayTime').value;
+      const d = document.getElementById('todayDuration').value;
+
+      if (!t) return;
+
+      todayTasks.push({ id: Date.now(), title: t, category: c, time: tm, duration: d, completed: false });
+      document.getElementById('todayTaskInput').value = '';
+      document.getElementById('todayTime').value = '';
+      document.getElementById('todayDuration').value = '';
+      saveState();
+    }
+
+    function addMasterTask() {
+      const input = document.getElementById('masterTaskInput');
+      const category = document.getElementById('masterCategory').value;
+      if (!input.value.trim()) return;
+
+      masterTasks.push({ id: Date.now(), title: input.value.trim(), category: category });
+      input.value = '';
+      saveState();
+    }
+
+    function moveToToday(id) {
+      if (todayTasks.length >= 3) {
+        alert("আজকের ৩টি কোটা পূর্ণ! যেকোনো একটি শেষ বা ডিলিট করে তারপর নতুন কাজ আনুন।");
+        return;
+      }
+      const index = masterTasks.findIndex(t => t.id === id);
+      if (index !== -1) {
+        const item = masterTasks.splice(index, 1)[0];
+        todayTasks.push({ ...item, time: '', duration: '', completed: false });
+        saveState();
+      }
+    }
+
+    function deleteTask(id, isToday) {
+      if (isToday) todayTasks = todayTasks.filter(t => t.id !== id);
+      else masterTasks = masterTasks.filter(t => t.id !== id);
+      saveState();
+    }
+
+    function toggleTodayTask(id) {
+      todayTasks = todayTasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
+      saveState();
+    }
+
+    // Google Calendar ইন্টিগ্রেশন
+    function addToGoogleCalendar(title, time, duration) {
+      if (!time) {
+        alert("ক্যালেন্ডারে সেট করতে শুরুর সময় দিন।");
+        return;
+      }
+      const now = new Date();
+      const [h, m] = time.split(':');
+      const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(h), parseInt(m));
+      const durMinutes = parseInt(duration) || 60;
+      const end = new Date(start.getTime() + durMinutes * 60000);
+
+      const fmt = (d) => d.toISOString().replace(/-|:|\.\d\d\d/g, "");
+      const calUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${fmt(start)}/${fmt(end)}`;
+      window.open(calUrl, '_blank');
+    }
+
+    function render() {
+      const todayListEl = document.getElementById('todayList');
+      todayListEl.innerHTML = '';
+      document.getElementById('ruleCount').innerText = `${todayTasks.length} / ৩ টি কাজ যুক্ত`;
+
+      todayTasks.forEach(t => {
+        const li = document.createElement('li');
+        li.className = 'task-item';
+        li.innerHTML = `
+          <div class="task-left">
+            <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="toggleTodayTask(${t.id})" />
+            <div class="${t.completed ? 'completed' : ''}">
+              <strong>${t.title}</strong>
+              <span class="task-meta">
+                <span class="badge badge-${t.category}">${t.category}</span>
+                ${t.time ? ` ⏰ ${t.time}` : ''} 
+                ${t.duration ? ` (${t.duration} মিনিট)` : ''}
+              </span>
+            </div>
+          </div>
+          <div style="display: flex; gap: 6px;">
+            ${t.time ? `<button class="btn-secondary" title="Calendar" onclick="addToGoogleCalendar('${t.title}', '${t.time}', '${t.duration}')">📅</button>` : ''}
+            <button class="btn-danger" onclick="deleteTask(${t.id}, true)">✕</button>
+          </div>
+        `;
+        todayListEl.appendChild(li);
+      });
+
+      const masterListEl = document.getElementById('masterList');
+      masterListEl.innerHTML = '';
+      masterTasks.forEach(t => {
+        const li = document.createElement('li');
+        li.className = 'task-item';
+        li.innerHTML = `
+          <div class="task-left">
+            <div>
+              <strong>${t.title}</strong>
+              <span class="task-meta"><span class="badge badge-${t.category}">${t.category}</span></span>
+            </div>
+          </div>
+          <div style="display: flex; gap: 6px;">
+            <button class="btn-secondary" onclick="moveToToday(${t.id})">আজকের তালিকায় নিন ➔</button>
+            <button class="btn-danger" onclick="deleteTask(${t.id}, false)">✕</button>
+          </div>
+        `;
+        masterListEl.appendChild(li);
+      });
+    }
+
+    render();
+  </script>
+</body>
+</html>
