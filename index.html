@@ -77,6 +77,12 @@
     .count-tag { font-size: 13px; color: var(--muted); font-weight: bold; }
     .section-divider { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin: 15px 0 10px 0; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
 
+    /* মোডাল উইন্ডো */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.7); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
+    .modal-box { background: var(--card); border: 1px solid var(--accent); border-radius: 12px; max-width: 400px; width: 100%; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+    .modal-box h3 { margin-bottom: 8px; }
+    .modal-box p { font-size: 13px; color: var(--muted); margin-bottom: 15px; }
+
     /* ডেভেলপার সেকশন */
     .developer-card { border-color: rgba(56, 189, 248, 0.3); background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); text-align: center; }
     .developer-header { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 6px; font-weight: bold; }
@@ -94,7 +100,7 @@
 
   <div class="container">
 
-    <!-- দৈনিক অনুপ্রেরণা ও হেদায়েত কার্ড -->
+    <!-- দৈনিক অনুপ্রেরণা কার্ড -->
     <div class="card quote-card">
       <div class="quote-header">
         <span class="quote-tag" id="quoteCategory">✨ দৈনিক অনুপ্রেরণা</span>
@@ -113,7 +119,7 @@
       
       <div class="judgment-grid">
         <div class="judgment-card">
-          <span style="font-size: 12px; color: var(--muted);">মোট কাজ</span>
+          <span style="font-size: 12px; color: var(--muted);">আজকের কাজ</span>
           <div class="judgment-value" id="statTotal">০</div>
         </div>
         <div class="judgment-card">
@@ -140,12 +146,10 @@
     <div class="card">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <h3>🕌 নামাজের লাইভ সময় ও চেকলিস্ট</h3>
-        <button class="btn-secondary" onclick="requestNotification()" style="font-size: 11px; padding: 4px 8px;">🔔 রিমাইন্ডার অন করুন</button>
+        <button class="btn-secondary" onclick="enableAudioAndNotification()" style="font-size: 11px; padding: 4px 8px;">🔊 ভয়েস ও অ্যালার্ট চালু করুন</button>
       </div>
       
-      <div class="namaz-grid" id="namazContainer">
-        <!-- জাভাস্ক্রিপ্ট দিয়ে লাইভ ওয়াক্ত তৈরি হবে -->
-      </div>
+      <div class="namaz-grid" id="namazContainer"></div>
     </div>
 
     <!-- The Rule of 3 (আজকের কাজ) -->
@@ -155,7 +159,7 @@
         <span class="count-tag" id="ruleCount">চলমান: ০ / ৩</span>
       </div>
       <p style="color: var(--muted); font-size: 13px; margin-bottom: 14px;">
-        একসাথে সর্বোচ্চ ৩টি অসম্পূর্ণ কাজ সক্রিয় থাকবে। সম্পন্ন হলে স্বয়ংক্রিয়ভাবে নিচে জমা হবে।
+        আজকের শীর্ষ ৩টি কাজ। নির্দিষ্ট সময় হওয়ামাত্র অ্যাপটি বাংলায় ভয়েস রিমাইন্ডার দেবে।
       </p>
 
       <div class="input-group">
@@ -170,14 +174,12 @@
         <div class="input-row">
           <input type="time" id="todayTime" title="শুরুর সময়" />
           <input type="number" id="todayDuration" placeholder="স্থায়িত্ব (মিনিট)" style="width: 130px;" />
-          <button onclick="addTodayTask()">+ যুক্ত করুন</button>
+          <button onclick="addTodayTaskDirect()">+ যুক্ত করুন</button>
         </div>
       </div>
 
-      <!-- অ্যাক্টিভ আনফিনিশড লিস্ট -->
       <ul class="task-list" id="todayActiveList"></ul>
 
-      <!-- সম্পন্ন কাজের লিস্ট -->
       <div id="completedSection" style="display: none;">
         <div class="section-divider">✓ সম্পন্ন হওয়া কাজগুলো (হিস্ট্রি)</div>
         <ul class="task-list" id="todayCompletedList"></ul>
@@ -186,19 +188,24 @@
 
     <!-- মাস্টার লিস্ট -->
     <div class="card">
-      <h2>📋 মাস্টার লিস্ট (সব কাজের ভাণ্ডার)</h2>
+      <h2>📋 মাস্টার লিস্ট (সব কাজের ভাণ্ডার ও ডেডলাইন)</h2>
       <p style="color: var(--muted); font-size: 13px; margin-bottom: 14px;">
-        মাথায় আসা যেকোনো কাজ এখানে রাখুন, ওপরের ৩টি কাজের কোনোটি শেষ হলে এখান থেকে অ্যাড করুন।
+        ভবিষ্যতের কাজগুলো ডেডলাইনসহ টুকে রাখুন। নির্দিষ্ট তারিখে নোটিফিকেশন আসবে।
       </p>
 
-      <div class="input-row" style="margin-bottom: 15px;">
-        <input type="text" id="masterTaskInput" placeholder="ভবিষ্যতের কাজের বিবরণ..." />
-        <select id="masterCategory">
-          <option value="teaching">ক্লাস/টিচিং</option>
-          <option value="admin">অ্যাডমিন</option>
-          <option value="personal">ব্যক্তিগত</option>
-        </select>
-        <button onclick="addMasterTask()">তালিকায় রাখুন</button>
+      <div class="input-group">
+        <div class="input-row">
+          <input type="text" id="masterTaskInput" placeholder="কাজের নাম..." />
+          <select id="masterCategory">
+            <option value="teaching">ক্লাস/টিচিং</option>
+            <option value="admin">অ্যাডমিন</option>
+            <option value="personal">ব্যক্তিগত</option>
+          </select>
+        </div>
+        <div class="input-row">
+          <input type="date" id="masterDueDate" title="কবে করতে হবে (ডেডলাইন)" />
+          <button onclick="addMasterTask()">তালিকায় রাখুন</button>
+        </div>
       </div>
 
       <ul class="task-list" id="masterList"></ul>
@@ -224,8 +231,29 @@
 
   </div>
 
+  <!-- সময় নির্ধারণের পপআপ -->
+  <div class="modal-overlay" id="timeModal">
+    <div class="modal-box">
+      <h3 id="modalTaskTitle">কাজের সময় নির্ধারণ</h3>
+      <p>আজকের দিনে এই কাজটি কোন সময় করবেন এবং কতক্ষণ সময় নেবেন তা নির্ধারণ করুন:</p>
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px;">
+        <div>
+          <label style="font-size: 12px; color: var(--muted); display: block; margin-bottom: 4px;">শুরুর সময়:</label>
+          <input type="time" id="modalTime" style="width: 100%;" />
+        </div>
+        <div>
+          <label style="font-size: 12px; color: var(--muted); display: block; margin-bottom: 4px;">স্থায়িত্ব (মিনিট):</label>
+          <input type="number" id="modalDuration" placeholder="যেমন: ৩০ বা ৬০" style="width: 100%;" />
+        </div>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button class="btn-danger" onclick="closeTimeModal()">বাতিল</button>
+        <button onclick="confirmMoveToToday()">শীর্ষ ৩-এ যুক্ত করুন</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // অনুপ্রেরণামূলক বাণীর ডেটাবেজ
     const quotes = [
       { cat: "কোরআনের বাণী", text: "নিশ্চয়ই কষ্টের সাথেই রয়েছে স্বস্তি।", author: "সূরা আল-ইনশিরাহ: ৬" },
       { cat: "হাদিস শরিফ", text: "দুটি নিয়ামতের ব্যাপারে অধিকাংশ মানুষ ধোঁকার মধ্যে থাকে: স্বাস্থ্য ও অবসর সময়।", author: "সহিহ বুখারি: ৬৪১২" },
@@ -249,7 +277,6 @@
     let todayTasks = JSON.parse(localStorage.getItem('todayTasks')) || [];
     let masterTasks = JSON.parse(localStorage.getItem('masterTasks')) || [];
     
-    // নামাজের ডেটা
     const todayDateKey = new Date().toISOString().slice(0, 10);
     let savedNamazDate = localStorage.getItem('namazDate');
     let namazData = JSON.parse(localStorage.getItem('namazData')) || {
@@ -267,8 +294,28 @@
     }
 
     let remindedTasks = new Set();
+    let selectedMasterId = null;
 
-    // লাইভ নামাজের সময়সূচি (Bogura City)
+    // বাংলা ভয়েস স্পিচ ফাংশন (Text-to-Speech)
+    function speakBangla(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel(); // আগের কথা বন্ধ করা
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'bn-BD';
+        utterance.rate = 0.9; // স্বাভাবিক ও স্পষ্ট গতি
+        utterance.pitch = 1.0;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function enableAudioAndNotification() {
+      playBeep();
+      speakBangla("স্মার্ট ডু অ্যাপের ভয়েস এবং নোটিফিকেশন অ্যালার্ট সফলভাবে চালু হয়েছে।");
+      if ("Notification" in window) {
+        Notification.requestPermission();
+      }
+    }
+
     async function fetchLivePrayerTimes() {
       try {
         const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=Bogura&country=Bangladesh&method=1`);
@@ -284,15 +331,7 @@
           renderNamaz();
         }
       } catch (e) {
-        console.log("Could not load live prayer times, using fallback.");
-      }
-    }
-
-    function requestNotification() {
-      if ("Notification" in window) {
-        Notification.requestPermission().then(p => {
-          if (p === 'granted') alert("রিমাইন্ডার নোটিফিকেশন সফলভাবে চালু হয়েছে!");
-        });
+        console.log("Using cached prayer times.");
       }
     }
 
@@ -303,7 +342,7 @@
       render();
     }
 
-    function addTodayTask() {
+    function addTodayTaskDirect() {
       const activeTasksCount = todayTasks.filter(t => !t.completed).length;
       if (activeTasksCount >= 3) {
         alert("The Rule of 3: আপনার ৩টি গুরুত্বপূর্ণ কাজ এখনো চলমান আছে! যেকোনো একটি সম্পন্ন (Tick) করুন অথবা ডিলিট করে নতুন কাজ আনুন।");
@@ -327,25 +366,57 @@
     function addMasterTask() {
       const input = document.getElementById('masterTaskInput');
       const category = document.getElementById('masterCategory').value;
+      const dueDate = document.getElementById('masterDueDate').value;
+
       if (!input.value.trim()) return;
 
-      masterTasks.push({ id: Date.now(), title: input.value.trim(), category: category });
+      masterTasks.push({ 
+        id: Date.now(), 
+        title: input.value.trim(), 
+        category: category,
+        dueDate: dueDate || '' 
+      });
+
       input.value = '';
+      document.getElementById('masterDueDate').value = '';
       saveState();
     }
 
-    function moveToToday(id) {
+    function openMoveModal(id) {
       const activeTasksCount = todayTasks.filter(t => !t.completed).length;
       if (activeTasksCount >= 3) {
-        alert("চলমান ৩টি কোটা পূর্ণ! আগের একটি কাজ শেষ করে তবেই নতুন কাজ আনুন।");
+        alert("চলমান ৩টি কোটা পূর্ণ! আগের যেকোনো একটি কাজ টিক দিয়ে শেষ করুন, তারপর নতুন কাজ আনুন।");
         return;
       }
-      const index = masterTasks.findIndex(t => t.id === id);
+      selectedMasterId = id;
+      const task = masterTasks.find(t => t.id === id);
+      document.getElementById('modalTaskTitle').innerText = `"${task.title}"`;
+      document.getElementById('modalTime').value = '';
+      document.getElementById('modalDuration').value = '30';
+      document.getElementById('timeModal').style.display = 'flex';
+    }
+
+    function closeTimeModal() {
+      selectedMasterId = null;
+      document.getElementById('timeModal').style.display = 'none';
+    }
+
+    function confirmMoveToToday() {
+      const tm = document.getElementById('modalTime').value;
+      const dur = document.getElementById('modalDuration').value;
+
+      const index = masterTasks.findIndex(t => t.id === selectedMasterId);
       if (index !== -1) {
         const item = masterTasks.splice(index, 1)[0];
-        todayTasks.push({ ...item, time: '', duration: '', completed: false });
+        todayTasks.push({
+          ...item,
+          time: tm,
+          duration: dur,
+          completed: false
+        });
         saveState();
       }
+      closeTimeModal();
     }
 
     function deleteTask(id, isToday) {
@@ -365,14 +436,13 @@
     }
 
     function resetDayStats() {
-      if (confirm("আপনি কি আজকের সব সম্পন্ন কাজ আর্কাইভ করে নতুন দিনের ফ্রেশ তালিকা শুরু করতে চান?")) {
+      if (confirm("আপনি কি আজকের সম্পন্ন কাজ আর্কাইভ করে নতুন দিন শুরু করতে চান?")) {
         todayTasks = todayTasks.filter(t => !t.completed);
         Object.keys(namazData).forEach(k => namazData[k].done = false);
         saveState();
       }
     }
 
-    // Google Calendar ইন্টিগ্রেশন
     function addToGoogleCalendar(title, time, duration) {
       if (!time) return alert("শুরুর সময় উল্লেখ করুন।");
       const now = new Date();
@@ -386,7 +456,6 @@
       window.open(calUrl, '_blank');
     }
 
-    // বিপ সাউন্ড
     function playBeep() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -402,12 +471,15 @@
       } catch (e) {}
     }
 
-    function notifyUser(title, body) {
+    // ভয়েস + স্ক্রিন অ্যালার্ট রিমাইন্ডার
+    function notifyUserWithVoice(title, body, speechText) {
       playBeep();
+      setTimeout(() => {
+        speakBangla(speechText || body);
+      }, 500);
+
       if ("Notification" in window && Notification.permission === "granted") {
         new Notification(title, { body, icon: "https://cdn-icons-png.flaticon.com/512/906/906334.png" });
-      } else {
-        alert(`⏰ রিমাইন্ডার:\n${title} - ${body}`);
       }
     }
 
@@ -511,7 +583,7 @@
                 <span class="task-meta">সম্পন্ন হয়েছে</span>
               </div>
             </div>
-            <button class="btn-danger" title="তালিকা থেকে মুছুন" onclick="deleteTask(${t.id}, true)">✕</button>
+            <button class="btn-danger" title="মুছুন" onclick="deleteTask(${t.id}, true)">✕</button>
           `;
           completedListEl.appendChild(li);
         });
@@ -522,17 +594,21 @@
       const masterListEl = document.getElementById('masterList');
       masterListEl.innerHTML = '';
       masterTasks.forEach(t => {
+        const isTodayDue = t.dueDate && t.dueDate === new Date().toISOString().slice(0, 10);
         const li = document.createElement('li');
         li.className = 'task-item';
         li.innerHTML = `
           <div class="task-left">
             <div>
               <strong>${t.title}</strong>
-              <span class="task-meta"><span class="badge badge-${t.category}">${t.category}</span></span>
+              <span class="task-meta">
+                <span class="badge badge-${t.category}">${t.category}</span>
+                ${t.dueDate ? ` 📅 নির্ধারিত তারিখ: <b style="${isTodayDue ? 'color: var(--warning);' : ''}">${t.dueDate}${isTodayDue ? ' (আজকে!)' : ''}</b>` : ''}
+              </span>
             </div>
           </div>
           <div style="display: flex; gap: 6px;">
-            <button class="btn-secondary" onclick="moveToToday(${t.id})">শীর্ষ তালিকায় নিন ➔</button>
+            <button class="btn-secondary" onclick="openMoveModal(${t.id})">শীর্ষ তালিকায় নিন ➔</button>
             <button class="btn-danger" onclick="deleteTask(${t.id}, false)">✕</button>
           </div>
         `;
@@ -540,32 +616,66 @@
       });
     }
 
+    // প্রতি সেকেন্ডে সময়, ওয়াক্ত ও ভয়েস অ্যালার্ট ট্র্যাকিং
     setInterval(() => {
       const now = new Date();
       const currentHHMM = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
+      const todayISO = now.toISOString().slice(0, 10);
       const currentSeconds = now.getSeconds();
 
+      // ১. টাস্কের নিজস্ব ভয়েস রিমাইন্ডার
       todayTasks.forEach(t => {
         if (!t.completed && t.time === currentHHMM && !remindedTasks.has(`task_${t.id}_${currentHHMM}`)) {
           remindedTasks.add(`task_${t.id}_${currentHHMM}`);
-          notifyUser("কাজের সময় হয়েছে!", `এখন সময়: "${t.title}" শুরু করার।`);
+          notifyUserWithVoice(
+            "কাজের সময় হয়েছে!",
+            `এখন সময়: "${t.title}" শুরু করার।`,
+            `কাজের সময় হয়েছে। এখন ${t.title} শুরু করার নির্ধারিত সময়।`
+          );
         }
       });
 
+      // ২. নামাজের লাইভ ভয়েস রিমাইন্ডার
       Object.keys(namazData).forEach(k => {
         const item = namazData[k];
         if (item.time === currentHHMM && !remindedTasks.has(`namaz_${k}_${currentHHMM}`)) {
           remindedTasks.add(`namaz_${k}_${currentHHMM}`);
-          notifyUser("নামাজের ওয়াক্ত হয়েছে!", `${item.name}-এর নামাজের সময় হয়েছে।`);
+          notifyUserWithVoice(
+            "নামাজের ওয়াক্ত হয়েছে!",
+            `${item.name}-এর নামাজের সময় হয়েছে।`,
+            `আসসালামু আলাইকুম। এখন ${item.name}-এর নামাজের ওয়াক্ত হয়েছে।`
+          );
         }
       });
 
-      if (currentHHMM === "08:00" && currentSeconds === 0) {
-        notifyUser("শুভ সকাল!", "আজকের ৩টি মূল কাজ এবং ডে জাজমেন্ট ট্র্যাকিং শুরু করুন।");
+      // ৩. সকাল ৯:০০ টায় মাস্টার লিস্টের ডেডলাইন ভয়েস অ্যালার্ট
+      if (currentHHMM === "09:00" && currentSeconds === 0) {
+        masterTasks.forEach(t => {
+          if (t.dueDate === todayISO && !remindedTasks.has(`due_${t.id}_${todayISO}`)) {
+            remindedTasks.add(`due_${t.id}_${todayISO}`);
+            notifyUserWithVoice(
+              "আজকের নির্ধারিত কাজ!",
+              `মাস্টার লিস্টে "${t.title}" এর ডেডলাইন আজকে।`,
+              `আজকে আপনার মাস্টার লিস্টে নির্ধারিত কাজ রয়েছে। ${t.title} কাজটিকে শীর্ষ তালিকায় যুক্ত করুন।`
+            );
+          }
+        });
       }
 
+      // ৪. সকাল ও রাতের রুটিন ভয়েস
+      if (currentHHMM === "08:00" && currentSeconds === 0) {
+        notifyUserWithVoice(
+          "শুভ সকাল!",
+          "আজকের ৩টি মূল কাজ এবং ডে জাজমেন্ট ট্র্যাকিং শুরু করুন।",
+          "শুভ সকাল। আজকের ৩টি মূল কাজ নির্ধারণ করে লক্ষ্য পূরণ শুরু করুন।"
+        );
+      }
       if (currentHHMM === "22:00" && currentSeconds === 0) {
-        notifyUser("দিনের পর্যালোচনা", "আজকের সফলতার স্কোর মিলিয়ে নিন এবং আগামীকালের পরিকল্পনা করুন।");
+        notifyUserWithVoice(
+          "দিনের পর্যালোচনা",
+          "আজকের সফলতার স্কোর মিলিয়ে নিন।",
+          "শুভ রাত্রি। আজকের সফলতার স্কোর মিলিয়ে নিন এবং আগামীকালের পরিকল্পনা করুন।"
+        );
       }
     }, 1000);
 
