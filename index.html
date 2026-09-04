@@ -21,79 +21,87 @@
       --fb-blue: #1877F2;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background: var(--bg); color: var(--text); padding: 16px; display: flex; justify-content: center; }
-    .container { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 20px; }
+    body { background: var(--bg); color: var(--text); padding: 12px; display: flex; justify-content: center; }
+    .container { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 16px; }
     
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); }
-    h2, h3 { color: var(--accent); margin-bottom: 12px; font-weight: 600; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); }
+    h2, h3 { color: var(--accent); margin-bottom: 10px; font-weight: 600; }
 
     /* দৈনিক অনুপ্রেরণা কার্ড */
     .quote-card { border-left: 4px solid var(--accent); background: linear-gradient(90deg, #1e293b 0%, #162032 100%); }
-    .quote-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .quote-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
     .quote-tag { font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--accent); letter-spacing: 1px; }
-    .quote-text { font-size: 14px; font-style: italic; line-height: 1.6; color: #e2e8f0; }
-    .quote-author { font-size: 12px; color: var(--muted); font-weight: 600; text-align: right; margin-top: 6px; }
+    .quote-text { font-size: 13.5px; font-style: italic; line-height: 1.5; color: #e2e8f0; }
+    .quote-author { font-size: 11px; color: var(--muted); font-weight: 600; text-align: right; margin-top: 4px; }
 
     /* ডে জাজমেন্ট */
-    .judgment-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-top: 10px; }
-    .judgment-card { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 12px; text-align: center; }
-    .judgment-value { font-size: 22px; font-weight: bold; color: var(--accent); margin-top: 4px; }
-    .judgment-bar-bg { background: #0f172a; border-radius: 10px; height: 12px; width: 100%; overflow: hidden; margin-top: 10px; border: 1px solid var(--border); }
+    .judgment-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; margin-top: 8px; }
+    .judgment-card { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 8px; text-align: center; }
+    .judgment-value { font-size: 20px; font-weight: bold; color: var(--accent); margin-top: 2px; }
+    .judgment-bar-bg { background: #0f172a; border-radius: 10px; height: 10px; width: 100%; overflow: hidden; margin-top: 10px; border: 1px solid var(--border); }
     .judgment-bar-fill { background: linear-gradient(90deg, #38bdf8, #22c55e); height: 100%; width: 0%; transition: width 0.4s ease; }
-    .judgment-verdict { font-size: 14px; font-weight: 600; margin-top: 10px; text-align: center; }
+    .judgment-verdict { font-size: 13px; font-weight: 600; margin-top: 8px; text-align: center; }
 
     /* নামাজের বার */
-    .namaz-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 10px; }
-    .namaz-card { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; }
-    .namaz-info { font-size: 13px; }
-    .namaz-info b { display: block; font-size: 15px; color: var(--text); }
+    .namaz-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-top: 8px; }
+    .namaz-card { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; display: flex; align-items: center; justify-content: space-between; }
+    .namaz-info { font-size: 12px; }
+    .namaz-info b { display: block; font-size: 14px; color: var(--text); }
     .namaz-check { width: 18px; height: 18px; cursor: pointer; accent-color: var(--success); }
 
-    .input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
-    .input-row { display: flex; gap: 10px; flex-wrap: wrap; }
-    input, select, button { border-radius: 8px; border: 1px solid var(--border); background: #0f172a; color: var(--text); padding: 10px 14px; font-size: 14px; outline: none; }
+    .input-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+    .input-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    input, select, button { border-radius: 6px; border: 1px solid var(--border); background: #0f172a; color: var(--text); padding: 8px 12px; font-size: 13.5px; outline: none; }
     input:focus, select:focus { border-color: var(--accent); }
-    input[type="text"], input[type="date"] { flex: 1; min-width: 160px; }
+    input[type="text"], input[type="date"] { flex: 1; min-width: 140px; }
     
     button { background: var(--accent); color: #0f172a; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
     button:hover { background: var(--accent-hover); }
     .btn-secondary { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
-    .btn-secondary:hover { background: rgba(56, 189, 248, 0.1); }
-    .btn-danger { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
-    .btn-danger:hover { background: rgba(239, 68, 68, 0.1); }
-    .btn-edit { background: transparent; border: 1px solid var(--warning); color: var(--warning); }
-    .btn-edit:hover { background: rgba(245, 158, 11, 0.1); }
-    .btn-focus { background: #8b5cf6; color: white; border: none; font-size: 12px; padding: 6px 10px; border-radius: 6px; }
-    .btn-focus:hover { background: #7c3aed; }
+    
+    /* কম্প্যাক্ট অ্যাকশন বাটন */
+    .btn-icon { width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 14px; border: 1px solid transparent; background: #1e293b; }
+    .btn-up { color: var(--accent); border-color: rgba(56, 189, 248, 0.4); }
+    .btn-up:hover { background: rgba(56, 189, 248, 0.15); }
+    .btn-edit { color: var(--warning); border-color: rgba(245, 158, 11, 0.4); }
+    .btn-edit:hover { background: rgba(245, 158, 11, 0.15); }
+    .btn-del { color: var(--danger); border-color: rgba(239, 68, 68, 0.4); }
+    .btn-del:hover { background: rgba(239, 68, 68, 0.15); }
+    .btn-focus { background: #8b5cf6; color: white; border: none; font-size: 11px; padding: 4px 8px; border-radius: 5px; }
 
-    .task-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .task-item { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px; transition: 0.3s; }
+    /* স্লিম টাস্ক আইটেম */
+    .task-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .task-item { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
     .task-item.done-item { opacity: 0.5; background: #090d16; border-style: dashed; }
-    .task-left { display: flex; align-items: center; gap: 12px; flex: 1; }
-    .task-meta { font-size: 12px; color: var(--muted); display: block; margin-top: 4px; }
-    .badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+    .task-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+    .task-content { flex: 1; min-width: 0; }
+    .task-title { font-size: 14px; font-weight: 500; color: #f1f5f9; line-height: 1.4; word-break: break-word; }
+    .task-meta { font-size: 11px; color: var(--muted); margin-top: 4px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .task-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+
+    .badge { display: inline-block; padding: 1px 5px; border-radius: 3px; font-size: 9.5px; font-weight: bold; text-transform: uppercase; }
     .badge-teaching { background: #0284c7; color: white; }
     .badge-personal { background: #10b981; color: white; }
     .badge-admin { background: #f59e0b; color: white; }
     .completed-text { text-decoration: line-through; color: var(--muted); }
 
     .rule-of-3-header { display: flex; justify-content: space-between; align-items: center; }
-    .count-tag { font-size: 13px; color: var(--muted); font-weight: bold; }
-    .section-divider { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin: 15px 0 10px 0; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+    .count-tag { font-size: 12px; color: var(--muted); font-weight: bold; }
+    .section-divider { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin: 12px 0 8px 0; border-bottom: 1px solid var(--border); padding-bottom: 3px; }
 
     /* মোডাল উইন্ডো */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.75); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
-    .modal-box { background: var(--card); border: 1px solid var(--accent); border-radius: 12px; max-width: 420px; width: 100%; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-    .modal-box h3 { margin-bottom: 8px; }
-    .modal-box p { font-size: 13px; color: var(--muted); margin-bottom: 15px; }
+    .modal-box { background: var(--card); border: 1px solid var(--accent); border-radius: 12px; max-width: 400px; width: 100%; padding: 18px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+    .modal-box h3 { margin-bottom: 6px; font-size: 16px; }
+    .modal-box p { font-size: 12.5px; color: var(--muted); margin-bottom: 12px; }
 
     /* ডেভেলপার সেকশন */
     .developer-card { border-color: rgba(56, 189, 248, 0.3); background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); text-align: center; }
-    .developer-header { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 6px; font-weight: bold; }
-    .developer-name { font-size: 18px; font-weight: 700; color: var(--text); }
-    .developer-title { font-size: 13px; color: var(--muted); margin-top: 2px; }
-    .contact-buttons { display: flex; justify-content: center; gap: 12px; margin-top: 15px; flex-wrap: wrap; }
-    .contact-btn { display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; color: white; transition: 0.2s; }
+    .developer-header { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 4px; font-weight: bold; }
+    .developer-name { font-size: 17px; font-weight: 700; color: var(--text); }
+    .developer-title { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .contact-buttons { display: flex; justify-content: center; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+    .contact-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; color: white; transition: 0.2s; }
     .btn-wa { background-color: var(--wa-green); }
     .btn-wa:hover { background-color: #1ebc59; }
     .btn-fb { background-color: var(--fb-blue); }
@@ -116,12 +124,12 @@
     }
 
     .focus-pulse-text {
-      font-size: 16px;
+      font-size: 15px;
       letter-spacing: 2px;
       font-weight: 600;
       color: #38bdf8;
       animation: pulseGlow 3s infinite ease-in-out;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
     }
 
     @keyframes pulseGlow {
@@ -131,7 +139,7 @@
     }
 
     .focus-task-title {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 700;
       color: #f8fafc;
       max-width: 600px;
@@ -139,19 +147,19 @@
     }
 
     .focus-timer-text {
-      font-size: 52px;
+      font-size: 48px;
       font-family: monospace;
       font-weight: bold;
       color: #ffffff;
-      margin: 20px 0;
+      margin: 16px 0;
     }
 
     .exit-modal-box {
       background: #111827;
       border: 1px solid #ef4444;
       border-radius: 12px;
-      padding: 24px;
-      max-width: 440px;
+      padding: 20px;
+      max-width: 400px;
       width: 90%;
       text-align: center;
       box-shadow: 0 10px 30px rgba(239,68,68,0.2);
@@ -166,7 +174,7 @@
     <div class="card quote-card">
       <div class="quote-header">
         <span class="quote-tag" id="quoteCategory">✨ দৈনিক অনুপ্রেরণা</span>
-        <button class="btn-secondary" onclick="loadRandomQuote()" style="font-size: 10px; padding: 3px 7px;">🔄 নতুন বাণী</button>
+        <button class="btn-secondary" onclick="loadRandomQuote()" style="font-size: 10px; padding: 2px 6px;">🔄 নতুন বাণী</button>
       </div>
       <div class="quote-text" id="quoteText">"ধৈর্য ধারণ করো, নিশ্চয়ই আল্লাহর সাহায্য অত্যন্ত নিকটে।"</div>
       <div class="quote-author" id="quoteAuthor">— আল-কোরআন</div>
@@ -175,25 +183,25 @@
     <!-- ডে জাজমেন্ট -->
     <div class="card">
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h2>📊 ডে জাজমেন্ট (দিনের সফলতার স্কোর)</h2>
-        <button class="btn-secondary" onclick="resetDayStats()" style="font-size: 11px; padding: 4px 8px;">🔄 নতুন দিন শুরু</button>
+        <h2>📊 ডে জাজমেন্ট (সফলতার স্কোর)</h2>
+        <button class="btn-secondary" onclick="resetDayStats()" style="font-size: 10px; padding: 3px 6px;">🔄 নতুন দিন</button>
       </div>
       
       <div class="judgment-grid">
         <div class="judgment-card">
-          <span style="font-size: 12px; color: var(--muted);">আজকের কাজ</span>
+          <span style="font-size: 11px; color: var(--muted);">আজকের কাজ</span>
           <div class="judgment-value" id="statTotal">০</div>
         </div>
         <div class="judgment-card">
-          <span style="font-size: 12px; color: var(--muted);">সম্পন্ন কাজ</span>
+          <span style="font-size: 11px; color: var(--muted);">সম্পন্ন</span>
           <div class="judgment-value" id="statCompleted" style="color: var(--success);">০</div>
         </div>
         <div class="judgment-card">
-          <span style="font-size: 12px; color: var(--muted);">বাকি কাজ</span>
+          <span style="font-size: 11px; color: var(--muted);">বাকি</span>
           <div class="judgment-value" id="statPending" style="color: var(--danger);">০</div>
         </div>
         <div class="judgment-card">
-          <span style="font-size: 12px; color: var(--muted);">নামাজ (৫ ওয়াক্ত)</span>
+          <span style="font-size: 11px; color: var(--muted);">নামাজ</span>
           <div class="judgment-value" id="statNamaz" style="color: var(--accent);">০/৫</div>
         </div>
       </div>
@@ -207,10 +215,9 @@
     <!-- নামাজের লাইভ সময় ও চেকলিস্ট -->
     <div class="card">
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h3>🕌 নামাজের লাইভ সময় ও চেকলিস্ট</h3>
-        <button class="btn-secondary" onclick="enableAudioAndNotification()" style="font-size: 11px; padding: 4px 8px;">🔊 ভয়েস চালু করুন</button>
+        <h3>🕌 নামাজের সময় ও চেকলিস্ট</h3>
+        <button class="btn-secondary" onclick="enableAudioAndNotification()" style="font-size: 10px; padding: 3px 6px;">🔊 ভয়েস অন</button>
       </div>
-      
       <div class="namaz-grid" id="namazContainer"></div>
     </div>
 
@@ -220,13 +227,13 @@
         <h2>🎯 The Rule of 3 (চলমান শীর্ষ ৩ কাজ)</h2>
         <span class="count-tag" id="ruleCount">চলমান: ০ / ৩</span>
       </div>
-      <p style="color: var(--muted); font-size: 13px; margin-bottom: 14px;">
-        গভীর মনোযোগে কাজ করার জন্য কাজের পাশের <b>"ফোকাস"</b> বাটনটি চাপুন।
+      <p style="color: var(--muted); font-size: 12px; margin-bottom: 10px;">
+        গভীর মনোযোগে কাজ করার জন্য কাজের পাশের <b>"ফোকাস"</b> বাটনটি ব্যবহার করুন।
       </p>
 
       <div class="input-group">
         <div class="input-row">
-          <input type="text" id="todayTaskInput" placeholder="জরুরি কাজের বিবরণ লিখুন..." />
+          <input type="text" id="todayTaskInput" placeholder="জরুরি কাজের বিবরণ..." />
           <select id="todayCategory">
             <option value="teaching">ক্লাস/টিচিং</option>
             <option value="admin">অ্যাডমিন</option>
@@ -235,7 +242,7 @@
         </div>
         <div class="input-row">
           <input type="time" id="todayTime" title="শুরুর সময়" />
-          <input type="number" id="todayDuration" placeholder="স্থায়িত্ব (মিনিট)" style="width: 130px;" />
+          <input type="number" id="todayDuration" placeholder="মিনিট" style="width: 100px;" />
           <button onclick="addTodayTaskDirect()">+ যুক্ত করুন</button>
         </div>
       </div>
@@ -243,7 +250,7 @@
       <ul class="task-list" id="todayActiveList"></ul>
 
       <div id="completedSection" style="display: none;">
-        <div class="section-divider">✓ সম্পন্ন হওয়া কাজগুলো (হিস্ট্রি)</div>
+        <div class="section-divider">✓ সম্পন্ন হওয়া কাজগুলো</div>
         <ul class="task-list" id="todayCompletedList"></ul>
       </div>
     </div>
@@ -251,13 +258,13 @@
     <!-- মাস্টার লিস্ট -->
     <div class="card">
       <h2>📋 মাস্টার লিস্ট (সব কাজের ভাণ্ডার ও ডেডলাইন)</h2>
-      <p style="color: var(--muted); font-size: 13px; margin-bottom: 14px;">
-        ভবিষ্যতের কাজগুলো ডেডলাইনসহ টুকে রাখুন। প্রয়োজনে এডিট বা সংশোধন করতে পারবেন।
+      <p style="color: var(--muted); font-size: 12px; margin-bottom: 10px;">
+        ভবিষ্যতের কাজগুলো ডেডলাইনসহ রাখুন। যেকোনো সময় ✏️ দিয়ে সংশোধন করতে পারবেন।
       </p>
 
       <div class="input-group">
         <div class="input-row">
-          <input type="text" id="masterTaskInput" placeholder="কাজের নাম..." />
+          <input type="text" id="masterTaskInput" placeholder="কাজের নাম ও বিস্তারিত..." />
           <select id="masterCategory">
             <option value="teaching">ক্লাস/টিচিং</option>
             <option value="admin">অ্যাডমিন</option>
@@ -265,7 +272,7 @@
           </select>
         </div>
         <div class="input-row">
-          <input type="date" id="masterDueDate" title="কবে করতে হবে (ডেডলাইন)" />
+          <input type="date" id="masterDueDate" title="ডেডলাইন" />
           <button onclick="addMasterTask()">তালিকায় রাখুন</button>
         </div>
       </div>
@@ -278,15 +285,12 @@
       <div class="developer-header">Developer & Creator</div>
       <div class="developer-name">Alamin Nazir</div>
       <div class="developer-title">Director, Future Academy | Educator & Creator</div>
-      <p style="font-size: 12px; color: var(--muted); margin-top: 8px;">
-        অ্যাপ সম্পর্কে যেকোনো মতামত, পরামর্শ বা প্রয়োজনে সরাসরি যোগাযোগ করতে পারেন:
-      </p>
       <div class="contact-buttons">
         <a href="https://wa.me/8801796431795?text=Hello%20Alamin%20Sir,%20I%20am%20using%20your%20SmartDo%20App." target="_blank" class="contact-btn btn-wa">
-          💬 WhatsApp-এ মেসেজ দিন
+          💬 WhatsApp
         </a>
         <a href="https://www.facebook.com/alaminphysics01" target="_blank" class="contact-btn btn-fb">
-          🌐 Facebook পেজ
+          🌐 Facebook
         </a>
       </div>
     </div>
@@ -296,15 +300,15 @@
   <!-- মাস্টার লিস্ট কাজ এডিট করার মোডাল -->
   <div class="modal-overlay" id="editModal">
     <div class="modal-box">
-      <h3 style="color: var(--warning);">✏️ কাজের তথ্য সংশোধন (Edit)</h3>
-      <p>কাজের নাম, ক্যাটাগরি বা নির্ধারিত তারিখ পরিবর্তন করুন:</p>
-      <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px;">
+      <h3 style="color: var(--warning);">✏️ কাজের তথ্য সংশোধন</h3>
+      <p>কাজের নাম, ক্যাটাগরি বা ডেডলাইন পরিবর্তন করুন:</p>
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px;">
         <div>
-          <label style="font-size: 12px; color: var(--muted); display: block; margin-bottom: 4px;">কাজের নাম:</label>
+          <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 3px;">কাজের নাম:</label>
           <input type="text" id="editTaskTitle" style="width: 100%;" />
         </div>
         <div>
-          <label style="font-size: 12px; color: var(--muted); display: block; margin-bottom: 4px;">ক্যাটাগরি:</label>
+          <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 3px;">ক্যাটাগরি:</label>
           <select id="editTaskCategory" style="width: 100%;">
             <option value="teaching">ক্লাস/টিচিং</option>
             <option value="admin">অ্যাডমিন</option>
@@ -312,13 +316,13 @@
           </select>
         </div>
         <div>
-          <label style="font-size: 12px; color: var(--muted); display: block; margin-bottom: 4px;">নির্ধারিত তারিখ (Due Date):</label>
+          <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 3px;">ডেডলাইন:</label>
           <input type="date" id="editTaskDueDate" style="width: 100%;" />
         </div>
       </div>
-      <div style="display: flex; justify-content: flex-end; gap: 10px;">
-        <button class="btn-danger" onclick="closeEditModal()">বাতিল</button>
-        <button onclick="saveEditedTask()" style="background: var(--warning); color: #000;">সংরক্ষণ করুন</button>
+      <div style="display: flex; justify-content: flex-end; gap: 8px;">
+        <button class="btn-del" onclick="closeEditModal()" style="padding: 6px 12px; font-size: 12px;">বাতিল</button>
+        <button onclick="saveEditedTask()" style="background: var(--warning); color: #000; padding: 6px 12px; font-size: 12px;">সংরক্ষণ</button>
       </div>
     </div>
   </div>
@@ -327,39 +331,39 @@
   <div class="modal-overlay" id="timeModal">
     <div class="modal-box">
       <h3 id="modalTaskTitle">কাজের সময় নির্ধারণ</h3>
-      <p>আজকের দিনে এই কাজটি কোন সময় করবেন এবং কতক্ষণ সময় নেবেন তা নির্ধারণ করুন:</p>
-      <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px;">
+      <p>আজকের দিনে এই কাজটি কোন সময় করবেন এবং কতক্ষণ সময় নেবেন:</p>
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px;">
         <div>
-          <label style="font-size: 12px; color: var(--muted); display: block; margin-bottom: 4px;">শুরুর সময়:</label>
+          <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 3px;">শুরুর সময়:</label>
           <input type="time" id="modalTime" style="width: 100%;" />
         </div>
         <div>
-          <label style="font-size: 12px; color: var(--muted); display: block; margin-bottom: 4px;">স্থায়িত্ব (মিনিট):</label>
-          <input type="number" id="modalDuration" placeholder="যেমন: ৩০ বা ৬০" style="width: 100%;" />
+          <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 3px;">স্থায়িত্ব (মিনিট):</label>
+          <input type="number" id="modalDuration" placeholder="৩০ বা ৬০" style="width: 100%;" />
         </div>
       </div>
-      <div style="display: flex; justify-content: flex-end; gap: 10px;">
-        <button class="btn-danger" onclick="closeTimeModal()">বাতিল</button>
-        <button onclick="confirmMoveToToday()">শীর্ষ ৩-এ যুক্ত করুন</button>
+      <div style="display: flex; justify-content: flex-end; gap: 8px;">
+        <button class="btn-del" onclick="closeTimeModal()" style="padding: 6px 12px; font-size: 12px;">বাতিল</button>
+        <button onclick="confirmMoveToToday()" style="padding: 6px 12px; font-size: 12px;">যুক্ত করুন</button>
       </div>
     </div>
   </div>
 
-  <!-- পিওর সাইলেন্ট ব্ল্যাক ফোকাস স্ক্রিন -->
+  <!-- সাইলেন্ট ব্ল্যাক ফোকাস স্ক্রিন -->
   <div id="focusScreen">
     <div style="width: 100%;">
       <div class="focus-pulse-text">● NEVER GIVE UP • STAY FOCUSED ●</div>
-      <span style="font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 1px;">চলমান কাজ:</span>
+      <span style="font-size: 11px; color: #64748b; text-transform: uppercase;">চলমান কাজ:</span>
       <div class="focus-task-title" id="focusCurrentTask">কাজের শিরোনাম</div>
     </div>
 
     <div>
       <div class="focus-timer-text" id="focusTimerDisplay">25:00</div>
-      <p style="font-size: 13px; color: #64748b;">পূর্ণ মনোনিবেশ করুন। কল ছাড়া অন্য কোনো দিকে নজর দেবেন না।</p>
+      <p style="font-size: 12px; color: #64748b;">পূর্ণ মনোনিবেশ বজায় রাখুন।</p>
     </div>
 
     <div>
-      <button class="btn-danger" onclick="startExitFlow()" style="font-size: 13px; padding: 10px 20px; border-radius: 20px;">
+      <button class="btn-del" onclick="startExitFlow()" style="font-size: 12px; padding: 8px 16px; border-radius: 20px;">
         ⚠️ ফোকাস মোড থেকে বের হন
       </button>
     </div>
@@ -368,9 +372,8 @@
   <!-- ৫ ধাপের এক্সিট চ্যালেঞ্জ মোডাল -->
   <div class="modal-overlay" id="exitModal" style="z-index: 100000;">
     <div class="exit-modal-box">
-      <h3 style="color: #ef4444; margin-bottom: 10px;" id="exitStepTitle">ধাপ ১: নিশ্চিতকরণ</h3>
-      <p id="exitStepDesc" style="font-size: 14px; color: #cbd5e1; line-height: 1.5; margin-bottom: 20px;"></p>
-      
+      <h3 style="color: #ef4444; margin-bottom: 8px; font-size: 15px;" id="exitStepTitle">ধাপ ১: নিশ্চিতকরণ</h3>
+      <p id="exitStepDesc" style="font-size: 13px; color: #cbd5e1; line-height: 1.4; margin-bottom: 16px;"></p>
       <div id="exitStepActionContainer"></div>
     </div>
   </div>
@@ -431,7 +434,7 @@
     }
 
     function enableAudioAndNotification() {
-      speakBangla("স্মার্ট ডু অ্যাপের বাংলা ভয়েস রিমাইন্ডার সফলভাবে সক্রিয় হয়েছে।");
+      speakBangla("স্মার্ট ডু অ্যাপের বাংলা ভয়েস রিমাইন্ডার সক্রিয় হয়েছে।");
       if ("Notification" in window) Notification.requestPermission();
     }
 
@@ -501,7 +504,6 @@
       saveState();
     }
 
-    // মাস্টার লিস্ট এডিট অপশন
     function openEditModal(id) {
       editingMasterId = id;
       const task = masterTasks.find(t => t.id === id);
@@ -528,13 +530,7 @@
         return;
       }
 
-      masterTasks = masterTasks.map(t => {
-        if (t.id === editingMasterId) {
-          return { ...t, title, category, dueDate };
-        }
-        return t;
-      });
-
+      masterTasks = masterTasks.map(t => t.id === editingMasterId ? { ...t, title, category, dueDate } : t);
       saveState();
       closeEditModal();
     }
@@ -542,7 +538,7 @@
     function openMoveModal(id) {
       const activeTasksCount = todayTasks.filter(t => !t.completed).length;
       if (activeTasksCount >= 3) {
-        alert("চলমান ৩টি কোটা পূর্ণ! আগের কাজ শেষ করুন।");
+        alert("চলমান ৩টি কোটা পূর্ণ! আগের একটি কাজ শেষ করুন।");
         return;
       }
       selectedMasterId = id;
@@ -684,34 +680,34 @@
         titleEl.innerText = "ধাপ ১: নিশ্চিতকরণ";
         descEl.innerText = "আপনি মাত্র কাজে মনোনিবেশ করেছিলেন। এখনই মনোযোগ ভাঙলে লক্ষ্য পূরণ ব্যাহত হবে। সত্যিই কি বের হতে চান?";
         actionEl.innerHTML = `
-          <div style="display: flex; gap: 10px; justify-content: center;">
-            <button onclick="closeExitModal()" style="background: #22c55e;">না, কাজে ফিরে যাই</button>
-            <button class="btn-danger" onclick="nextExitStep(2)">হ্যাঁ, বের হতে চাই ➔</button>
+          <div style="display: flex; gap: 8px; justify-content: center;">
+            <button onclick="closeExitModal()" style="background: #22c55e; padding: 6px 12px; font-size: 12px;">কাজে ফিরে যাই</button>
+            <button class="btn-del" onclick="nextExitStep(2)" style="padding: 6px 12px; font-size: 12px;">বের হতে চাই ➔</button>
           </div>
         `;
       } else if (exitStep === 2) {
         titleEl.innerText = "ধাপ ২: কাজের স্থিতি";
-        descEl.innerText = `আপনি "${currentFocusTask.title}" কাজটি করছিলেন। এটি কি শেষ হয়েছে?`;
+        descEl.innerText = `"${currentFocusTask.title}" কাজটি কি সম্পন্ন হয়েছে?`;
         actionEl.innerHTML = `
-          <div style="display: flex; flex-direction: column; gap: 10px;">
-            <button onclick="exitFocusWithDone()" style="background: #22c55e;">হ্যাঁ, কাজ সম্পন্ন হয়েছে (Done)</button>
-            <button class="btn-danger" onclick="nextExitStep(3)">না, এখনো বাকি আছে ➔</button>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button onclick="exitFocusWithDone()" style="background: #22c55e; padding: 6px 12px; font-size: 12px;">হ্যাঁ, সম্পন্ন হয়েছে (Done)</button>
+            <button class="btn-del" onclick="nextExitStep(3)" style="padding: 6px 12px; font-size: 12px;">না, বাকি আছে ➔</button>
           </div>
         `;
       } else if (exitStep === 3) {
         titleEl.innerText = "ধাপ ৩: গুরুত্ব বিবেচনা";
-        descEl.innerText = "যে কারণে এখন বের হতে চাচ্ছেন, সেটি কি আপনার এই জরুরি কাজের চেয়েও বেশি গুরুত্বপূর্ণ?";
+        descEl.innerText = "যে কারণে বের হচ্ছেন, সেটি কি এই কাজের চেয়েও বেশি গুরুত্বপূর্ণ?";
         actionEl.innerHTML = `
-          <div style="display: flex; gap: 10px; justify-content: center;">
-            <button onclick="closeExitModal()" style="background: #22c55e;">কাজে ফিরে যাই</button>
-            <button class="btn-danger" onclick="nextExitStep(4)">হ্যাঁ, অন্যটি বেশি জরুরি ➔</button>
+          <div style="display: flex; gap: 8px; justify-content: center;">
+            <button onclick="closeExitModal()" style="background: #22c55e; padding: 6px 12px; font-size: 12px;">কাজে ফিরে যাই</button>
+            <button class="btn-del" onclick="nextExitStep(4)" style="padding: 6px 12px; font-size: 12px;">হ্যাঁ, বেশি জরুরি ➔</button>
           </div>
         `;
       } else if (exitStep === 4) {
-        titleEl.innerText = "ধাপ ৪: ১০ সেকেন্ড শ্বাস নিন";
-        descEl.innerText = "তাড়াহুড়া করবেন না। চোখ বন্ধ করে একটি দীর্ঘ নিঃশ্বাস নিন। বাটনটি সক্রিয় হওয়া পর্যন্ত অপেক্ষা করুন...";
+        titleEl.innerText = "ধাপ ৪: গভীর শ্বাস নিন";
+        descEl.innerText = "চোখ বন্ধ করে দীর্ঘ নিঃশ্বাস নিন। বাটন সক্রিয় হওয়া পর্যন্ত অপেক্ষা করুন...";
         actionEl.innerHTML = `
-          <button id="cooldownBtn" disabled style="opacity: 0.5; cursor: not-allowed; width: 100%;">অপেক্ষা করুন (১০ সেকেন্ড)</button>
+          <button id="cooldownBtn" disabled style="opacity: 0.5; cursor: not-allowed; width: 100%; padding: 8px;">অপেক্ষা করুন (১০ সেকেন্ড)</button>
         `;
         let sec = 10;
         exitCooldownInterval = setInterval(() => {
@@ -725,7 +721,7 @@
               btn.disabled = false;
               btn.style.opacity = '1';
               btn.style.cursor = 'pointer';
-              btn.className = 'btn-danger';
+              btn.className = 'btn-del';
               btn.innerText = "পরবর্তী ধাপে যান ➔";
               btn.onclick = () => nextExitStep(5);
             }
@@ -733,12 +729,12 @@
         }, 1000);
       } else if (exitStep === 5) {
         titleEl.innerText = "ধাপ ৫: টাইপিং চ্যালেঞ্জ";
-        descEl.innerHTML = `নিজের মনকে প্রস্তুত করতে হুবহু নিচের বাক্যটি বক্সে লিখুন:<br><b style="color: #38bdf8;">আমি সচেতনভাবে ফোকাস ভাঙছি</b>`;
+        descEl.innerHTML = `হুবহু লিখুন:<br><b style="color: #38bdf8;">আমি সচেতনভাবে ফোকাস ভাঙছি</b>`;
         actionEl.innerHTML = `
-          <input type="text" id="exitInputConfirm" placeholder="এখানে লিখুন..." style="width: 100%; margin-bottom: 12px; text-align: center;" />
-          <div style="display: flex; gap: 10px; justify-content: center;">
-            <button onclick="closeExitModal()" style="background: #22c55e;">কাজে ফিরে যাই</button>
-            <button class="btn-danger" onclick="verifyExitText()">লক খুলুন</button>
+          <input type="text" id="exitInputConfirm" placeholder="এখানে লিখুন..." style="width: 100%; margin-bottom: 10px; text-align: center;" />
+          <div style="display: flex; gap: 8px; justify-content: center;">
+            <button onclick="closeExitModal()" style="background: #22c55e; padding: 6px 12px; font-size: 12px;">কাজে ফিরে যাই</button>
+            <button class="btn-del" onclick="verifyExitText()" style="padding: 6px 12px; font-size: 12px;">লক খুলুন</button>
           </div>
         `;
       }
@@ -754,7 +750,7 @@
       if (val === "আমি সচেতনভাবে ফোকাস ভাঙছি") {
         exitFocusDirect(false);
       } else {
-        alert("বানান সঠিক হয়নি! বাক্যটি হুবহু লিখে সাবমিট করুন অথবা কাজে ফিরে যান।");
+        alert("বানান সঠিক হয়নি! বাক্যটি হুবহু লিখে সাবমিট করুন।");
       }
     }
 
@@ -784,7 +780,7 @@
             <span>${item.name}</span>
             <b>${item.time}</b>
           </div>
-          <input type="checkbox" class="namaz-check" title="নামাজ সম্পন্ন হয়েছে" ${item.done ? 'checked' : ''} onchange="toggleNamaz('${k}')" />
+          <input type="checkbox" class="namaz-check" title="নামাজ সম্পন্ন" ${item.done ? 'checked' : ''} onchange="toggleNamaz('${k}')" />
         `;
         container.appendChild(div);
       });
@@ -812,10 +808,10 @@
       scoreBar.style.width = `${finalScore}%`;
 
       let verdict = '';
-      if (finalScore >= 85) verdict = `🌟 অসাধারণ ও বরকতময় দিন! (সফলতা: ${finalScore}%)`;
-      else if (finalScore >= 60) verdict = `👍 ভালো অগ্রগতি, বাকি কাজগুলো শেষ করুন (সফলতা: ${finalScore}%)`;
-      else if (finalScore >= 35) verdict = `⚠️ মাঝারি অগ্রগতি, আরো ফোকাস দেওয়া প্রয়োজন (সফলতা: ${finalScore}%)`;
-      else verdict = `💪 সফলতা: ${finalScore}% — নামাজ ও জরুরি কাজগুলোতে দ্রুত মনোযোগ দিন!`;
+      if (finalScore >= 85) verdict = `🌟 অসাধারণ ও বরকতময় দিন! (${finalScore}%)`;
+      else if (finalScore >= 60) verdict = `👍 ভালো অগ্রগতি, বাকিগুলো শেষ করুন (${finalScore}%)`;
+      else if (finalScore >= 35) verdict = `⚠️ মাঝারি অগ্রগতি, ফোকাস বাড়ান (${finalScore}%)`;
+      else verdict = `💪 সফলতা: ${finalScore}% — কাজ ও নামাজে মনোযোগ দিন!`;
 
       scoreText.innerText = verdict;
     }
@@ -841,20 +837,20 @@
         li.className = 'task-item';
         li.innerHTML = `
           <div class="task-left">
-            <input type="checkbox" onchange="toggleTodayTask(${t.id})" />
-            <div>
-              <strong>${t.title}</strong>
-              <span class="task-meta">
+            <input type="checkbox" onchange="toggleTodayTask(${t.id})" style="margin-top: 3px;" />
+            <div class="task-content">
+              <div class="task-title">${t.title}</div>
+              <div class="task-meta">
                 <span class="badge badge-${t.category}">${t.category}</span>
-                ${t.time ? ` ⏰ ${t.time}` : ''} 
-                ${t.duration ? ` (${t.duration} মিনিট)` : ''}
-              </span>
+                ${t.time ? `<span>⏰ ${t.time}</span>` : ''} 
+                ${t.duration ? `<span>(${t.duration}মিনিট)</span>` : ''}
+              </div>
             </div>
           </div>
-          <div style="display: flex; gap: 6px; align-items: center;">
-            <button class="btn-focus" onclick="enterFocusMode(${t.id})" title="ব্ল্যাক ফোকাস মোড">🎯 ফোকাস</button>
-            ${t.time ? `<button class="btn-secondary" title="Calendar" onclick="addToGoogleCalendar('${t.title}', '${t.time}', '${t.duration}')">📅</button>` : ''}
-            <button class="btn-danger" onclick="deleteTask(${t.id}, true)">✕</button>
+          <div class="task-actions">
+            <button class="btn-focus" onclick="enterFocusMode(${t.id})">🎯 ফোকাস</button>
+            ${t.time ? `<button class="btn-icon btn-up" title="Calendar" onclick="addToGoogleCalendar('${t.title}', '${t.time}', '${t.duration}')">📅</button>` : ''}
+            <button class="btn-icon btn-del" onclick="deleteTask(${t.id}, true)">✕</button>
           </div>
         `;
         activeListEl.appendChild(li);
@@ -867,13 +863,13 @@
           li.className = 'task-item done-item';
           li.innerHTML = `
             <div class="task-left">
-              <input type="checkbox" checked onchange="toggleTodayTask(${t.id})" />
-              <div class="completed-text">
-                <strong>${t.title}</strong>
-                <span class="task-meta">সম্পন্ন হয়েছে</span>
+              <input type="checkbox" checked onchange="toggleTodayTask(${t.id})" style="margin-top: 3px;" />
+              <div class="task-content completed-text">
+                <div class="task-title">${t.title}</div>
+                <div class="task-meta">সম্পন্ন হয়েছে</div>
               </div>
             </div>
-            <button class="btn-danger" title="মুছুন" onclick="deleteTask(${t.id}, true)">✕</button>
+            <button class="btn-icon btn-del" onclick="deleteTask(${t.id}, true)">✕</button>
           `;
           completedListEl.appendChild(li);
         });
@@ -881,7 +877,7 @@
         completedSection.style.display = "none";
       }
 
-      // মাস্টার লিস্ট রেন্ডার (এডিট বাটনসহ)
+      // মাস্টার লিস্ট রেন্ডার (কম্প্যাক্ট আইকন বাটন এবং সর্বোচ্চ টেক্সট স্পেস)
       const masterListEl = document.getElementById('masterList');
       masterListEl.innerHTML = '';
       masterTasks.forEach(t => {
@@ -890,18 +886,18 @@
         li.className = 'task-item';
         li.innerHTML = `
           <div class="task-left">
-            <div>
-              <strong>${t.title}</strong>
-              <span class="task-meta">
+            <div class="task-content">
+              <div class="task-title">${t.title}</div>
+              <div class="task-meta">
                 <span class="badge badge-${t.category}">${t.category}</span>
-                ${t.dueDate ? ` 📅 নির্ধারিত তারিখ: <b style="${isTodayDue ? 'color: var(--warning);' : ''}">${t.dueDate}${isTodayDue ? ' (আজকে!)' : ''}</b>` : ''}
-              </span>
+                ${t.dueDate ? `<span>📅 <b style="${isTodayDue ? 'color: var(--warning);' : ''}">${t.dueDate}${isTodayDue ? ' (আজ!)' : ''}</b></span>` : ''}
+              </div>
             </div>
           </div>
-          <div style="display: flex; gap: 6px; align-items: center;">
-            <button class="btn-edit" onclick="openEditModal(${t.id})" title="তথ্য সংশোধন">✏️ এডিট</button>
-            <button class="btn-secondary" onclick="openMoveModal(${t.id})">শীর্ষ তালিকায় নিন ➔</button>
-            <button class="btn-danger" onclick="deleteTask(${t.id}, false)">✕</button>
+          <div class="task-actions">
+            <button class="btn-icon btn-up" onclick="openMoveModal(${t.id})" title="চলমান শীর্ষ ৩-এ নিন">⬆️</button>
+            <button class="btn-icon btn-edit" onclick="openEditModal(${t.id})" title="সংশোধন">✏️</button>
+            <button class="btn-icon btn-del" onclick="deleteTask(${t.id}, false)" title="মুছুন">✕</button>
           </div>
         `;
         masterListEl.appendChild(li);
