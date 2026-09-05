@@ -4,73 +4,113 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SmartDo - Focus, Analytics & Day Judgment</title>
+  <meta name="theme-color" content="#090d16" />
   
   <style>
     :root {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --accent: #38bdf8;
-      --accent-hover: #0284c7;
+      --bg: #090d16;
       --text: #f8fafc;
       --muted: #94a3b8;
       --border: #334155;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
       --danger: #ef4444;
       --success: #22c55e;
       --warning: #f59e0b;
-      --purple: #8b5cf6;
       --wa-green: #25D366;
       --fb-blue: #1877F2;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background: var(--bg); color: var(--text); padding: 12px; display: flex; justify-content: center; }
-    .container { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 16px; }
+    .container { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; }
     
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); }
-    h2, h3 { color: var(--accent); margin-bottom: 10px; font-weight: 600; font-size: 17px; }
+    .card { border-radius: 12px; padding: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); border: 1px solid var(--border); }
+    h2, h3 { margin-bottom: 10px; font-weight: 600; font-size: 17px; }
 
-    /* দৈনিক অনুপ্রেরণা */
-    .quote-card { border-left: 4px solid var(--accent); background: linear-gradient(90deg, #1e293b 0%, #162032 100%); }
+    /* বক্স থিমিং */
+    .card-quote {
+      background: linear-gradient(135deg, #062b21 0%, #0d1f1b 100%);
+      border: 1px solid rgba(34, 197, 94, 0.35);
+      border-left: 5px solid #22c55e;
+    }
+    .card-quote h3, .card-quote .quote-tag { color: #4ade80; }
+
+    .card-analytics {
+      background: linear-gradient(135deg, #161936 0%, #0e1124 100%);
+      border: 1px solid rgba(129, 140, 248, 0.3);
+    }
+    .card-analytics h2 { color: #a5b4fc; }
+
+    .card-namaz {
+      background: linear-gradient(135deg, #0b222c 0%, #09171f 100%);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+    .card-namaz h3 { color: #38bdf8; }
+
+    .card-rule-of-3 {
+      background: linear-gradient(135deg, #0e2b45 0%, #081a2b 100%);
+      border: 2px solid #38bdf8;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
+    }
+    .card-rule-of-3 h2 { color: #7dd3fc; }
+
+    .card-master {
+      background: linear-gradient(135deg, #172033 0%, #0f172a 100%);
+      border: 1px solid #334155;
+    }
+    .card-master h2 { color: #cbd5e1; }
+
+    .card-settings {
+      background: #0d1322;
+      border: 1px solid #1e293b;
+    }
+
+    /* কোট টেক্সট */
     .quote-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-    .quote-tag { font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--accent); letter-spacing: 1px; }
-    .quote-text { font-size: 13.5px; font-style: italic; line-height: 1.5; color: #e2e8f0; }
-    .quote-author { font-size: 11px; color: var(--muted); font-weight: 600; text-align: right; margin-top: 4px; }
+    .quote-tag { font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+    .quote-text { font-size: 13.5px; font-style: italic; line-height: 1.5; color: #f0fdf4; }
+    .quote-author { font-size: 11px; color: #86efac; font-weight: 600; text-align: right; margin-top: 4px; }
 
-    /* ডে জাজমেন্ট ও অ্যানালিটিক্স */
+    /* ডে জাজমেন্ট উপাদান */
     .judgment-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; margin-top: 8px; }
-    .judgment-card { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 8px; text-align: center; }
-    .judgment-value { font-size: 18px; font-weight: bold; color: var(--accent); margin-top: 2px; }
+    .judgment-card { background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(148, 163, 184, 0.15); border-radius: 8px; padding: 8px; text-align: center; }
+    .judgment-value { font-size: 18px; font-weight: bold; color: #a5b4fc; margin-top: 2px; }
     
-    .judgment-bar-bg { background: #0f172a; border-radius: 10px; height: 10px; width: 100%; overflow: hidden; margin-top: 10px; border: 1px solid var(--border); }
-    .judgment-bar-fill { background: linear-gradient(90deg, #38bdf8, #22c55e); height: 100%; width: 0%; transition: width 0.4s ease; }
+    .judgment-bar-bg { background: rgba(15, 23, 42, 0.8); border-radius: 10px; height: 10px; width: 100%; overflow: hidden; margin-top: 10px; border: 1px solid var(--border); }
+    .judgment-bar-fill { background: linear-gradient(90deg, #38bdf8, #818cf8, #22c55e); height: 100%; width: 0%; transition: width 0.5s ease; }
     
-    .coaching-box { background: rgba(56, 189, 248, 0.08); border-left: 3px solid var(--accent); border-radius: 6px; padding: 10px 12px; font-size: 12.5px; color: #e2e8f0; margin-top: 10px; line-height: 1.4; }
+    .coaching-box { background: rgba(15, 23, 42, 0.6); border-left: 3px solid #818cf8; border-radius: 6px; padding: 10px 12px; font-size: 12.5px; color: #e2e8f0; margin-top: 10px; line-height: 1.4; }
     
-    /* গত ৭ দিনের চার্ট বার */
-    .chart-container { display: flex; align-items: flex-end; justify-content: space-between; height: 110px; gap: 6px; margin-top: 14px; padding-top: 10px; border-bottom: 1px solid var(--border); }
+    .report-card { background: rgba(30, 41, 59, 0.5); border: 1px dashed rgba(129, 140, 248, 0.4); border-radius: 8px; padding: 10px 12px; margin-top: 12px; font-size: 12px; color: #cbd5e1; }
+
+    /* গত ৭ দিনের চার্ট */
+    .chart-container { display: flex; align-items: flex-end; justify-content: space-between; height: 110px; gap: 6px; margin-top: 14px; padding-top: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
     .chart-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end; }
-    .chart-bar { width: 100%; max-width: 24px; background: #334155; border-radius: 4px 4px 0 0; transition: height 0.5s ease; position: relative; }
-    .chart-bar.today-bar { background: var(--accent); }
+    .chart-bar { width: 100%; max-width: 24px; background: #334155; border-radius: 4px 4px 0 0; transition: height 0.5s ease; min-height: 4px; }
+    .chart-bar.today-bar { background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%); }
     .chart-label { font-size: 10px; color: var(--muted); }
     .chart-val { font-size: 9px; color: #cbd5e1; font-weight: bold; margin-bottom: 2px; }
 
     /* নামাজের বার */
     .namaz-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-top: 8px; }
-    .namaz-card { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; display: flex; align-items: center; justify-content: space-between; }
+    .namaz-card { background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 8px; padding: 8px 10px; display: flex; align-items: center; justify-content: space-between; }
     .namaz-info { font-size: 12px; }
     .namaz-info b { display: block; font-size: 14px; color: var(--text); }
     .namaz-check { width: 18px; height: 18px; cursor: pointer; accent-color: var(--success); }
 
+    /* ইনপুট ও বাটন */
     .input-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
     .input-row { display: flex; gap: 8px; flex-wrap: wrap; }
-    input, select, button { border-radius: 6px; border: 1px solid var(--border); background: #0f172a; color: var(--text); padding: 8px 12px; font-size: 13px; outline: none; }
+    input, select, button { border-radius: 6px; border: 1px solid var(--border); background: #0b1120; color: var(--text); padding: 8px 12px; font-size: 13px; outline: none; }
     input:focus, select:focus { border-color: var(--accent); }
     input[type="text"], input[type="date"] { flex: 1; min-width: 140px; }
     
-    button { background: var(--accent); color: #0f172a; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    button { background: var(--accent); color: #090d16; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
     button:hover { background: var(--accent-hover); }
     .btn-secondary { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+    .btn-secondary:hover { background: rgba(56, 189, 248, 0.1); }
     
-    .btn-icon { width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 14px; border: 1px solid transparent; background: #1e293b; }
+    .btn-icon { width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 14px; border: 1px solid transparent; background: #0b1120; }
     .btn-up { color: var(--accent); border-color: rgba(56, 189, 248, 0.4); }
     .btn-up:hover { background: rgba(56, 189, 248, 0.15); }
     .btn-edit { color: var(--warning); border-color: rgba(245, 158, 11, 0.4); }
@@ -81,7 +121,7 @@
 
     /* টাস্ক আইটেম */
     .task-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-    .task-item { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .task-item { background: rgba(11, 17, 32, 0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
     .task-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
     .task-content { flex: 1; min-width: 0; }
     .task-title { font-size: 14px; font-weight: 500; color: #f1f5f9; line-height: 1.4; word-break: break-word; }
@@ -94,16 +134,19 @@
     .badge-admin { background: #f59e0b; color: white; }
 
     .rule-of-3-header { display: flex; justify-content: space-between; align-items: center; }
-    .count-tag { font-size: 12px; color: var(--muted); font-weight: bold; }
+    .count-tag { font-size: 12px; color: #7dd3fc; font-weight: bold; }
 
     /* মোডাল উইন্ডো */
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.75); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
-    .modal-box { background: var(--card); border: 1px solid var(--accent); border-radius: 12px; max-width: 440px; width: 100%; padding: 18px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); max-height: 85vh; overflow-y: auto; }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.8); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
+    .modal-box { background: #111827; border: 1px solid var(--accent); border-radius: 12px; max-width: 460px; width: 100%; padding: 18px; box-shadow: 0 10px 25px rgba(0,0,0,0.6); max-height: 85vh; overflow-y: auto; }
     .modal-box h3 { margin-bottom: 6px; font-size: 16px; }
     .modal-box p { font-size: 12.5px; color: var(--muted); margin-bottom: 12px; }
 
+    /* সেটিংস ও ব্যাকআপ কন্ট্রোল */
+    .backup-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+
     /* ডেভেলপার সেকশন */
-    .developer-card { border-color: rgba(56, 189, 248, 0.3); background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); text-align: center; }
+    .developer-card { background: linear-gradient(180deg, #111827 0%, #0b0f19 100%); border: 1px solid rgba(56, 189, 248, 0.25); text-align: center; }
     .developer-header { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 4px; font-weight: bold; }
     .developer-name { font-size: 17px; font-weight: 700; color: var(--text); }
     .developer-title { font-size: 12px; color: var(--muted); margin-top: 2px; }
@@ -129,22 +172,8 @@
       text-align: center;
       user-select: none;
     }
-
-    .focus-pulse-text {
-      font-size: 15px;
-      letter-spacing: 2px;
-      font-weight: 600;
-      color: #38bdf8;
-      animation: pulseGlow 3s infinite ease-in-out;
-      margin-bottom: 12px;
-    }
-
-    @keyframes pulseGlow {
-      0% { opacity: 0.2; transform: scale(0.98); }
-      50% { opacity: 1; transform: scale(1.02); }
-      100% { opacity: 0.2; transform: scale(0.98); }
-    }
-
+    .focus-pulse-text { font-size: 15px; letter-spacing: 2px; font-weight: 600; color: #38bdf8; animation: pulseGlow 3s infinite ease-in-out; margin-bottom: 12px; }
+    @keyframes pulseGlow { 0% { opacity: 0.2; transform: scale(0.98); } 50% { opacity: 1; transform: scale(1.02); } 100% { opacity: 0.2; transform: scale(0.98); } }
     .focus-task-title { font-size: 22px; font-weight: 700; color: #f8fafc; max-width: 600px; margin: 10px auto; }
     .focus-timer-text { font-size: 48px; font-family: monospace; font-weight: bold; color: #ffffff; margin: 16px 0; }
     .exit-modal-box { background: #111827; border: 1px solid #ef4444; border-radius: 12px; padding: 20px; max-width: 400px; width: 90%; text-align: center; }
@@ -154,21 +183,21 @@
 
   <div class="container">
 
-    <!-- দৈনিক অনুপ্রেরণা কার্ড -->
-    <div class="card quote-card">
+    <!-- ১. দৈনিক অনুপ্রেরণা কার্ড -->
+    <div class="card card-quote">
       <div class="quote-header">
         <span class="quote-tag" id="quoteCategory">✨ দৈনিক অনুপ্রেরণা</span>
-        <button class="btn-secondary" onclick="loadRandomQuote()" style="font-size: 10px; padding: 2px 6px;">🔄 নতুন বাণী</button>
+        <button class="btn-secondary" onclick="loadRandomQuote()" style="font-size: 10px; padding: 2px 6px; border-color: #4ade80; color: #4ade80;">🔄 নতুন বাণী</button>
       </div>
-      <div class="quote-text" id="quoteText">"ধৈর্য ধারণ করো, নিশ্চয়ই আল্লাহর সাহায্য অত্যন্ত নিকটে।"</div>
+      <div class="quote-text" id="quoteText">"ধৈর্য ধারণ করো, নিশ্চয়ই আল্লাহর সাহায্য অত্যন্ত নিকটে।"</div>
       <div class="quote-author" id="quoteAuthor">— আল-কোরআন</div>
     </div>
     
-    <!-- ডে জাজমেন্ট ও ৭ দিনের অ্যানালিটিক্স -->
-    <div class="card">
+    <!-- ২. ডে জাজমেন্ট ও ৭ দিনের অ্যানালিটিক্স -->
+    <div class="card card-analytics">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <h2>📊 ডে জাজমেন্ট ও স্মার্ট অ্যানালিটিক্স</h2>
-        <button class="btn-secondary" onclick="manualNewDayReset()" style="font-size: 10px; padding: 3px 6px;">🔄 নতুন দিন</button>
+        <button class="btn-secondary" onclick="manualNewDayReset()" style="font-size: 10px; padding: 3px 6px; border-color: #818cf8; color: #a5b4fc;">🔄 নতুন দিন</button>
       </div>
       
       <div class="judgment-grid">
@@ -181,43 +210,47 @@
           <div class="judgment-value" id="statCompleted" style="color: var(--success);">০</div>
         </div>
         <div class="judgment-card">
-          <span style="font-size: 11px; color: var(--muted);">সময়নিষ্ঠ কাজ</span>
+          <span style="font-size: 11px; color: var(--muted);">সময়নিষ্ঠ কাজ</span>
           <div class="judgment-value" id="statOnTime" style="color: var(--warning);">০</div>
         </div>
         <div class="judgment-card">
           <span style="font-size: 11px; color: var(--muted);">নামাজ</span>
-          <div class="judgment-value" id="statNamaz" style="color: var(--accent);">০/৫</div>
+          <div class="judgment-value" id="statNamaz" style="color: #38bdf8;">০/৫</div>
         </div>
       </div>
 
       <div class="judgment-bar-bg">
         <div class="judgment-bar-fill" id="scoreBar"></div>
       </div>
-      <div style="font-size: 13px; font-weight: 600; margin-top: 8px; text-align: center;" id="scoreText">সফলতা: ০%</div>
+      <div style="font-size: 13px; font-weight: 600; margin-top: 8px; text-align: center; color: #e2e8f0;" id="scoreText">সফলতা: ০%</div>
 
-      <!-- স্মার্ট পরামর্শ ও মূল্যায়ন কোচিং -->
       <div class="coaching-box" id="coachingAdvice">
-        💡 <b>পরামর্শ:</b> আজকের দিনটি শুরু করুন। নির্দিষ্ট সময়ে ৩টি কাজের প্রথমটি শেষ করার মাধ্যমে সময়নিষ্ঠতার পয়েন্ট অর্জন করুন।
+        💡 <b>পরামর্শ:</b> আজকের দিনটি শুরু করুন। নির্দিষ্ট সময়ে শীর্ষ ৩টি কাজের প্রথমটি শেষ করার মাধ্যমে সময়নিষ্ঠতার পয়েন্ট অর্জন করুন।
       </div>
 
-      <!-- গত ৭ দিনের অ্যানালিটিক্স গ্রাফ -->
+      <!-- ৭ দিনের ট্রেন্ড চার্ট -->
       <div style="margin-top: 14px;">
-        <div style="font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px;">📈 গত ৭ দিনের সফলতার ট্রেন্ড:</div>
+        <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">📈 গত ৭ দিনের সফলতার ট্রেন্ড:</div>
         <div class="chart-container" id="sevenDayChart"></div>
+      </div>
+
+      <!-- সাপ্তাহিক পারফরম্যান্স কার্ড -->
+      <div class="report-card" id="weeklyReportCard">
+        📊 <b>সাপ্তাহিক মূল্যায়ন:</b> লোড হচ্ছে...
       </div>
     </div>
 
-    <!-- নামাজের লাইভ সময় ও চেকলিস্ট -->
-    <div class="card">
+    <!-- ৩. নামাজের লাইভ সময় ও চেকলিস্ট -->
+    <div class="card card-namaz">
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h3>🕌 নামাজের সময় ও চেকলিস্ট</h3>
-        <button class="btn-secondary" onclick="enableAudioAndNotification()" style="font-size: 10px; padding: 3px 6px;">🔊 ভয়েস অন</button>
+        <h3>🕌 নামাজের সময় ও চেকলিস্ট</h3>
+        <button class="btn-secondary" onclick="enableAudioAndNotification()" style="font-size: 10px; padding: 3px 6px;">🔊 ভয়েস অন</button>
       </div>
       <div class="namaz-grid" id="namazContainer"></div>
     </div>
 
-    <!-- The Rule of 3 (আজকের কাজ) -->
-    <div class="card">
+    <!-- ৪. The Rule of 3 -->
+    <div class="card card-rule-of-3">
       <div class="rule-of-3-header">
         <h2>🎯 The Rule of 3 (চলমান শীর্ষ ৩ কাজ)</h2>
         <div style="display: flex; align-items: center; gap: 8px;">
@@ -225,7 +258,7 @@
           <button class="btn-secondary" onclick="openCompletedModal()" style="font-size: 11px; padding: 3px 7px;">✓ সম্পন্ন কাজ (<span id="completedCountBadge">০</span>)</button>
         </div>
       </div>
-      <p style="color: var(--muted); font-size: 12px; margin-bottom: 10px;">
+      <p style="color: #94a3b8; font-size: 12px; margin-bottom: 10px;">
         একটানা সর্বোচ্চ ৩টি চলমান কাজ থাকবে। গভীর মনোযোগের জন্য কাজের পাশের <b>"ফোকাস"</b> বাটন চাপুন।
       </p>
 
@@ -239,7 +272,7 @@
           </select>
         </div>
         <div class="input-row">
-          <input type="time" id="todayTime" title="শুরুর সময়" />
+          <input type="time" id="todayTime" title="শুরুর সময়" />
           <input type="number" id="todayDuration" placeholder="মিনিট" style="width: 100px;" />
           <button onclick="addTodayTaskDirect()">+ যুক্ত করুন</button>
         </div>
@@ -248,11 +281,11 @@
       <ul class="task-list" id="todayActiveList"></ul>
     </div>
 
-    <!-- মাস্টার লিস্ট -->
-    <div class="card">
+    <!-- ৫. মাস্টার লিস্ট -->
+    <div class="card card-master">
       <h2>📋 মাস্টার লিস্ট (সব কাজের ভাণ্ডার ও ডেডলাইন)</h2>
       <p style="color: var(--muted); font-size: 12px; margin-bottom: 10px;">
-        ভবিষ্যতের কাজগুলো ডেডলাইনসহ রাখুন। যেকোনো সময় ✏️ দিয়ে সংশোধন করতে পারবেন।
+        ভবিষ্যতের কাজগুলো ডেডলাইনসহ রাখুন। যেকোনো সময় ✏️ দিয়ে সংশোধন করতে পারবেন।
       </p>
 
       <div class="input-group">
@@ -266,11 +299,22 @@
         </div>
         <div class="input-row">
           <input type="date" id="masterDueDate" title="ডেডলাইন" />
-          <button onclick="addMasterTask()">তালিকায় রাখুন</button>
+          <button onclick="addMasterTask()">তালিকায় রাখুন</button>
         </div>
       </div>
 
       <ul class="task-list" id="masterList"></ul>
+    </div>
+
+    <!-- ৬. ডেটা ব্যাকআপ ও সেটিংস কার্ড -->
+    <div class="card card-settings">
+      <h3>💾 ডেটা ব্যাকআপ ও সংরক্ষণ</h3>
+      <p style="font-size: 12px; color: var(--muted);">ব্রাউজারের হিস্ট্রি বা ক্যাশ ক্লিয়ার হলেও আপনার ডাটা সুরক্ষিত রাখতে ব্যাকআপ ফাইল ডাউনলোড করে রাখুন।</p>
+      <div class="backup-actions">
+        <button class="btn-secondary" onclick="exportDataBackup()" style="font-size: 12px;">⬇️ ব্যাকআপ ডাউনলোড (JSON)</button>
+        <button class="btn-secondary" onclick="document.getElementById('importFile').click()" style="font-size: 12px;">⬆️ ডাটা রিস্টোর করুন</button>
+        <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importDataBackup(event)" />
+      </div>
     </div>
 
     <!-- ডেভেলপার ও যোগাযোগ কার্ড -->
@@ -290,17 +334,15 @@
 
   </div>
 
-  <!-- সম্পন্ন কাজের পপআপ মোডাল -->
+  <!-- সম্পন্ন কাজের আর্কাইভ মোডাল -->
   <div class="modal-overlay" id="completedModal">
     <div class="modal-box">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-        <h3 style="color: var(--success); margin: 0;">✓ আজকের সম্পন্ন হওয়া কাজসমূহ</h3>
+        <h3 style="color: var(--success); margin: 0;">✓ সম্পন্ন হওয়া কাজের আর্কাইভ</h3>
         <button class="btn-del" onclick="closeCompletedModal()" style="padding: 2px 8px;">✕</button>
       </div>
-      <p>আজকের দিনে আপনি যে কাজগুলো শেষ করেছেন তার ইতিহাস:</p>
-      
+      <p>আপনার সম্পন্ন হওয়া কাজগুলো স্থায়ীভাবে সংরক্ষিত আছে:</p>
       <ul class="task-list" id="modalCompletedList"></ul>
-      
       <div style="display: flex; justify-content: flex-end; margin-top: 14px;">
         <button onclick="closeCompletedModal()" style="padding: 6px 14px; font-size: 12px;">বন্ধ করুন</button>
       </div>
@@ -337,18 +379,18 @@
     </div>
   </div>
 
-  <!-- সময় নির্ধারণের পপআপ -->
+  <!-- সময় নির্ধারণের পপআপ -->
   <div class="modal-overlay" id="timeModal">
     <div class="modal-box">
-      <h3 id="modalTaskTitle">কাজের সময় নির্ধারণ</h3>
-      <p>আজকের দিনে এই কাজটি কোন সময় করবেন এবং কতক্ষণ সময় নেবেন:</p>
+      <h3 id="modalTaskTitle">কাজের সময় নির্ধারণ</h3>
+      <p>আজকের দিনে এই কাজটি কোন সময় করবেন এবং কতক্ষণ সময় নেবেন:</p>
       <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px;">
         <div>
-          <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 3px;">শুরুর সময়:</label>
+          <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 3px;">শুরুর সময়:</label>
           <input type="time" id="modalTime" style="width: 100%;" />
         </div>
         <div>
-          <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 3px;">স্থায়িত্ব (মিনিট):</label>
+          <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 3px;">স্থায়িত্ব (মিনিট):</label>
           <input type="number" id="modalDuration" placeholder="৩০ বা ৬০" style="width: 100%;" />
         </div>
       </div>
@@ -369,7 +411,8 @@
 
     <div>
       <div class="focus-timer-text" id="focusTimerDisplay">25:00</div>
-      <p style="font-size: 12px; color: #64748b;">পূর্ণ মনোনিবেশ বজায় রাখুন।</p>
+      <p style="font-size: 12px; color: #64748b;">পূর্ণ মনোনিবেশ বজায় রাখুন।</p>
+      <button id="noiseToggleBtn" class="btn-secondary" onclick="toggleWhiteNoise()" style="font-size: 11px; padding: 4px 10px; margin-top: 10px; border-radius: 20px;">🌧️ বৃষ্টির মৃদু শব্দ (অন/অফ)</button>
     </div>
 
     <div>
@@ -390,14 +433,14 @@
 
   <script>
     const quotes = [
-      { cat: "কোরআনের বাণী", text: "নিশ্চয়ই কষ্টের সাথেই রয়েছে স্বস্তি।", author: "সূরা আল-ইনশিরাহ: ৬" },
-      { cat: "হাদিস শরিফ", text: "দুটি নিয়ামতের ব্যাপারে অধিকাংশ মানুষ ধোঁকার মধ্যে থাকে: স্বাস্থ্য ও অবসর সময়।", author: "সহিহ বুখারি: ৬৪১২" },
-      { cat: "কোরআনের বাণী", text: "মানুষ যা চেষ্টা করে, তা-ই পায়।", author: "সূরা আন-নাজম: ৩৯" },
-      { cat: "হাদিস শরিফ", text: "যে ব্যক্তি সময়ের হেফাজত করে না, সে কখনো তার লক্ষ্য অর্জন করতে পারে না।", author: "বায়হাকি" },
-      { cat: "সময় ও নিয়মানুবর্তিতা", text: "হারিয়ে যাওয়া সম্পদ আবার ফিরে পাওয়া সম্ভব, কিন্তু সময়ের অপচয় চিরতরে হারিয়ে যায়।", author: "ইমাম আল-গাজ্জালী (রহ.)" },
-      { cat: "সফলতার নীতি", text: "সফলতা হলো ছোট ছোট প্রচেষ্টার সমষ্টি, যা প্রতিদিন পুনরাবৃত্তি করা হয়।", author: "রবার্ট কলিয়ার" },
-      { cat: "ঐতিহাসিক বাণী", text: "তুমি যদি সময়ের মূল্য না দাও, তবে সময়ও কখনো তোমার মূল্য দেবে না।", author: "উইলিয়াম শেক্সপিয়র" },
-      { cat: "কর্মস্পৃহা", text: "আজকের কাজ কালকের জন্য ফেলে রাখা সবচেয়ে বড় অলসতা।", author: "হযরত উমর (রা.)" },
+      { cat: "কোরআনের বাণী", text: "নিশ্চয়ই কষ্টের সাথেই রয়েছে স্বস্তি।", author: "সূরা আল-ইনশিরাহ: ৬" },
+      { cat: "হাদিস শরিফ", text: "দুটি নিয়ামতের ব্যাপারে অধিকাংশ মানুষ ধোঁকার মধ্যে থাকে: স্বাস্থ্য ও অবসর সময়।", author: "সহিহ বুখারি: ৬৪১২" },
+      { cat: "কোরআনের বাণী", text: "মানুষ যা চেষ্টা করে, তা-ই পায়।", author: "সূরা আন-নাজম: ৩৯" },
+      { cat: "হাদিস শরিফ", text: "যে ব্যক্তি সময়ের হেফাজত করে না, সে কখনো তার লক্ষ্য অর্জন করতে পারে না।", author: "বায়হাকি" },
+      { cat: "সময় ও নিয়মানুবর্তিতা", text: "হারিয়ে যাওয়া সম্পদ আবার ফিরে পাওয়া সম্ভব, কিন্তু সময়ের অপচয় চিরতরে হারিয়ে যায়।", author: "ইমাম আল-গাজ্জালী (রহ.)" },
+      { cat: "সফলতার নীতি", text: "সফলতা হলো ছোট ছোট প্রচেষ্টার সমষ্টি, যা প্রতিদিন পুনরাবৃত্তি করা হয়।", author: "রবার্ট কলিয়ার" },
+      { cat: "ঐতিহাসিক বাণী", text: "তুমি যদি সময়ের মূল্য না দাও, তবে সময়ও কখনো তোমার মূল্য দেবে না।", author: "উইলিয়াম শেক্সপিয়র" },
+      { cat: "কর্মস্পৃহা", text: "আজকের কাজ কালকের জন্য ফেলে রাখা সবচেয়ে বড় অলসতা।", author: "হযরত উমর (রা.)" },
       { cat: "মনোযোগ ও লক্ষ্য", text: "প্রতিদিন মাত্র ৩টি মূল কাজে পূর্ণ মনোযোগ দিন, ফলাফল আপনাকে নিজেই বিস্মিত করবে।", author: "The Rule of 3 Concept" }
     ];
 
@@ -409,26 +452,46 @@
       document.getElementById('quoteAuthor').innerText = `— ${q.author}`;
     }
 
+    function getTodayString() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, '0');
+      const d = String(now.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    // স্টেট ও লোকালস্টোরেজ
     let todayTasks = JSON.parse(localStorage.getItem('todayTasks')) || [];
     let masterTasks = JSON.parse(localStorage.getItem('masterTasks')) || [];
-    let historyStats = JSON.parse(localStorage.getItem('historyStats')) || {}; // { 'YYYY-MM-DD': { score, completedCount, totalCount } }
-    
-    const todayDateKey = new Date().toISOString().slice(0, 10);
-    let activeDayDate = localStorage.getItem('activeDayDate') || todayDateKey;
+    let historyStats = JSON.parse(localStorage.getItem('historyStats')) || {}; 
+    let completedArchive = JSON.parse(localStorage.getItem('completedArchive')) || [];
+    let activeDayDate = localStorage.getItem('activeDayDate') || getTodayString();
 
+    // বগুড়া স্থানীয় সময়ের অফলাইন ফলব্যাক
     let namazData = JSON.parse(localStorage.getItem('namazData')) || {
-      Fajr: { name: 'ফজর', time: '04:30', done: false },
-      Dhuhr: { name: 'যোহর', time: '13:15', done: false },
-      Asr: { name: 'আসর', time: '16:45', done: false },
-      Maghrib: { name: 'মাগরিব', time: '18:20', done: false },
-      Isha: { name: 'ইশা', time: '20:00', done: false }
+      Fajr: { name: 'ফজর', time: '04:35', done: false },
+      Dhuhr: { name: 'যোহর', time: '12:10', done: false },
+      Asr: { name: 'আসর', time: '16:30', done: false },
+      Maghrib: { name: 'মাগরিব', time: '18:15', done: false },
+      Isha: { name: 'ইশা', time: '19:35', done: false }
     };
 
-    let remindedTasks = new Set();
+    // রিমাইন্ডার ট্র্যাকার (মেমোরি ও লোকালস্টোরেজ ক্যাশ)
+    let remindedTasks = new Set(JSON.parse(localStorage.getItem('remindedTasksCache') || '[]'));
     let selectedMasterId = null;
     let editingMasterId = null;
 
-    // বাংলা ভয়েস
+    function saveState() {
+      localStorage.setItem('todayTasks', JSON.stringify(todayTasks));
+      localStorage.setItem('masterTasks', JSON.stringify(masterTasks));
+      localStorage.setItem('namazData', JSON.stringify(namazData));
+      localStorage.setItem('historyStats', JSON.stringify(historyStats));
+      localStorage.setItem('completedArchive', JSON.stringify(completedArchive));
+      localStorage.setItem('activeDayDate', activeDayDate);
+      localStorage.setItem('remindedTasksCache', JSON.stringify(Array.from(remindedTasks).slice(-100)));
+      render();
+    }
+
     function speakBangla(text) {
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
@@ -441,8 +504,10 @@
     }
 
     function enableAudioAndNotification() {
-      speakBangla("স্মার্ট ডু অ্যাপের বাংলা ভয়েস রিমাইন্ডার সক্রিয় হয়েছে।");
-      if ("Notification" in window) Notification.requestPermission();
+      speakBangla("স্মার্ট ডু অ্যাপের বাংলা ভয়েস রিমাইন্ডার সক্রিয় হয়েছে।");
+      if ("Notification" in window && Notification.permission !== "granted") {
+        Notification.requestPermission();
+      }
     }
 
     async function fetchLivePrayerTimes() {
@@ -460,54 +525,52 @@
           renderNamaz();
         }
       } catch (e) {
-        console.log("Using cached prayer times.");
+        console.log("অফলাইন/ক্যাশড নামাজের সময় ব্যবহৃত হচ্ছে।");
       }
     }
 
-    function saveState() {
-      localStorage.setItem('todayTasks', JSON.stringify(todayTasks));
-      localStorage.setItem('masterTasks', JSON.stringify(masterTasks));
-      localStorage.setItem('namazData', JSON.stringify(namazData));
-      localStorage.setItem('historyStats', JSON.stringify(historyStats));
-      localStorage.setItem('activeDayDate', activeDayDate);
-      render();
-    }
+    // নিখুঁত অটো-রোলওভার (যেকোনো সময় তারিখ পাল্টালে কার্যকর)
+    function checkAndPerformRollover() {
+      const realToday = getTodayString();
+      if (activeDayDate !== realToday) {
+        const scoreData = calculateCurrentScore();
+        historyStats[activeDayDate] = {
+          score: scoreData.finalScore,
+          completedCount: scoreData.todayFinishedCount,
+          totalCount: scoreData.totalTasks,
+          namazCount: scoreData.completedNamaz
+        };
 
-    // রাত ১২:০০ টায় অটো-রোলওভার অথবা ম্যানুয়াল রিসেট
-    function performDailyReset(isAuto = false) {
-      // বর্তমান দিনের স্কোর হিস্ট্রিতে লক করা
-      const currentScore = calculateCurrentScore().finalScore;
-      const completedCount = todayTasks.filter(t => t.completed).length;
-      historyStats[activeDayDate] = {
-        score: currentScore,
-        completedCount: completedCount,
-        totalCount: todayTasks.length
-      };
+        // অসম্পূর্ণ কাজ রোলওভার হবে, সম্পন্নগুলো আর্কাইভে সংরক্ষিত থাকবে
+        todayTasks = todayTasks.filter(t => !t.completed);
+        Object.keys(namazData).forEach(k => namazData[k].done = false);
 
-      // সম্পন্ন কাজগুলো মুছে শুধু বাকি থাকা আনফিনিশড কাজগুলো রাখা
-      todayTasks = todayTasks.filter(t => !t.completed);
-      
-      // নামাজের চেকলিস্ট রিসেট
-      Object.keys(namazData).forEach(k => namazData[k].done = false);
-
-      activeDayDate = new Date().toISOString().slice(0, 10);
-      saveState();
-
-      if (isAuto) {
-        speakBangla("রাত বারোটা বেজেছে। নতুন দিন শুরু হয়েছে, শুভ সকাল!");
+        activeDayDate = realToday;
+        remindedTasks.clear();
+        saveState();
+        speakBangla("নতুন দিন শুরু হয়েছে। আজকের লক্ষ্য পূরণে এগিয়ে চলুন!");
       }
     }
 
     function manualNewDayReset() {
-      if (confirm("আপনি কি আজকের দিন সম্পন্ন করে নতুন দিনের ফ্রেশ তালিকা শুরু করতে চান?")) {
-        performDailyReset(false);
+      if (confirm("আপনি কি আজকের হিস্ট্রি সংরক্ষণ করে নতুন দিনের ফ্রেশ গণনা শুরু করতে চান?")) {
+        const scoreData = calculateCurrentScore();
+        historyStats[activeDayDate] = {
+          score: scoreData.finalScore,
+          completedCount: scoreData.todayFinishedCount,
+          totalCount: scoreData.totalTasks,
+          namazCount: scoreData.completedNamaz
+        };
+        todayTasks = todayTasks.filter(t => !t.completed);
+        Object.keys(namazData).forEach(k => namazData[k].done = false);
+        saveState();
       }
     }
 
     function addTodayTaskDirect() {
       const activeTasksCount = todayTasks.filter(t => !t.completed).length;
       if (activeTasksCount >= 3) {
-        alert("The Rule of 3: আপনার ৩টি কাজ এখনো বাকি! একটি শেষ করে নতুন কাজ আনুন।");
+        alert("The Rule of 3: আপনার ৩টি কাজ চলমান আছে! একটি শেষ করে নতুন কাজ আনুন।");
         return;
       }
 
@@ -545,7 +608,7 @@
       masterTasks.push({ 
         id: Date.now(), 
         title: input.value.trim(), 
-        category: category,
+        category: category, 
         dueDate: dueDate || '' 
       });
 
@@ -585,7 +648,7 @@
     function openMoveModal(id) {
       const activeTasksCount = todayTasks.filter(t => !t.completed).length;
       if (activeTasksCount >= 3) {
-        alert("চলমান ৩টি কোটা পূর্ণ! আগের একটি কাজ শেষ করুন।");
+        alert("The Rule of 3: চলমান ৩টি কোটা পূর্ণ! আগের একটি কাজ শেষ করুন।");
         return;
       }
       selectedMasterId = id;
@@ -634,11 +697,25 @@
       todayTasks = todayTasks.map(t => {
         if (t.id === id) {
           const isDone = !t.completed;
-          return {
+          const updated = {
             ...t,
             completed: isDone,
-            completedAt: isDone ? currentHHMM : null
+            completedAt: isDone ? currentHHMM : null,
+            completedDate: isDone ? activeDayDate : null
           };
+
+          if (isDone) {
+            completedArchive.unshift({
+              id: t.id,
+              title: t.title,
+              category: t.category,
+              completedAt: currentHHMM,
+              completedDate: activeDayDate
+            });
+          } else {
+            completedArchive = completedArchive.filter(a => a.id !== t.id);
+          }
+          return updated;
         }
         return t;
       });
@@ -659,40 +736,44 @@
       document.getElementById('completedModal').style.display = 'none';
     }
 
+    function deleteFromArchive(archiveId) {
+      completedArchive = completedArchive.filter(a => a.id !== archiveId);
+      todayTasks = todayTasks.filter(t => t.id !== archiveId);
+      saveState();
+      renderCompletedModalList();
+    }
+
     function renderCompletedModalList() {
       const listEl = document.getElementById('modalCompletedList');
       listEl.innerHTML = '';
-      const completedTasks = todayTasks.filter(t => t.completed);
 
-      if (completedTasks.length === 0) {
-        listEl.innerHTML = `<li style="color: var(--muted); font-size: 13px; text-align: center; padding: 10px;">আজকে এখনো কোনো কাজ সম্পন্ন হয়নি।</li>`;
+      if (completedArchive.length === 0) {
+        listEl.innerHTML = `<li style="color: var(--muted); font-size: 13px; text-align: center; padding: 15px;">এখনো কোনো সম্পন্ন কাজের ইতিহাস নেই।</li>`;
         return;
       }
 
-      completedTasks.forEach(t => {
+      completedArchive.forEach(item => {
         const li = document.createElement('li');
         li.className = 'task-item';
-        li.style.background = '#090d16';
         li.style.borderStyle = 'dashed';
         li.innerHTML = `
           <div class="task-left">
-            <input type="checkbox" checked onchange="toggleTodayTask(${t.id}); renderCompletedModalList();" />
-            <div class="task-content" style="text-decoration: line-through; color: var(--muted);">
-              <div class="task-title">${t.title}</div>
+            <div class="task-content">
+              <div class="task-title" style="text-decoration: line-through; color: #94a3b8;">${item.title}</div>
               <div class="task-meta">
-                <span class="badge badge-${t.category}">${t.category}</span>
-                ${t.completedAt ? `<span>✓ শেষ হয়েছে: ${t.completedAt}</span>` : ''}
+                <span class="badge badge-${item.category}">${item.category}</span>
+                <span>📅 সম্পন্ন: ${item.completedDate || 'আজ'} (${item.completedAt || 'সময়হীন'})</span>
               </div>
             </div>
           </div>
-          <button class="btn-icon btn-del" onclick="deleteTask(${t.id}, true); renderCompletedModalList();">✕</button>
+          <button class="btn-icon btn-del" onclick="deleteFromArchive(${item.id})" title="মুছুন">✕</button>
         `;
         listEl.appendChild(li);
       });
     }
 
     function addToGoogleCalendar(title, time, duration) {
-      if (!time) return alert("শুরুর সময় উল্লেখ করুন।");
+      if (!time) return alert("শুরুর সময় উল্লেখ করুন।");
       const now = new Date();
       const [h, m] = time.split(':');
       const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(h), parseInt(m));
@@ -707,14 +788,72 @@
     function notifyWithDirectVoice(title, body, speechText) {
       speakBangla(speechText || body);
       if ("Notification" in window && Notification.permission === "granted") {
-        new Notification(title, { body, icon: "https://cdn-icons-png.flaticon.com/512/906/906334.png" });
+        new Notification(title, { body });
       }
     }
 
-    // ফোকাস মোড
+    // ফোকাস মোড ও ব্যাকগ্রাউন্ড অ্যাম্বিয়েন্ট সাউন্ড (Web Audio API)
     let currentFocusTask = null;
     let focusTimerInterval = null;
+    let focusTargetTimestamp = null;
     let focusRemainingSeconds = 0;
+    let audioCtx = null;
+    let noiseNode = null;
+
+    function toggleWhiteNoise() {
+      const btn = document.getElementById('noiseToggleBtn');
+      if (noiseNode) {
+        stopWhiteNoise();
+        btn.innerText = "🌧️ বৃষ্টির মৃদু শব্দ (অন করুন)";
+        btn.style.borderColor = "var(--accent)";
+      } else {
+        startWhiteNoise();
+        btn.innerText = "🔊 বৃষ্টির শব্দ বাজছে (বন্ধ করুন)";
+        btn.style.borderColor = "var(--success)";
+      }
+    }
+
+    function startWhiteNoise() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+        const bufferSize = audioCtx.sampleRate * 2;
+        const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        let b0 = 0, b1 = 0, b2 = 0;
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          b0 = 0.99 * b0 + white * 0.05;
+          b1 = 0.95 * b1 + white * 0.05;
+          b2 = 0.85 * b2 + white * 0.05;
+          output[i] = (b0 + b1 + b2) * 0.2;
+        }
+        noiseNode = audioCtx.createBufferSource();
+        noiseNode.buffer = noiseBuffer;
+        noiseNode.loop = true;
+        
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 800;
+
+        noiseNode.connect(filter);
+        filter.connect(audioCtx.destination);
+        noiseNode.start();
+      } catch (e) {
+        console.log("Audio not supported or blocked.");
+      }
+    }
+
+    function stopWhiteNoise() {
+      if (noiseNode) {
+        try { noiseNode.stop(); noiseNode.disconnect(); } catch (e) {}
+        noiseNode = null;
+      }
+      if (audioCtx) {
+        try { audioCtx.close(); } catch (e) {}
+        audioCtx = null;
+      }
+    }
 
     function enterFocusMode(taskId) {
       currentFocusTask = todayTasks.find(t => t.id === taskId);
@@ -722,6 +861,7 @@
 
       const durationMinutes = parseInt(currentFocusTask.duration) || 25;
       focusRemainingSeconds = durationMinutes * 60;
+      focusTargetTimestamp = Date.now() + focusRemainingSeconds * 1000;
 
       document.getElementById('focusCurrentTask').innerText = currentFocusTask.title;
       document.getElementById('focusScreen').style.display = 'flex';
@@ -730,13 +870,15 @@
       updateFocusTimerDisplay();
 
       focusTimerInterval = setInterval(() => {
-        if (focusRemainingSeconds > 0) {
-          focusRemainingSeconds--;
-          updateFocusTimerDisplay();
-        } else {
+        const now = Date.now();
+        focusRemainingSeconds = Math.max(0, Math.round((focusTargetTimestamp - now) / 1000));
+        updateFocusTimerDisplay();
+
+        if (focusRemainingSeconds <= 0) {
           clearInterval(focusTimerInterval);
-          speakBangla("আপনার নির্ধারিত ফোকাস সময় সম্পন্ন হয়েছে।");
-          alert("সময় শেষ! কাজটি সম্পন্ন হলে টিক দিয়ে দিন।");
+          stopWhiteNoise();
+          speakBangla("আপনার নির্ধারিত ফোকাস সময় সম্পন্ন হয়েছে।");
+          alert("সময় শেষ! কাজটি সম্পন্ন হলে টিক দিন।");
           exitFocusDirect(false);
         }
       }, 1000);
@@ -749,7 +891,7 @@
         `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
     }
 
-    window.addEventListener('popstate', function (event) {
+    window.addEventListener('popstate', function () {
       if (document.getElementById('focusScreen').style.display === 'flex') {
         history.pushState({ inFocus: true }, null, "");
         startExitFlow();
@@ -787,16 +929,16 @@
         `;
       } else if (exitStep === 2) {
         titleEl.innerText = "ধাপ ২: কাজের স্থিতি";
-        descEl.innerText = `"${currentFocusTask.title}" কাজটি কি সম্পন্ন হয়েছে?`;
+        descEl.innerText = `"${currentFocusTask.title}" কাজটি কি সম্পন্ন হয়েছে?`;
         actionEl.innerHTML = `
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button onclick="exitFocusWithDone()" style="background: #22c55e; padding: 6px 12px; font-size: 12px;">হ্যাঁ, সম্পন্ন হয়েছে (Done)</button>
+            <button onclick="exitFocusWithDone()" style="background: #22c55e; padding: 6px 12px; font-size: 12px;">হ্যাঁ, সম্পন্ন হয়েছে (Done)</button>
             <button class="btn-del" onclick="nextExitStep(3)" style="padding: 6px 12px; font-size: 12px;">না, বাকি আছে ➔</button>
           </div>
         `;
       } else if (exitStep === 3) {
         titleEl.innerText = "ধাপ ৩: গুরুত্ব বিবেচনা";
-        descEl.innerText = "যে কারণে বের হচ্ছেন, সেটি কি এই কাজের চেয়েও বেশি গুরুত্বপূর্ণ?";
+        descEl.innerText = "যে কারণে বের হচ্ছেন, সেটি কি এই কাজের চেয়েও বেশি গুরুত্বপূর্ণ?";
         actionEl.innerHTML = `
           <div style="display: flex; gap: 8px; justify-content: center;">
             <button onclick="closeExitModal()" style="background: #22c55e; padding: 6px 12px; font-size: 12px;">কাজে ফিরে যাই</button>
@@ -805,7 +947,7 @@
         `;
       } else if (exitStep === 4) {
         titleEl.innerText = "ধাপ ৪: গভীর শ্বাস নিন";
-        descEl.innerText = "চোখ বন্ধ করে দীর্ঘ নিঃশ্বাস নিন। বাটন সক্রিয় হওয়া পর্যন্ত অপেক্ষা করুন...";
+        descEl.innerText = "চোখ বন্ধ করে দীর্ঘ নিঃশ্বাস নিন। বাটন সক্রিয় হওয়া পর্যন্ত অপেক্ষা করুন...";
         actionEl.innerHTML = `
           <button id="cooldownBtn" disabled style="opacity: 0.5; cursor: not-allowed; width: 100%; padding: 8px;">অপেক্ষা করুন (১০ সেকেন্ড)</button>
         `;
@@ -850,19 +992,18 @@
       if (val === "আমি সচেতনভাবে ফোকাস ভাঙছি") {
         exitFocusDirect(false);
       } else {
-        alert("বানান সঠিক হয়নি! বাক্যটি হুবহু লিখে সাবমিট করুন।");
+        alert("বানান সঠিক হয়নি! বাক্যটি হুবহু লিখে সাবমিট করুন।");
       }
     }
 
     function exitFocusWithDone() {
-      if (currentFocusTask) {
-        toggleTodayTask(currentFocusTask.id);
-      }
+      if (currentFocusTask) toggleTodayTask(currentFocusTask.id);
       exitFocusDirect(true);
     }
 
     function exitFocusDirect(isDone) {
       if (focusTimerInterval) clearInterval(focusTimerInterval);
+      stopWhiteNoise();
       closeExitModal();
       document.getElementById('focusScreen').style.display = 'none';
       currentFocusTask = null;
@@ -886,45 +1027,35 @@
       });
     }
 
-    // ==========================================
-    // ডে জাজমেন্ট ও স্মার্ট অ্যানালিটিক্স লজিক
-    // ==========================================
+    // ডে জাজমেন্ট মেট্রিক্স
     function calculateCurrentScore() {
-      const totalTasks = todayTasks.length;
-      const completedTasks = todayTasks.filter(t => t.completed).length;
+      const activeOrDoneToday = todayTasks;
+      const totalTasks = activeOrDoneToday.length;
+      const todayFinishedTasks = activeOrDoneToday.filter(t => t.completed);
+      const todayFinishedCount = todayFinishedTasks.length;
       
-      // সময়নিষ্ঠ কাজ (On-Time Completion): কাজ সম্পন্ন হয়েছে এবং নির্ধারিত সময় থাকলে
       let onTimeCount = 0;
-      todayTasks.forEach(t => {
-        if (t.completed) {
-          if (!t.time) onTimeCount++;
-          else if (t.completedAt && t.completedAt <= t.time) onTimeCount++;
-          else onTimeCount += 0.8; // সামান্য বিলম্বে হলেও ক্রেডিট
-        }
+      todayFinishedTasks.forEach(t => {
+        if (!t.time) onTimeCount++;
+        else if (t.completedAt && t.completedAt <= t.time) onTimeCount++;
+        else onTimeCount += 0.8;
       });
 
-      // সেদিনই শেষ হওয়া কাজ (Same-Day Completion)
-      const sameDayCompletedCount = todayTasks.filter(t => t.completed && t.createdDate === activeDayDate).length;
-
+      const sameDayCount = todayFinishedTasks.filter(t => t.createdDate === activeDayDate).length;
       const totalNamaz = 5;
       const completedNamaz = Object.values(namazData).filter(n => n.done).length;
 
-      // পয়েন্ট বন্টন:
-      // ১. নামাজ: ৪০ নম্বর
       const namazScore = (completedNamaz / totalNamaz) * 40;
-      // ২. টাস্ক সম্পন্নতা: ৩০ নম্বর
-      const taskScore = totalTasks > 0 ? (completedTasks / totalTasks) * 30 : 0;
-      // ৩. সময়নিষ্ঠতা: ১৫ নম্বর
+      const taskScore = totalTasks > 0 ? (todayFinishedCount / totalTasks) * 30 : 0;
       const onTimeScore = totalTasks > 0 ? (onTimeCount / totalTasks) * 15 : 0;
-      // ৪. সেদিনের কাজ সেদিন শেষ: ১৫ নম্বর
-      const sameDayScore = totalTasks > 0 ? (sameDayCompletedCount / totalTasks) * 15 : 0;
+      const sameDayScore = totalTasks > 0 ? (sameDayCount / totalTasks) * 15 : 0;
 
       const finalScore = Math.round(namazScore + taskScore + onTimeScore + sameDayScore);
 
       return {
         finalScore,
         totalTasks,
-        completedTasks,
+        todayFinishedCount,
         onTimeCount: Math.round(onTimeCount),
         completedNamaz
       };
@@ -934,7 +1065,7 @@
       const metrics = calculateCurrentScore();
 
       document.getElementById('statTotal').innerText = metrics.totalTasks;
-      document.getElementById('statCompleted').innerText = metrics.completedTasks;
+      document.getElementById('statCompleted').innerText = metrics.todayFinishedCount;
       document.getElementById('statOnTime').innerText = metrics.onTimeCount;
       document.getElementById('statNamaz').innerText = `${metrics.completedNamaz}/5`;
 
@@ -943,42 +1074,40 @@
       scoreBar.style.width = `${metrics.finalScore}%`;
       scoreText.innerText = `সফলতা: ${metrics.finalScore}%`;
 
-      // গতকালকের তুলনা বের করা
       const yDate = new Date();
       yDate.setDate(yDate.getDate() - 1);
-      const yesterdayKey = yDate.toISOString().slice(0, 10);
-      const yesterdayData = historyStats[yesterdayKey];
+      const yStr = `${yDate.getFullYear()}-${String(yDate.getMonth()+1).padStart(2,'0')}-${String(yDate.getDate()).padStart(2,'0')}`;
+      const yesterdayData = historyStats[yStr];
 
       let compText = "";
       if (yesterdayData) {
-        const diff = metrics.completedTasks - yesterdayData.completedCount;
-        if (diff > 0) compText = `গতকালকের তুলনায় আজ <b>${diff}টি কাজ বেশি</b> সম্পন্ন করেছেন। দারুণ উন্নতি! 🚀`;
-        else if (diff < 0) compText = `গতকালকের চেয়ে আজ <b>${Math.abs(diff)}টি কাজ কম</b> হয়েছে। বাকি সময়ে গতি বাড়ান। ⏳`;
-        else compText = `গতকালকের সমান সংখ্যক কাজ সম্পন্ন হয়েছে। 📈`;
+        const diff = metrics.todayFinishedCount - yesterdayData.completedCount;
+        if (diff > 0) compText = `গতকালকের তুলনায় আজ <b>${diff}টি কাজ বেশি</b> সম্পন্ন করেছেন। দুর্দান্ত অগ্রগতি! 🚀`;
+        else if (diff < 0) compText = `গতকালকের চেয়ে আজ <b>${Math.abs(diff)}টি কাজ কম</b> হয়েছে। বাকি সময়ে গতি বাড়ান। ⏳`;
+        else compText = `গতকালকের সমান সংখ্যক কাজ শেষ হয়েছে। 📈`;
       } else {
-        compText = `প্রতিদিন অ্যাপটি ব্যবহারে তুলনামূলক ট্র্যাকিং আরও সমৃদ্ধ হবে।`;
+        compText = `প্রতিদিন অ্যাপটি ব্যবহারের সাথে সাথে তুলনামূলক অগ্রগতি আরও সুস্পষ্ট হবে।`;
       }
 
-      // এআই কোচিং পরামর্শ লজিক
       let advice = "";
       if (metrics.completedNamaz < 3) {
-        advice = `🕌 নামাজের ওয়াক্তে মনোযোগ দিন। আধ্যাত্মিক একাগ্রতা কর্মক্ষমতা বহুগুণ বাড়িয়ে দেয়।`;
-      } else if (metrics.totalTasks > 0 && metrics.completedTasks === 0) {
-        advice = `🎯 শীর্ষ তালিকার যেকোনো একটি কাজ এখনই 'ফোকাস মোড'-এ শুরু করে দিনের খাতা খুলুন।`;
-      } else if (metrics.onTimeCount < metrics.completedTasks * 0.7) {
-        advice = `⏰ কাজগুলো শেষ হচ্ছে ঠিকই, তবে নির্ধারিত সময়ের চেয়ে দেরি হচ্ছে। সময় পরিকল্পনায় আরো বাস্তববাদী হোন।`;
+        advice = `🕌 নামাজের ওয়াক্তে যত্নবান হোন। আধ্যাত্মিক স্থিরতা কাজের ফোকাস বৃদ্ধি করে।`;
+      } else if (metrics.totalTasks > 0 && metrics.todayFinishedCount === 0) {
+        advice = `🎯 শীর্ষ তালিকার যেকোনো একটি কাজ 'ফোকাস মোড'-এ শুরু করে দিনের সূচনা করুন।`;
+      } else if (metrics.onTimeCount < metrics.todayFinishedCount * 0.7) {
+        advice = `⏰ কাজগুলো শেষ হচ্ছে, তবে কিছুটা দেরিতে। নির্ধারিত সময়ে শেষ করার চেষ্টা করুন।`;
       } else if (metrics.finalScore >= 80) {
-        advice = `🌟 অসাধারণ পারফরম্যান্স! আপনি উচ্চ প্রোডাক্টিভিটি ও সময়নিষ্ঠতায় অবস্থান করছেন। এই ধারাবাহিকতা বজায় রাখুন।`;
+        advice = `🌟 অসাধারণ পারফরম্যান্স! আপনি সর্বোচ্চ প্রোডাক্টিভিটি বজায় রাখছেন।`;
       } else {
-        advice = `💪 নিয়মিত ছোট ছোট কাজগুলো সময়মতো শেষ করলেই দিনের পূর্ণাঙ্গ সাফল্য আসবে।`;
+        advice = `💪 একাগ্রতার সাথে ৩টি কাজ শেষ করলেই দিনের পূর্ণ সফলতা অর্জিত হবে।`;
       }
 
       document.getElementById('coachingAdvice').innerHTML = `💡 <b>বিশ্লেষণ ও পরামর্শ:</b> ${compText}<br>${advice}`;
 
       renderSevenDayChart(metrics.finalScore);
+      renderWeeklySummary();
     }
 
-    // গত ৭ দিনের ভিজ্যুয়াল বার চার্ট
     function renderSevenDayChart(todayLiveScore) {
       const container = document.getElementById('sevenDayChart');
       container.innerHTML = '';
@@ -989,25 +1118,101 @@
       for (let i = 6; i >= 0; i--) {
         const d = new Date();
         d.setDate(today.getDate() - i);
-        const dateKey = d.toISOString().slice(0, 10);
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const dt = String(d.getDate()).padStart(2, '0');
+        const dateKey = `${y}-${m}-${dt}`;
         const dayLabel = (i === 0) ? 'আজ' : dayNames[d.getDay()];
 
-        let score = 0;
-        if (i === 0) {
-          score = todayLiveScore;
-        } else if (historyStats[dateKey]) {
-          score = historyStats[dateKey].score;
-        }
+        let score = (i === 0) ? todayLiveScore : (historyStats[dateKey] ? historyStats[dateKey].score : 0);
 
         const col = document.createElement('div');
         col.className = 'chart-col';
         col.innerHTML = `
           <span class="chart-val">${score}%</span>
-          <div class="chart-bar ${i === 0 ? 'today-bar' : ''}" style="height: ${Math.max(score, 6)}%;"></div>
+          <div class="chart-bar ${i === 0 ? 'today-bar' : ''}" style="height: ${Math.max(score, 5)}%;"></div>
           <span class="chart-label">${dayLabel}</span>
         `;
         container.appendChild(col);
       }
+    }
+
+    function renderWeeklySummary() {
+      const card = document.getElementById('weeklyReportCard');
+      let totalScores = 0;
+      let recordedDays = 0;
+      let totalCompleted = 0;
+
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const dt = String(d.getDate()).padStart(2, '0');
+        const dateKey = `${y}-${m}-${dt}`;
+
+        if (i === 0) {
+          const live = calculateCurrentScore();
+          totalScores += live.finalScore;
+          totalCompleted += live.todayFinishedCount;
+          recordedDays++;
+        } else if (historyStats[dateKey]) {
+          totalScores += historyStats[dateKey].score;
+          totalCompleted += (historyStats[dateKey].completedCount || 0);
+          recordedDays++;
+        }
+      }
+
+      const avgScore = recordedDays > 0 ? Math.round(totalScores / recordedDays) : 0;
+      card.innerHTML = `
+        📊 <b>সাপ্তাহিক মূল্যায়ন:</b> গত ৭ দিনে আপনার গড় স্কোর <b>${avgScore}%</b> এবং আপনি মোট <b>${totalCompleted}টি</b> কাজ সফলভাবে সম্পন্ন করেছেন। ${avgScore >= 75 ? 'দুর্দান্ত গতি বজায় রেখেছেন! 🏆' : 'নিয়মানুবর্তিতা বাড়িয়ে সামনে এগিয়ে চলুন! 💪'}
+      `;
+    }
+
+    // ব্যাকআপ ডাউনলোড ও রিস্টোর
+    function exportDataBackup() {
+      const fullData = {
+        todayTasks,
+        masterTasks,
+        namazData,
+        historyStats,
+        completedArchive,
+        activeDayDate,
+        exportedAt: new Date().toISOString()
+      };
+      const blob = new Blob([JSON.stringify(fullData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `SmartDo_Backup_${getTodayString()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importDataBackup(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          const data = JSON.parse(evt.target.result);
+          if (data.todayTasks && data.masterTasks) {
+            todayTasks = data.todayTasks;
+            masterTasks = data.masterTasks;
+            namazData = data.namazData || namazData;
+            historyStats = data.historyStats || {};
+            completedArchive = data.completedArchive || [];
+            activeDayDate = data.activeDayDate || getTodayString();
+            saveState();
+            alert("সব ডাটা সফলভাবে রিস্টোর হয়েছে!");
+          } else {
+            alert("ফাইলটি সঠিক SmartDo ব্যাকআপ ফরম্যাটে নেই।");
+          }
+        } catch (err) {
+          alert("ফাইল পড়তে ত্রুটি হয়েছে। সঠিক JSON ব্যাকআপ ফাইল নির্বাচন করুন।");
+        }
+      };
+      reader.readAsText(file);
     }
 
     function render() {
@@ -1018,10 +1223,9 @@
       activeListEl.innerHTML = '';
 
       const activeTasks = todayTasks.filter(t => !t.completed);
-      const completedTasks = todayTasks.filter(t => t.completed);
 
       document.getElementById('ruleCount').innerText = `চলমান: ${activeTasks.length} / ৩`;
-      document.getElementById('completedCountBadge').innerText = completedTasks.length;
+      document.getElementById('completedCountBadge').innerText = completedArchive.length;
 
       activeTasks.forEach(t => {
         const li = document.createElement('li');
@@ -1047,11 +1251,10 @@
         activeListEl.appendChild(li);
       });
 
-      // মাস্টার লিস্ট রেন্ডার
       const masterListEl = document.getElementById('masterList');
       masterListEl.innerHTML = '';
       masterTasks.forEach(t => {
-        const isTodayDue = t.dueDate && t.dueDate === new Date().toISOString().slice(0, 10);
+        const isTodayDue = t.dueDate && t.dueDate === getTodayString();
         const li = document.createElement('li');
         li.className = 'task-item';
         li.innerHTML = `
@@ -1065,7 +1268,7 @@
             </div>
           </div>
           <div class="task-actions">
-            <button class="btn-icon btn-up" onclick="openMoveModal(${t.id})" title="শীর্ষ তালিকায় নিন">⬆️</button>
+            <button class="btn-icon btn-up" onclick="openMoveModal(${t.id})" title="শীর্ষ তালিকায় নিন">⬆️</button>
             <button class="btn-icon btn-edit" onclick="openEditModal(${t.id})" title="সংশোধন">✏️</button>
             <button class="btn-icon btn-del" onclick="deleteTask(${t.id}, false)" title="মুছুন">✕</button>
           </div>
@@ -1074,79 +1277,78 @@
       });
     }
 
-    // প্রতি সেকেন্ডে ট্র্যাকিং ও রাত ১২:০০ টায় অটোমেটিক নতুন দিন শুরু
+    // রিয়েল-টাইম ট্র্যাকিং ও অ্যালার্ট
     setInterval(() => {
       const now = new Date();
       const currentHHMM = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
-      const todayISO = now.toISOString().slice(0, 10);
+      const todayISO = getTodayString();
       const currentSeconds = now.getSeconds();
 
-      // রাত ১২:০০ (০০:০০) তে অটোমেটিক নতুন দিন শুরু
-      if (currentHHMM === "00:00" && currentSeconds === 0) {
-        performDailyReset(true);
-      }
+      // অটো-রোলওভার চেক
+      checkAndPerformRollover();
 
-      // ১. কাজের ভয়েস রিমাইন্ডার
+      // ১. কাজের সময়সূচির ভয়েস
       todayTasks.forEach(t => {
-        if (!t.completed && t.time === currentHHMM && !remindedTasks.has(`task_${t.id}_${currentHHMM}`)) {
-          remindedTasks.add(`task_${t.id}_${currentHHMM}`);
+        const alertKey = `task_${t.id}_${todayISO}_${currentHHMM}`;
+        if (!t.completed && t.time === currentHHMM && !remindedTasks.has(alertKey)) {
+          remindedTasks.add(alertKey);
+          localStorage.setItem('remindedTasksCache', JSON.stringify(Array.from(remindedTasks)));
           notifyWithDirectVoice(
-            "কাজের সময় হয়েছে!",
-            `এখন "${t.title}" কাজটির সময় হয়েছে।`,
-            `এখন ${t.title} এর সময় হয়েছে, কাজটি শুরু করুন।`
+            "কাজের সময় হয়েছে!",
+            `এখন "${t.title}" কাজটির সময় হয়েছে।`,
+            `এখন ${t.title} এর সময় হয়েছে, কাজটি শুরু করুন।`
           );
         }
       });
 
-      // ২. নামাজের ওয়াক্তের ভয়েস
+      // ২. নামাজের ওয়াক্তের ভয়েস
       Object.keys(namazData).forEach(k => {
         const item = namazData[k];
-        if (item.time === currentHHMM && !remindedTasks.has(`namaz_${k}_${currentHHMM}`)) {
-          remindedTasks.add(`namaz_${k}_${currentHHMM}`);
+        const prayerKey = `namaz_${k}_${todayISO}_${currentHHMM}`;
+        if (item.time === currentHHMM && !remindedTasks.has(prayerKey)) {
+          remindedTasks.add(prayerKey);
+          localStorage.setItem('remindedTasksCache', JSON.stringify(Array.from(remindedTasks)));
           notifyWithDirectVoice(
-            "নামাজের ওয়াক্ত হয়েছে!",
-            `${item.name}-এর নামাজের সময় হয়েছে।`,
-            `আসসালামু আলাইকুম। এখন ${item.name}-এর নামাজের ওয়াক্ত হয়েছে।`
+            "নামাজের ওয়াক্ত হয়েছে!",
+            `${item.name}-এর নামাজের সময় হয়েছে।`,
+            `আসসালামু আলাইকুম। এখন ${item.name}-এর নামাজের ওয়াক্ত হয়েছে।`
           );
         }
       });
 
-      // ৩. সকাল ৯:০০ টায় ডেডলাইন ভয়েস
+      // ৩. সকালের ও রাতের নোটিফিকেশন
       if (currentHHMM === "09:00" && currentSeconds === 0) {
         masterTasks.forEach(t => {
-          if (t.dueDate === todayISO && !remindedTasks.has(`due_${t.id}_${todayISO}`)) {
-            remindedTasks.add(`due_${t.id}_${todayISO}`);
+          const dueKey = `due_${t.id}_${todayISO}`;
+          if (t.dueDate === todayISO && !remindedTasks.has(dueKey)) {
+            remindedTasks.add(dueKey);
+            localStorage.setItem('remindedTasksCache', JSON.stringify(Array.from(remindedTasks)));
             notifyWithDirectVoice(
               "আজকের নির্ধারিত কাজ!",
               `মাস্টার লিস্টে "${t.title}" এর ডেডলাইন আজকে।`,
-              `আজকে আপনার নির্ধারিত কাজ রয়েছে। ${t.title} কাজটি শীর্ষ তালিকায় যুক্ত করুন।`
+              `আজকে আপনার নির্ধারিত কাজ রয়েছে। ${t.title} কাজটি শীর্ষ তালিকায় যুক্ত করুন।`
             );
           }
         });
       }
 
-      // ৪. সকাল ও রাতের রুটিন ভয়েস
       if (currentHHMM === "08:00" && currentSeconds === 0) {
-        notifyWithDirectVoice(
-          "শুভ সকাল!",
-          "আজকের ৩টি মূল কাজ শুরু করুন।",
-          "শুভ সকাল। আজকের ৩টি মূল কাজ নির্ধারণ করে লক্ষ্য পূরণ শুরু করুন।"
-        );
+        notifyWithDirectVoice("শুভ সকাল!", "আজকের ৩টি মূল কাজ শুরু করুন।", "শুভ সকাল। আজকের ৩টি মূল কাজ নির্ধারণ করে লক্ষ্য পূরণ শুরু করুন।");
       }
       if (currentHHMM === "22:00" && currentSeconds === 0) {
-        notifyWithDirectVoice(
-          "দিনের পর্যালোচনা",
-          "আজকের সফলতার স্কোর দেখে নিন।",
-          "শুভ রাত্রি। আজকের সফলতার স্কোর মিলিয়ে নিন এবং আগামীকালের পরিকল্পনা করুন।"
-        );
+        notifyWithDirectVoice("দিনের পর্যালোচনা", "আজকের সফলতার স্কোর দেখে নিন।", "শুভ রাত্রি। আজকের সফলতার স্কোর মিলিয়ে নিন এবং আগামীকালের পরিকল্পনা করুন।");
       }
     }, 1000);
 
-    // অ্যাপ চালুর সময় ডেট রোলওভার চেক
-    if (activeDayDate !== todayDateKey) {
-      performDailyReset(false);
-    }
+    // ট্যাব বা স্ক্রিন পুনরায় সক্রিয় হলে অবিলম্বে রোলওভার যাচাই
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        checkAndPerformRollover();
+      }
+    });
 
+    // ইনিশিয়ালাইজেশন
+    checkAndPerformRollover();
     loadRandomQuote();
     fetchLivePrayerTimes();
     render();
