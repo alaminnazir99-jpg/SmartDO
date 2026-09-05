@@ -397,11 +397,11 @@
       <!-- AI ইন্টিগ্রেশন কার্ড -->
       <div class="card card-ai">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h3>🤖 AI স্মার্ট শিডিউল কনসালট্যান্ট (Gemini API)</h3>
+          <h3>🤖 AI স্মার্ট শিডিউল কনসালট্যান্ট (Gemini AI)</h3>
           <button class="btn-secondary" onclick="toggleApiKeyInput()" style="font-size: 10px; padding: 2px 6px; border-color: #c084fc; color: #c084fc;">⚙️ API Key</button>
         </div>
         <p style="font-size: 12px; color: #d8b4fe; margin-top: 4px;">
-          আপনার নামাজের সময়, বর্তমান ফাঁকা স্লট এবং পেন্ডিং কাজের সমন্বয়ে কৃত্রিম বুদ্ধিমত্তা আপনাকে সময় ব্যবস্থাপনার পরামর্শ দেবে।
+          আপনার নামাজের সময়, বর্তমান ফাঁকা স্লট এবং পেন্ডিং কাজের সমন্বয়ে কৃত্রিম বুদ্ধিমত্তা আপনাকে সময় ব্যবস্থাপনার দিকনির্দেশনা দেবে।
         </p>
 
         <!-- API Key বক্স -->
@@ -590,7 +590,7 @@
     let historyStats = JSON.parse(localStorage.getItem('historyStats')) || {};
     let completedArchive = JSON.parse(localStorage.getItem('completedArchive')) || [];
     let activeDayDate = localStorage.getItem('activeDayDate') || getTodayString();
-    let geminiApiKey = localStorage.getItem('geminiApiKey') || '';
+    let geminiApiKey = (localStorage.getItem('geminiApiKey') || '').trim();
 
     let namazData = JSON.parse(localStorage.getItem('namazData')) || {
       Fajr: { name: 'ফজর', start: '04:35', end: '05:50', customTime: '05:00', done: false },
@@ -855,12 +855,14 @@
       if (!key) return alert("সঠিক API Key দিন।");
       geminiApiKey = key;
       localStorage.setItem('geminiApiKey', key);
-      alert("Gemini API Key সংরক্ষিত হয়েছে!");
+      alert("Gemini API Key সফলভাবে সংরক্ষিত হয়েছে!");
       document.getElementById('apiKeySection').style.display = 'none';
     }
 
+    // নির্ভুল এআই পরামর্শ ফাংশন (গুগলের আসল এরর প্রদর্শনসহ)
     async function askAiForScheduleAdvice() {
-      if (!geminiApiKey) {
+      const cleanKey = (geminiApiKey || '').trim();
+      if (!cleanKey) {
         alert("দয়া করে প্রথমে উপরের ⚙️ API Key বাটনে ক্লিক করে আপনার Gemini API Key দিন।");
         toggleApiKeyInput();
         return;
@@ -879,32 +881,41 @@
       const namazSchedule = Object.entries(namazData).map(([k, v]) => `${v.name}: ${v.customTime || v.start}`).join(', ');
 
       const promptText = `
-তুমি একজন পারসোনাল প্রোডাক্টিভিটি এক্সপার্ট। ব্যবহারকারীর বর্তমান অবস্থা:
+তুমি একজন বিচক্ষণ পারসোনাল প্রোডাক্টিভিটি এক্সপার্ট। ব্যবহারকারীর বর্তমান অবস্থা:
 - বর্তমান সময়: ${currentHHMM}
 - নামাজের নির্ধারিত সময়: ${namazSchedule}
 - ব্যবহারকারীর ২৪ ঘণ্টার রুটিন: ${activeRoutine || 'নির্দিষ্ট কোনো রুটিন এখনও দেওয়া নেই'}
 - আজকের পেন্ডিং শীর্ষ কাজগুলো: ${pendingTasks || 'সব কাজ সম্পন্ন'}
 
-প্রশ্ন: "আমার এই সময়টুকু ফাঁকা আছে বা আমি এখন কোন কাজটিতে সর্বোচ্চ মনোযোগ দেব? আমাকে বাস্তবসম্মত ৩-৪ লাইনে স্পষ্ট বাংলায় পরামর্শ দাও।"
+প্রশ্ন: "আমার এই সময়টুকু ফাঁকা আছে বা আমি এখন কোন কাজটিতে সর্বোচ্চ মনোযোগ দেব? আমাকে বাস্তবসম্মত ৩-৪ লাইনে পরিষ্কার ও ইতিবাচক বাংলায় পরামর্শ দাও।"
       `;
 
       try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`, {
+        // গুগল জেমিনি এপিআই এন্ডপয়েন্ট
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${cleanKey}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
         });
 
         const data = await response.json();
-        if (data.candidates && data.candidates[0].content.parts[0].text) {
+
+        // গুগল সার্ভার থেকে কোনো এরর এলে তা সরাসরি স্ক্রিনে দেখানো
+        if (data.error) {
+          resBox.innerHTML = `⚠️ <b>গুগল এআই ত্রুটি:</b> ${data.error.message || 'API Key বা পারমিশন সঠিক নয়।'}`;
+          resBox.style.display = 'block';
+          return;
+        }
+
+        if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
           resBox.innerText = data.candidates[0].content.parts[0].text;
           resBox.style.display = 'block';
         } else {
-          resBox.innerText = "পরামর্শ তৈরি করা যায়নি। API Key বা কোটা যাচাই করুন।";
+          resBox.innerText = "পরামর্শ পাওয়া যায়নি। আবার চেষ্টা করুন।";
           resBox.style.display = 'block';
         }
       } catch (err) {
-        resBox.innerText = "ইন্টারনেট সংযোগ বা API যোগাযোগে সমস্যা হয়েছে।";
+        resBox.innerText = "ইন্টারনেট সংযোগ বা নেটওয়ার্ক ব্লকিংয়ের কারণে এআই এর সাথে যোগাযোগ করা যায়নি।";
         resBox.style.display = 'block';
       } finally {
         btn.innerText = '✨ "আমার এই সময়টুকু ফাঁকা আছে, এখন কী করা উচিত?"';
