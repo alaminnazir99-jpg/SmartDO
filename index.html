@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SmartDo - Focus & Day Judgment</title>
+  <title>SmartDo - Focus, Analytics & Day Judgment</title>
   
   <style>
     :root {
@@ -17,6 +17,7 @@
       --danger: #ef4444;
       --success: #22c55e;
       --warning: #f59e0b;
+      --purple: #8b5cf6;
       --wa-green: #25D366;
       --fb-blue: #1877F2;
     }
@@ -25,22 +26,32 @@
     .container { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 16px; }
     
     .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); }
-    h2, h3 { color: var(--accent); margin-bottom: 10px; font-weight: 600; }
+    h2, h3 { color: var(--accent); margin-bottom: 10px; font-weight: 600; font-size: 17px; }
 
-    /* দৈনিক অনুপ্রেরণা কার্ড */
+    /* দৈনিক অনুপ্রেরণা */
     .quote-card { border-left: 4px solid var(--accent); background: linear-gradient(90deg, #1e293b 0%, #162032 100%); }
     .quote-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
     .quote-tag { font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--accent); letter-spacing: 1px; }
     .quote-text { font-size: 13.5px; font-style: italic; line-height: 1.5; color: #e2e8f0; }
     .quote-author { font-size: 11px; color: var(--muted); font-weight: 600; text-align: right; margin-top: 4px; }
 
-    /* ডে জাজমেন্ট */
+    /* ডে জাজমেন্ট ও অ্যানালিটিক্স */
     .judgment-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; margin-top: 8px; }
     .judgment-card { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 8px; text-align: center; }
-    .judgment-value { font-size: 20px; font-weight: bold; color: var(--accent); margin-top: 2px; }
+    .judgment-value { font-size: 18px; font-weight: bold; color: var(--accent); margin-top: 2px; }
+    
     .judgment-bar-bg { background: #0f172a; border-radius: 10px; height: 10px; width: 100%; overflow: hidden; margin-top: 10px; border: 1px solid var(--border); }
     .judgment-bar-fill { background: linear-gradient(90deg, #38bdf8, #22c55e); height: 100%; width: 0%; transition: width 0.4s ease; }
-    .judgment-verdict { font-size: 13px; font-weight: 600; margin-top: 8px; text-align: center; }
+    
+    .coaching-box { background: rgba(56, 189, 248, 0.08); border-left: 3px solid var(--accent); border-radius: 6px; padding: 10px 12px; font-size: 12.5px; color: #e2e8f0; margin-top: 10px; line-height: 1.4; }
+    
+    /* গত ৭ দিনের চার্ট বার */
+    .chart-container { display: flex; align-items: flex-end; justify-content: space-between; height: 110px; gap: 6px; margin-top: 14px; padding-top: 10px; border-bottom: 1px solid var(--border); }
+    .chart-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end; }
+    .chart-bar { width: 100%; max-width: 24px; background: #334155; border-radius: 4px 4px 0 0; transition: height 0.5s ease; position: relative; }
+    .chart-bar.today-bar { background: var(--accent); }
+    .chart-label { font-size: 10px; color: var(--muted); }
+    .chart-val { font-size: 9px; color: #cbd5e1; font-weight: bold; margin-bottom: 2px; }
 
     /* নামাজের বার */
     .namaz-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-top: 8px; }
@@ -51,7 +62,7 @@
 
     .input-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
     .input-row { display: flex; gap: 8px; flex-wrap: wrap; }
-    input, select, button { border-radius: 6px; border: 1px solid var(--border); background: #0f172a; color: var(--text); padding: 8px 12px; font-size: 13.5px; outline: none; }
+    input, select, button { border-radius: 6px; border: 1px solid var(--border); background: #0f172a; color: var(--text); padding: 8px 12px; font-size: 13px; outline: none; }
     input:focus, select:focus { border-color: var(--accent); }
     input[type="text"], input[type="date"] { flex: 1; min-width: 140px; }
     
@@ -59,7 +70,6 @@
     button:hover { background: var(--accent-hover); }
     .btn-secondary { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
     
-    /* কম্প্যাক্ট অ্যাকশন বাটন */
     .btn-icon { width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 14px; border: 1px solid transparent; background: #1e293b; }
     .btn-up { color: var(--accent); border-color: rgba(56, 189, 248, 0.4); }
     .btn-up:hover { background: rgba(56, 189, 248, 0.15); }
@@ -69,10 +79,9 @@
     .btn-del:hover { background: rgba(239, 68, 68, 0.15); }
     .btn-focus { background: #8b5cf6; color: white; border: none; font-size: 11px; padding: 4px 8px; border-radius: 5px; }
 
-    /* স্লিম টাস্ক আইটেম */
+    /* টাস্ক আইটেম */
     .task-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
     .task-item { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    .task-item.done-item { opacity: 0.5; background: #090d16; border-style: dashed; }
     .task-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
     .task-content { flex: 1; min-width: 0; }
     .task-title { font-size: 14px; font-weight: 500; color: #f1f5f9; line-height: 1.4; word-break: break-word; }
@@ -83,15 +92,13 @@
     .badge-teaching { background: #0284c7; color: white; }
     .badge-personal { background: #10b981; color: white; }
     .badge-admin { background: #f59e0b; color: white; }
-    .completed-text { text-decoration: line-through; color: var(--muted); }
 
     .rule-of-3-header { display: flex; justify-content: space-between; align-items: center; }
     .count-tag { font-size: 12px; color: var(--muted); font-weight: bold; }
-    .section-divider { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin: 12px 0 8px 0; border-bottom: 1px solid var(--border); padding-bottom: 3px; }
 
     /* মোডাল উইন্ডো */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.75); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
-    .modal-box { background: var(--card); border: 1px solid var(--accent); border-radius: 12px; max-width: 400px; width: 100%; padding: 18px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+    .modal-box { background: var(--card); border: 1px solid var(--accent); border-radius: 12px; max-width: 440px; width: 100%; padding: 18px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); max-height: 85vh; overflow-y: auto; }
     .modal-box h3 { margin-bottom: 6px; font-size: 16px; }
     .modal-box p { font-size: 12.5px; color: var(--muted); margin-bottom: 12px; }
 
@@ -107,7 +114,7 @@
     .btn-fb { background-color: var(--fb-blue); }
     .btn-fb:hover { background-color: #1464cc; }
 
-    /* পিওর ব্ল্যাক ফোকাস স্ক্রিন */
+    /* পিওর সাইলেন্ট ব্ল্যাক ফোকাস স্ক্রিন */
     #focusScreen {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
@@ -138,32 +145,9 @@
       100% { opacity: 0.2; transform: scale(0.98); }
     }
 
-    .focus-task-title {
-      font-size: 22px;
-      font-weight: 700;
-      color: #f8fafc;
-      max-width: 600px;
-      margin: 10px auto;
-    }
-
-    .focus-timer-text {
-      font-size: 48px;
-      font-family: monospace;
-      font-weight: bold;
-      color: #ffffff;
-      margin: 16px 0;
-    }
-
-    .exit-modal-box {
-      background: #111827;
-      border: 1px solid #ef4444;
-      border-radius: 12px;
-      padding: 20px;
-      max-width: 400px;
-      width: 90%;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(239,68,68,0.2);
-    }
+    .focus-task-title { font-size: 22px; font-weight: 700; color: #f8fafc; max-width: 600px; margin: 10px auto; }
+    .focus-timer-text { font-size: 48px; font-family: monospace; font-weight: bold; color: #ffffff; margin: 16px 0; }
+    .exit-modal-box { background: #111827; border: 1px solid #ef4444; border-radius: 12px; padding: 20px; max-width: 400px; width: 90%; text-align: center; }
   </style>
 </head>
 <body>
@@ -180,11 +164,11 @@
       <div class="quote-author" id="quoteAuthor">— আল-কোরআন</div>
     </div>
     
-    <!-- ডে জাজমেন্ট -->
+    <!-- ডে জাজমেন্ট ও ৭ দিনের অ্যানালিটিক্স -->
     <div class="card">
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h2>📊 ডে জাজমেন্ট (সফলতার স্কোর)</h2>
-        <button class="btn-secondary" onclick="resetDayStats()" style="font-size: 10px; padding: 3px 6px;">🔄 নতুন দিন</button>
+        <h2>📊 ডে জাজমেন্ট ও স্মার্ট অ্যানালিটিক্স</h2>
+        <button class="btn-secondary" onclick="manualNewDayReset()" style="font-size: 10px; padding: 3px 6px;">🔄 নতুন দিন</button>
       </div>
       
       <div class="judgment-grid">
@@ -197,8 +181,8 @@
           <div class="judgment-value" id="statCompleted" style="color: var(--success);">০</div>
         </div>
         <div class="judgment-card">
-          <span style="font-size: 11px; color: var(--muted);">বাকি</span>
-          <div class="judgment-value" id="statPending" style="color: var(--danger);">০</div>
+          <span style="font-size: 11px; color: var(--muted);">সময়নিষ্ঠ কাজ</span>
+          <div class="judgment-value" id="statOnTime" style="color: var(--warning);">০</div>
         </div>
         <div class="judgment-card">
           <span style="font-size: 11px; color: var(--muted);">নামাজ</span>
@@ -209,7 +193,18 @@
       <div class="judgment-bar-bg">
         <div class="judgment-bar-fill" id="scoreBar"></div>
       </div>
-      <div class="judgment-verdict" id="scoreText">সফলতা: ০% — দিনের পর্যালোচনা শুরু করুন</div>
+      <div style="font-size: 13px; font-weight: 600; margin-top: 8px; text-align: center;" id="scoreText">সফলতা: ০%</div>
+
+      <!-- স্মার্ট পরামর্শ ও মূল্যায়ন কোচিং -->
+      <div class="coaching-box" id="coachingAdvice">
+        💡 <b>পরামর্শ:</b> আজকের দিনটি শুরু করুন। নির্দিষ্ট সময়ে ৩টি কাজের প্রথমটি শেষ করার মাধ্যমে সময়নিষ্ঠতার পয়েন্ট অর্জন করুন।
+      </div>
+
+      <!-- গত ৭ দিনের অ্যানালিটিক্স গ্রাফ -->
+      <div style="margin-top: 14px;">
+        <div style="font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px;">📈 গত ৭ দিনের সফলতার ট্রেন্ড:</div>
+        <div class="chart-container" id="sevenDayChart"></div>
+      </div>
     </div>
 
     <!-- নামাজের লাইভ সময় ও চেকলিস্ট -->
@@ -225,10 +220,13 @@
     <div class="card">
       <div class="rule-of-3-header">
         <h2>🎯 The Rule of 3 (চলমান শীর্ষ ৩ কাজ)</h2>
-        <span class="count-tag" id="ruleCount">চলমান: ০ / ৩</span>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="count-tag" id="ruleCount">চলমান: ০ / ৩</span>
+          <button class="btn-secondary" onclick="openCompletedModal()" style="font-size: 11px; padding: 3px 7px;">✓ সম্পন্ন কাজ (<span id="completedCountBadge">০</span>)</button>
+        </div>
       </div>
       <p style="color: var(--muted); font-size: 12px; margin-bottom: 10px;">
-        গভীর মনোযোগে কাজ করার জন্য কাজের পাশের <b>"ফোকাস"</b> বাটনটি ব্যবহার করুন।
+        একটানা সর্বোচ্চ ৩টি চলমান কাজ থাকবে। গভীর মনোযোগের জন্য কাজের পাশের <b>"ফোকাস"</b> বাটন চাপুন।
       </p>
 
       <div class="input-group">
@@ -248,11 +246,6 @@
       </div>
 
       <ul class="task-list" id="todayActiveList"></ul>
-
-      <div id="completedSection" style="display: none;">
-        <div class="section-divider">✓ সম্পন্ন হওয়া কাজগুলো</div>
-        <ul class="task-list" id="todayCompletedList"></ul>
-      </div>
     </div>
 
     <!-- মাস্টার লিস্ট -->
@@ -295,6 +288,23 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- সম্পন্ন কাজের পপআপ মোডাল -->
+  <div class="modal-overlay" id="completedModal">
+    <div class="modal-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <h3 style="color: var(--success); margin: 0;">✓ আজকের সম্পন্ন হওয়া কাজসমূহ</h3>
+        <button class="btn-del" onclick="closeCompletedModal()" style="padding: 2px 8px;">✕</button>
+      </div>
+      <p>আজকের দিনে আপনি যে কাজগুলো শেষ করেছেন তার ইতিহাস:</p>
+      
+      <ul class="task-list" id="modalCompletedList"></ul>
+      
+      <div style="display: flex; justify-content: flex-end; margin-top: 14px;">
+        <button onclick="closeCompletedModal()" style="padding: 6px 14px; font-size: 12px;">বন্ধ করুন</button>
+      </div>
+    </div>
   </div>
 
   <!-- মাস্টার লিস্ট কাজ এডিট করার মোডাল -->
@@ -401,9 +411,11 @@
 
     let todayTasks = JSON.parse(localStorage.getItem('todayTasks')) || [];
     let masterTasks = JSON.parse(localStorage.getItem('masterTasks')) || [];
+    let historyStats = JSON.parse(localStorage.getItem('historyStats')) || {}; // { 'YYYY-MM-DD': { score, completedCount, totalCount } }
     
     const todayDateKey = new Date().toISOString().slice(0, 10);
-    let savedNamazDate = localStorage.getItem('namazDate');
+    let activeDayDate = localStorage.getItem('activeDayDate') || todayDateKey;
+
     let namazData = JSON.parse(localStorage.getItem('namazData')) || {
       Fajr: { name: 'ফজর', time: '04:30', done: false },
       Dhuhr: { name: 'যোহর', time: '13:15', done: false },
@@ -412,16 +424,11 @@
       Isha: { name: 'ইশা', time: '20:00', done: false }
     };
 
-    if (savedNamazDate !== todayDateKey) {
-      Object.keys(namazData).forEach(k => namazData[k].done = false);
-      localStorage.setItem('namazDate', todayDateKey);
-      localStorage.setItem('namazData', JSON.stringify(namazData));
-    }
-
     let remindedTasks = new Set();
     let selectedMasterId = null;
     let editingMasterId = null;
 
+    // বাংলা ভয়েস
     function speakBangla(text) {
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
@@ -461,7 +468,40 @@
       localStorage.setItem('todayTasks', JSON.stringify(todayTasks));
       localStorage.setItem('masterTasks', JSON.stringify(masterTasks));
       localStorage.setItem('namazData', JSON.stringify(namazData));
+      localStorage.setItem('historyStats', JSON.stringify(historyStats));
+      localStorage.setItem('activeDayDate', activeDayDate);
       render();
+    }
+
+    // রাত ১২:০০ টায় অটো-রোলওভার অথবা ম্যানুয়াল রিসেট
+    function performDailyReset(isAuto = false) {
+      // বর্তমান দিনের স্কোর হিস্ট্রিতে লক করা
+      const currentScore = calculateCurrentScore().finalScore;
+      const completedCount = todayTasks.filter(t => t.completed).length;
+      historyStats[activeDayDate] = {
+        score: currentScore,
+        completedCount: completedCount,
+        totalCount: todayTasks.length
+      };
+
+      // সম্পন্ন কাজগুলো মুছে শুধু বাকি থাকা আনফিনিশড কাজগুলো রাখা
+      todayTasks = todayTasks.filter(t => !t.completed);
+      
+      // নামাজের চেকলিস্ট রিসেট
+      Object.keys(namazData).forEach(k => namazData[k].done = false);
+
+      activeDayDate = new Date().toISOString().slice(0, 10);
+      saveState();
+
+      if (isAuto) {
+        speakBangla("রাত বারোটা বেজেছে। নতুন দিন শুরু হয়েছে, শুভ সকাল!");
+      }
+    }
+
+    function manualNewDayReset() {
+      if (confirm("আপনি কি আজকের দিন সম্পন্ন করে নতুন দিনের ফ্রেশ তালিকা শুরু করতে চান?")) {
+        performDailyReset(false);
+      }
     }
 
     function addTodayTaskDirect() {
@@ -478,7 +518,17 @@
 
       if (!t) return;
 
-      todayTasks.push({ id: Date.now(), title: t, category: c, time: tm, duration: d, completed: false });
+      todayTasks.push({ 
+        id: Date.now(), 
+        title: t, 
+        category: c, 
+        time: tm, 
+        duration: d, 
+        completed: false,
+        completedAt: null,
+        createdDate: activeDayDate
+      });
+
       document.getElementById('todayTaskInput').value = '';
       document.getElementById('todayTime').value = '';
       document.getElementById('todayDuration').value = '';
@@ -525,10 +575,7 @@
       const category = document.getElementById('editTaskCategory').value;
       const dueDate = document.getElementById('editTaskDueDate').value;
 
-      if (!title) {
-        alert("কাজের নাম খালি রাখা যাবে না।");
-        return;
-      }
+      if (!title) return alert("কাজের নাম খালি রাখা যাবে না।");
 
       masterTasks = masterTasks.map(t => t.id === editingMasterId ? { ...t, title, category, dueDate } : t);
       saveState();
@@ -561,7 +608,14 @@
       const index = masterTasks.findIndex(t => t.id === selectedMasterId);
       if (index !== -1) {
         const item = masterTasks.splice(index, 1)[0];
-        todayTasks.push({ ...item, time: tm, duration: dur, completed: false });
+        todayTasks.push({ 
+          ...item, 
+          time: tm, 
+          duration: dur, 
+          completed: false,
+          completedAt: null,
+          createdDate: activeDayDate
+        });
         saveState();
       }
       closeTimeModal();
@@ -574,7 +628,20 @@
     }
 
     function toggleTodayTask(id) {
-      todayTasks = todayTasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
+      const now = new Date();
+      const currentHHMM = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
+
+      todayTasks = todayTasks.map(t => {
+        if (t.id === id) {
+          const isDone = !t.completed;
+          return {
+            ...t,
+            completed: isDone,
+            completedAt: isDone ? currentHHMM : null
+          };
+        }
+        return t;
+      });
       saveState();
     }
 
@@ -583,12 +650,45 @@
       saveState();
     }
 
-    function resetDayStats() {
-      if (confirm("আপনি কি আজকের সম্পন্ন কাজ আর্কাইভ করে নতুন দিন শুরু করতে চান?")) {
-        todayTasks = todayTasks.filter(t => !t.completed);
-        Object.keys(namazData).forEach(k => namazData[k].done = false);
-        saveState();
+    function openCompletedModal() {
+      document.getElementById('completedModal').style.display = 'flex';
+      renderCompletedModalList();
+    }
+
+    function closeCompletedModal() {
+      document.getElementById('completedModal').style.display = 'none';
+    }
+
+    function renderCompletedModalList() {
+      const listEl = document.getElementById('modalCompletedList');
+      listEl.innerHTML = '';
+      const completedTasks = todayTasks.filter(t => t.completed);
+
+      if (completedTasks.length === 0) {
+        listEl.innerHTML = `<li style="color: var(--muted); font-size: 13px; text-align: center; padding: 10px;">আজকে এখনো কোনো কাজ সম্পন্ন হয়নি।</li>`;
+        return;
       }
+
+      completedTasks.forEach(t => {
+        const li = document.createElement('li');
+        li.className = 'task-item';
+        li.style.background = '#090d16';
+        li.style.borderStyle = 'dashed';
+        li.innerHTML = `
+          <div class="task-left">
+            <input type="checkbox" checked onchange="toggleTodayTask(${t.id}); renderCompletedModalList();" />
+            <div class="task-content" style="text-decoration: line-through; color: var(--muted);">
+              <div class="task-title">${t.title}</div>
+              <div class="task-meta">
+                <span class="badge badge-${t.category}">${t.category}</span>
+                ${t.completedAt ? `<span>✓ শেষ হয়েছে: ${t.completedAt}</span>` : ''}
+              </div>
+            </div>
+          </div>
+          <button class="btn-icon btn-del" onclick="deleteTask(${t.id}, true); renderCompletedModalList();">✕</button>
+        `;
+        listEl.appendChild(li);
+      });
     }
 
     function addToGoogleCalendar(title, time, duration) {
@@ -786,51 +886,142 @@
       });
     }
 
-    function updateDayJudgment() {
+    // ==========================================
+    // ডে জাজমেন্ট ও স্মার্ট অ্যানালিটিক্স লজিক
+    // ==========================================
+    function calculateCurrentScore() {
       const totalTasks = todayTasks.length;
       const completedTasks = todayTasks.filter(t => t.completed).length;
-      const pendingTasks = totalTasks - completedTasks;
+      
+      // সময়নিষ্ঠ কাজ (On-Time Completion): কাজ সম্পন্ন হয়েছে এবং নির্ধারিত সময় থাকলে
+      let onTimeCount = 0;
+      todayTasks.forEach(t => {
+        if (t.completed) {
+          if (!t.time) onTimeCount++;
+          else if (t.completedAt && t.completedAt <= t.time) onTimeCount++;
+          else onTimeCount += 0.8; // সামান্য বিলম্বে হলেও ক্রেডিট
+        }
+      });
 
-      const totalNamaz = Object.keys(namazData).length;
+      // সেদিনই শেষ হওয়া কাজ (Same-Day Completion)
+      const sameDayCompletedCount = todayTasks.filter(t => t.completed && t.createdDate === activeDayDate).length;
+
+      const totalNamaz = 5;
       const completedNamaz = Object.values(namazData).filter(n => n.done).length;
 
-      document.getElementById('statTotal').innerText = totalTasks;
-      document.getElementById('statCompleted').innerText = completedTasks;
-      document.getElementById('statPending').innerText = pendingTasks;
-      document.getElementById('statNamaz').innerText = `${completedNamaz}/${totalNamaz}`;
+      // পয়েন্ট বন্টন:
+      // ১. নামাজ: ৪০ নম্বর
+      const namazScore = (completedNamaz / totalNamaz) * 40;
+      // ২. টাস্ক সম্পন্নতা: ৩০ নম্বর
+      const taskScore = totalTasks > 0 ? (completedTasks / totalTasks) * 30 : 0;
+      // ৩. সময়নিষ্ঠতা: ১৫ নম্বর
+      const onTimeScore = totalTasks > 0 ? (onTimeCount / totalTasks) * 15 : 0;
+      // ৪. সেদিনের কাজ সেদিন শেষ: ১৫ নম্বর
+      const sameDayScore = totalTasks > 0 ? (sameDayCompletedCount / totalTasks) * 15 : 0;
 
-      let taskScore = totalTasks > 0 ? (completedTasks / totalTasks) * 50 : 0;
-      let namazScore = (completedNamaz / totalNamaz) * 50;
-      let finalScore = Math.round(taskScore + namazScore);
+      const finalScore = Math.round(namazScore + taskScore + onTimeScore + sameDayScore);
+
+      return {
+        finalScore,
+        totalTasks,
+        completedTasks,
+        onTimeCount: Math.round(onTimeCount),
+        completedNamaz
+      };
+    }
+
+    function updateDayJudgmentAndAnalytics() {
+      const metrics = calculateCurrentScore();
+
+      document.getElementById('statTotal').innerText = metrics.totalTasks;
+      document.getElementById('statCompleted').innerText = metrics.completedTasks;
+      document.getElementById('statOnTime').innerText = metrics.onTimeCount;
+      document.getElementById('statNamaz').innerText = `${metrics.completedNamaz}/5`;
 
       const scoreBar = document.getElementById('scoreBar');
       const scoreText = document.getElementById('scoreText');
-      scoreBar.style.width = `${finalScore}%`;
+      scoreBar.style.width = `${metrics.finalScore}%`;
+      scoreText.innerText = `সফলতা: ${metrics.finalScore}%`;
 
-      let verdict = '';
-      if (finalScore >= 85) verdict = `🌟 অসাধারণ ও বরকতময় দিন! (${finalScore}%)`;
-      else if (finalScore >= 60) verdict = `👍 ভালো অগ্রগতি, বাকিগুলো শেষ করুন (${finalScore}%)`;
-      else if (finalScore >= 35) verdict = `⚠️ মাঝারি অগ্রগতি, ফোকাস বাড়ান (${finalScore}%)`;
-      else verdict = `💪 সফলতা: ${finalScore}% — কাজ ও নামাজে মনোযোগ দিন!`;
+      // গতকালকের তুলনা বের করা
+      const yDate = new Date();
+      yDate.setDate(yDate.getDate() - 1);
+      const yesterdayKey = yDate.toISOString().slice(0, 10);
+      const yesterdayData = historyStats[yesterdayKey];
 
-      scoreText.innerText = verdict;
+      let compText = "";
+      if (yesterdayData) {
+        const diff = metrics.completedTasks - yesterdayData.completedCount;
+        if (diff > 0) compText = `গতকালকের তুলনায় আজ <b>${diff}টি কাজ বেশি</b> সম্পন্ন করেছেন। দারুণ উন্নতি! 🚀`;
+        else if (diff < 0) compText = `গতকালকের চেয়ে আজ <b>${Math.abs(diff)}টি কাজ কম</b> হয়েছে। বাকি সময়ে গতি বাড়ান। ⏳`;
+        else compText = `গতকালকের সমান সংখ্যক কাজ সম্পন্ন হয়েছে। 📈`;
+      } else {
+        compText = `প্রতিদিন অ্যাপটি ব্যবহারে তুলনামূলক ট্র্যাকিং আরও সমৃদ্ধ হবে।`;
+      }
+
+      // এআই কোচিং পরামর্শ লজিক
+      let advice = "";
+      if (metrics.completedNamaz < 3) {
+        advice = `🕌 নামাজের ওয়াক্তে মনোযোগ দিন। আধ্যাত্মিক একাগ্রতা কর্মক্ষমতা বহুগুণ বাড়িয়ে দেয়।`;
+      } else if (metrics.totalTasks > 0 && metrics.completedTasks === 0) {
+        advice = `🎯 শীর্ষ তালিকার যেকোনো একটি কাজ এখনই 'ফোকাস মোড'-এ শুরু করে দিনের খাতা খুলুন।`;
+      } else if (metrics.onTimeCount < metrics.completedTasks * 0.7) {
+        advice = `⏰ কাজগুলো শেষ হচ্ছে ঠিকই, তবে নির্ধারিত সময়ের চেয়ে দেরি হচ্ছে। সময় পরিকল্পনায় আরো বাস্তববাদী হোন।`;
+      } else if (metrics.finalScore >= 80) {
+        advice = `🌟 অসাধারণ পারফরম্যান্স! আপনি উচ্চ প্রোডাক্টিভিটি ও সময়নিষ্ঠতায় অবস্থান করছেন। এই ধারাবাহিকতা বজায় রাখুন।`;
+      } else {
+        advice = `💪 নিয়মিত ছোট ছোট কাজগুলো সময়মতো শেষ করলেই দিনের পূর্ণাঙ্গ সাফল্য আসবে।`;
+      }
+
+      document.getElementById('coachingAdvice').innerHTML = `💡 <b>বিশ্লেষণ ও পরামর্শ:</b> ${compText}<br>${advice}`;
+
+      renderSevenDayChart(metrics.finalScore);
+    }
+
+    // গত ৭ দিনের ভিজ্যুয়াল বার চার্ট
+    function renderSevenDayChart(todayLiveScore) {
+      const container = document.getElementById('sevenDayChart');
+      container.innerHTML = '';
+
+      const dayNames = ['রবি', 'সোম', 'মঙ্গল', 'বুধ', 'বৃহঃ', 'শুক্র', 'শনি'];
+      const today = new Date();
+
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(today.getDate() - i);
+        const dateKey = d.toISOString().slice(0, 10);
+        const dayLabel = (i === 0) ? 'আজ' : dayNames[d.getDay()];
+
+        let score = 0;
+        if (i === 0) {
+          score = todayLiveScore;
+        } else if (historyStats[dateKey]) {
+          score = historyStats[dateKey].score;
+        }
+
+        const col = document.createElement('div');
+        col.className = 'chart-col';
+        col.innerHTML = `
+          <span class="chart-val">${score}%</span>
+          <div class="chart-bar ${i === 0 ? 'today-bar' : ''}" style="height: ${Math.max(score, 6)}%;"></div>
+          <span class="chart-label">${dayLabel}</span>
+        `;
+        container.appendChild(col);
+      }
     }
 
     function render() {
       renderNamaz();
-      updateDayJudgment();
+      updateDayJudgmentAndAnalytics();
 
       const activeListEl = document.getElementById('todayActiveList');
-      const completedListEl = document.getElementById('todayCompletedList');
-      const completedSection = document.getElementById('completedSection');
-      
       activeListEl.innerHTML = '';
-      completedListEl.innerHTML = '';
 
       const activeTasks = todayTasks.filter(t => !t.completed);
       const completedTasks = todayTasks.filter(t => t.completed);
 
       document.getElementById('ruleCount').innerText = `চলমান: ${activeTasks.length} / ৩`;
+      document.getElementById('completedCountBadge').innerText = completedTasks.length;
 
       activeTasks.forEach(t => {
         const li = document.createElement('li');
@@ -856,28 +1047,7 @@
         activeListEl.appendChild(li);
       });
 
-      if (completedTasks.length > 0) {
-        completedSection.style.display = "block";
-        completedTasks.forEach(t => {
-          const li = document.createElement('li');
-          li.className = 'task-item done-item';
-          li.innerHTML = `
-            <div class="task-left">
-              <input type="checkbox" checked onchange="toggleTodayTask(${t.id})" style="margin-top: 3px;" />
-              <div class="task-content completed-text">
-                <div class="task-title">${t.title}</div>
-                <div class="task-meta">সম্পন্ন হয়েছে</div>
-              </div>
-            </div>
-            <button class="btn-icon btn-del" onclick="deleteTask(${t.id}, true)">✕</button>
-          `;
-          completedListEl.appendChild(li);
-        });
-      } else {
-        completedSection.style.display = "none";
-      }
-
-      // মাস্টার লিস্ট রেন্ডার (কম্প্যাক্ট আইকন বাটন এবং সর্বোচ্চ টেক্সট স্পেস)
+      // মাস্টার লিস্ট রেন্ডার
       const masterListEl = document.getElementById('masterList');
       masterListEl.innerHTML = '';
       masterTasks.forEach(t => {
@@ -895,7 +1065,7 @@
             </div>
           </div>
           <div class="task-actions">
-            <button class="btn-icon btn-up" onclick="openMoveModal(${t.id})" title="চলমান শীর্ষ ৩-এ নিন">⬆️</button>
+            <button class="btn-icon btn-up" onclick="openMoveModal(${t.id})" title="শীর্ষ তালিকায় নিন">⬆️</button>
             <button class="btn-icon btn-edit" onclick="openEditModal(${t.id})" title="সংশোধন">✏️</button>
             <button class="btn-icon btn-del" onclick="deleteTask(${t.id}, false)" title="মুছুন">✕</button>
           </div>
@@ -904,12 +1074,19 @@
       });
     }
 
+    // প্রতি সেকেন্ডে ট্র্যাকিং ও রাত ১২:০০ টায় অটোমেটিক নতুন দিন শুরু
     setInterval(() => {
       const now = new Date();
       const currentHHMM = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
       const todayISO = now.toISOString().slice(0, 10);
       const currentSeconds = now.getSeconds();
 
+      // রাত ১২:০০ (০০:০০) তে অটোমেটিক নতুন দিন শুরু
+      if (currentHHMM === "00:00" && currentSeconds === 0) {
+        performDailyReset(true);
+      }
+
+      // ১. কাজের ভয়েস রিমাইন্ডার
       todayTasks.forEach(t => {
         if (!t.completed && t.time === currentHHMM && !remindedTasks.has(`task_${t.id}_${currentHHMM}`)) {
           remindedTasks.add(`task_${t.id}_${currentHHMM}`);
@@ -921,6 +1098,7 @@
         }
       });
 
+      // ২. নামাজের ওয়াক্তের ভয়েস
       Object.keys(namazData).forEach(k => {
         const item = namazData[k];
         if (item.time === currentHHMM && !remindedTasks.has(`namaz_${k}_${currentHHMM}`)) {
@@ -933,6 +1111,7 @@
         }
       });
 
+      // ৩. সকাল ৯:০০ টায় ডেডলাইন ভয়েস
       if (currentHHMM === "09:00" && currentSeconds === 0) {
         masterTasks.forEach(t => {
           if (t.dueDate === todayISO && !remindedTasks.has(`due_${t.id}_${todayISO}`)) {
@@ -946,6 +1125,7 @@
         });
       }
 
+      // ৪. সকাল ও রাতের রুটিন ভয়েস
       if (currentHHMM === "08:00" && currentSeconds === 0) {
         notifyWithDirectVoice(
           "শুভ সকাল!",
@@ -961,6 +1141,11 @@
         );
       }
     }, 1000);
+
+    // অ্যাপ চালুর সময় ডেট রোলওভার চেক
+    if (activeDayDate !== todayDateKey) {
+      performDailyReset(false);
+    }
 
     loadRandomQuote();
     fetchLivePrayerTimes();
