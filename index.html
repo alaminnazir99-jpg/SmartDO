@@ -855,12 +855,12 @@
       if (!key) return alert("সঠিক API Key দিন।");
       geminiApiKey = key;
       localStorage.setItem('geminiApiKey', key);
-      localStorage.removeItem('geminiActiveModel'); // নতুন কি দিলে মডেল ক্যাশ ক্লিয়ার করা
+      localStorage.removeItem('geminiActiveModel');
       alert("Gemini API Key সফলভাবে সংরক্ষিত হয়েছে!");
       document.getElementById('apiKeySection').style.display = 'none';
     }
 
-    // নির্ভুল এআই ইঞ্জিন: অটো-মডেল ফাইন্ডার ও ডায়নামিক কল
+    // নির্ভুল এআই ইঞ্জিন: gemini-3.6-flash এবং ফলব্যাক মডেল চেইন
     async function askAiForScheduleAdvice() {
       const cleanKey = (geminiApiKey || '').trim();
       if (!cleanKey) {
@@ -891,45 +891,20 @@
 প্রশ্ন: "আমার এই সময়টুকু ফাঁকা আছে বা আমি এখন কোন কাজটিতে সর্বোচ্চ মনোযোগ দেব? আমাকে বাস্তবসম্মত ৩-৪ লাইনে পরিষ্কার ও ইতিবাচক বাংলায় পরামর্শ দাও।"
       `;
 
+      // গুগলের প্রস্তাবিত gemini-3.6-flash সহ সক্রিয় মডেলের অগ্রাধিকার তালিকা
+      const candidateModels = [
+        'models/gemini-3.6-flash',
+        'models/gemini-3-flash',
+        'models/gemini-2.0-flash',
+        'models/gemini-pro'
+      ];
+
+      let success = false;
+      let lastErrorMsg = '';
+
       try {
-        // ১. স্বয়ংক্রিয়ভাবে সক্রিয় মডেল খুঁজে নেওয়া
-        let targetModel = localStorage.getItem('geminiActiveModel');
-
-        if (!targetModel) {
-          try {
-            const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${cleanKey}`);
-            const listData = await listRes.json();
-            if (listData.models && Array.isArray(listData.models)) {
-              // generateContent সাপোর্ট করে এমন মডেল ফিল্টার
-              const validModels = listData.models.filter(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes('generateContent'));
-              // ফ্ল্যাশ মডেলকে অগ্রাধিকার দেওয়া
-              const flashModel = validModels.find(m => m.name.includes('flash') || m.name.includes('gemini-2'));
-              const selected = flashModel || validModels[0];
-              if (selected) {
-                targetModel = selected.name; // এটি ইতিমধ্যে "models/..." ফরম্যাটে থাকে
-                localStorage.setItem('geminiActiveModel', targetModel);
-              }
-            }
-          } catch(e) {
-            console.log("Model discovery bypassed, attempting direct list...");
-          }
-        }
-
-        // সম্ভাব্য বিকল্প মডেলের তালিকা (যদি অটো-ডিটেকশনে কোনো কারণে মিস হয়)
-        const candidateModels = targetModel ? [targetModel] : [
-          'models/gemini-2.0-flash',
-          'models/gemini-2.5-flash',
-          'models/gemini-1.5-flash-latest',
-          'models/gemini-1.5-pro-latest',
-          'models/gemini-pro'
-        ];
-
-        let success = false;
-        let lastErrorMsg = '';
-
         for (let model of candidateModels) {
-          const modelName = model.startsWith('models/') ? model : `models/${model}`;
-          const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/${modelName}:generateContent?key=${cleanKey}`, {
+          const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/${model}:generateContent?key=${cleanKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
@@ -939,13 +914,12 @@
 
           if (data.error) {
             lastErrorMsg = data.error.message;
-            continue; // পরবর্তী মডেলটিতে চেষ্টা করবে
+            continue; // যদি এই মডেলটি সাপোর্ট না করে, পরবর্তী মডেলে চেষ্টা করবে
           }
 
           if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
             resBox.innerText = data.candidates[0].content.parts[0].text;
             resBox.style.display = 'block';
-            localStorage.setItem('geminiActiveModel', modelName); // সফল মডেলটি সেভ রাখা
             success = true;
             break;
           }
