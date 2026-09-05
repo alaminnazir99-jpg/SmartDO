@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SmartDo - Focus, Analytics & Day Judgment</title>
+  <title>SmartDo - Focus, Routine & Day Judgment</title>
   <meta name="theme-color" content="#090d16" />
   
   <style>
@@ -17,17 +17,26 @@
       --danger: #ef4444;
       --success: #22c55e;
       --warning: #f59e0b;
+      --purple: #a855f7;
       --wa-green: #25D366;
       --fb-blue: #1877F2;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background: var(--bg); color: var(--text); padding: 12px; display: flex; justify-content: center; }
-    .container { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; }
+    .container { width: 100%; max-width: 920px; display: flex; flex-direction: column; gap: 16px; margin-bottom: 50px; }
     
+    /* ট্যাব নেভিগেশন */
+    .tab-nav { display: flex; background: #0f172a; border-radius: 12px; padding: 5px; gap: 6px; border: 1px solid var(--border); }
+    .tab-btn { flex: 1; padding: 10px; border-radius: 8px; border: none; background: transparent; color: var(--muted); font-weight: 600; font-size: 13.5px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .tab-btn.active { background: var(--accent); color: #090d16; box-shadow: 0 2px 8px rgba(56, 189, 248, 0.3); }
+
+    .tab-content { display: flex; flex-direction: column; gap: 16px; }
+    .hidden { display: none !important; }
+
     .card { border-radius: 12px; padding: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); border: 1px solid var(--border); }
     h2, h3 { margin-bottom: 10px; font-weight: 600; font-size: 17px; }
 
-    /* বক্স থিমিং */
+    /* বক্স থিম */
     .card-quote {
       background: linear-gradient(135deg, #062b21 0%, #0d1f1b 100%);
       border: 1px solid rgba(34, 197, 94, 0.35);
@@ -58,12 +67,17 @@
       background: linear-gradient(135deg, #172033 0%, #0f172a 100%);
       border: 1px solid #334155;
     }
-    .card-master h2 { color: #cbd5e1; }
 
-    .card-settings {
-      background: #0d1322;
-      border: 1px solid #1e293b;
+    .card-routine {
+      background: linear-gradient(135deg, #141b2d 0%, #0b1120 100%);
+      border: 1px solid rgba(56, 189, 248, 0.3);
     }
+
+    .card-ai {
+      background: linear-gradient(135deg, #24143a 0%, #130c22 100%);
+      border: 1px solid rgba(168, 85, 247, 0.4);
+    }
+    .card-ai h3 { color: #c084fc; }
 
     /* কোট টেক্সট */
     .quote-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
@@ -81,8 +95,6 @@
     
     .coaching-box { background: rgba(15, 23, 42, 0.6); border-left: 3px solid #818cf8; border-radius: 6px; padding: 10px 12px; font-size: 12.5px; color: #e2e8f0; margin-top: 10px; line-height: 1.4; }
     
-    .report-card { background: rgba(30, 41, 59, 0.5); border: 1px dashed rgba(129, 140, 248, 0.4); border-radius: 8px; padding: 10px 12px; margin-top: 12px; font-size: 12px; color: #cbd5e1; }
-
     /* গত ৭ দিনের চার্ট */
     .chart-container { display: flex; align-items: flex-end; justify-content: space-between; height: 110px; gap: 6px; margin-top: 14px; padding-top: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
     .chart-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end; }
@@ -91,24 +103,85 @@
     .chart-label { font-size: 10px; color: var(--muted); }
     .chart-val { font-size: 9px; color: #cbd5e1; font-weight: bold; margin-bottom: 2px; }
 
-    /* নামাজের বার */
-    .namaz-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-top: 8px; }
-    .namaz-card { background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 8px; padding: 8px 10px; display: flex; align-items: center; justify-content: space-between; }
-    .namaz-info { font-size: 12px; }
-    .namaz-info b { display: block; font-size: 14px; color: var(--text); }
-    .namaz-check { width: 18px; height: 18px; cursor: pointer; accent-color: var(--success); }
+    /* নামাজের গ্রিড ও কাস্টম সালাত সময় */
+    .namaz-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; margin-top: 8px; }
+    .namaz-card { background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 8px; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; }
+    .namaz-header-row { display: flex; align-items: center; justify-content: space-between; }
+    .namaz-time-range { font-size: 11px; color: var(--muted); }
+    .namaz-custom-box { display: flex; align-items: center; justify-content: space-between; gap: 4px; background: rgba(0,0,0,0.3); padding: 4px 6px; border-radius: 6px; }
+    .namaz-custom-box label { font-size: 11px; color: #7dd3fc; }
+    .namaz-custom-box input[type="time"] { padding: 2px 4px; font-size: 11px; border: 1px solid var(--border); background: #0b1120; border-radius: 4px; width: 85px; }
 
-    /* ইনপুট ও বাটন */
+    /* ২৪ ঘণ্টার টাইম-ব্লকিং তালিকা ও লাইভ হাইলাইট */
+    .routine-timeline { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+    .routine-slot { 
+      background: rgba(15, 23, 42, 0.85); 
+      border: 1px solid rgba(255, 255, 255, 0.08); 
+      border-radius: 10px; 
+      padding: 12px 14px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      gap: 12px; 
+      transition: all 0.3s ease; 
+    }
+    .routine-slot.active-slot { 
+      border: 2px solid #22c55e !important; 
+      background: linear-gradient(90deg, rgba(34, 197, 94, 0.15) 0%, rgba(15, 23, 42, 0.9) 100%) !important; 
+      box-shadow: 0 0 15px rgba(34, 197, 94, 0.25); 
+      transform: scale(1.01); 
+    }
+    .slot-time { font-family: monospace; font-size: 12px; font-weight: 700; color: #38bdf8; min-width: 105px; }
+    .slot-title { font-size: 13.5px; font-weight: 500; color: #f1f5f9; flex: 1; }
+    .slot-badges { display: flex; gap: 8px; align-items: center; }
+
+    .btn-add-rule3 {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid #38bdf8;
+      color: #38bdf8;
+      font-size: 11px;
+      padding: 5px 9px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+      white-space: nowrap;
+    }
+    .btn-add-rule3:hover {
+      background: #38bdf8;
+      color: #090d16;
+    }
+
+    .badge-live-now {
+      background: #22c55e;
+      color: #052e16;
+      font-weight: 700;
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      animation: pulseLive 2s infinite ease-in-out;
+    }
+    @keyframes pulseLive {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.85; }
+    }
+
+    /* বাটন ও ইনপুট */
     .input-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
     .input-row { display: flex; gap: 8px; flex-wrap: wrap; }
-    input, select, button { border-radius: 6px; border: 1px solid var(--border); background: #0b1120; color: var(--text); padding: 8px 12px; font-size: 13px; outline: none; }
-    input:focus, select:focus { border-color: var(--accent); }
-    input[type="text"], input[type="date"] { flex: 1; min-width: 140px; }
+    input, select, button, textarea { border-radius: 6px; border: 1px solid var(--border); background: #0b1120; color: var(--text); padding: 8px 12px; font-size: 13px; outline: none; }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+    input[type="text"], input[type="date"], textarea { flex: 1; min-width: 140px; }
     
     button { background: var(--accent); color: #090d16; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
     button:hover { background: var(--accent-hover); }
     .btn-secondary { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
     .btn-secondary:hover { background: rgba(56, 189, 248, 0.1); }
+    .btn-purple { background: var(--purple); color: #ffffff; }
+    .btn-purple:hover { background: #9333ea; }
     
     .btn-icon { width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 14px; border: 1px solid transparent; background: #0b1120; }
     .btn-up { color: var(--accent); border-color: rgba(56, 189, 248, 0.4); }
@@ -128,22 +201,19 @@
     .task-meta { font-size: 11px; color: var(--muted); margin-top: 4px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
     .task-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 
-    .badge { display: inline-block; padding: 1px 5px; border-radius: 3px; font-size: 9.5px; font-weight: bold; text-transform: uppercase; }
+    .badge { display: inline-block; padding: 1px 6px; border-radius: 4px; font-size: 9.5px; font-weight: bold; text-transform: uppercase; }
     .badge-teaching { background: #0284c7; color: white; }
     .badge-personal { background: #10b981; color: white; }
     .badge-admin { background: #f59e0b; color: white; }
+    .badge-recurring { background: #0284c7; color: white; }
+    .badge-temp { background: #d97706; color: white; }
 
     .rule-of-3-header { display: flex; justify-content: space-between; align-items: center; }
     .count-tag { font-size: 12px; color: #7dd3fc; font-weight: bold; }
 
-    /* মোডাল উইন্ডো */
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.8); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
+    /* মোডাল */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
     .modal-box { background: #111827; border: 1px solid var(--accent); border-radius: 12px; max-width: 460px; width: 100%; padding: 18px; box-shadow: 0 10px 25px rgba(0,0,0,0.6); max-height: 85vh; overflow-y: auto; }
-    .modal-box h3 { margin-bottom: 6px; font-size: 16px; }
-    .modal-box p { font-size: 12.5px; color: var(--muted); margin-bottom: 12px; }
-
-    /* সেটিংস ও ব্যাকআপ কন্ট্রোল */
-    .backup-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
 
     /* ডেভেলপার সেকশন */
     .developer-card { background: linear-gradient(180deg, #111827 0%, #0b0f19 100%); border: 1px solid rgba(56, 189, 248, 0.25); text-align: center; }
@@ -157,7 +227,7 @@
     .btn-fb { background-color: var(--fb-blue); }
     .btn-fb:hover { background-color: #1464cc; }
 
-    /* পিওর সাইলেন্ট ব্ল্যাক ফোকাস স্ক্রিন */
+    /* ফোকাস স্ক্রিন */
     #focusScreen {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
@@ -183,165 +253,226 @@
 
   <div class="container">
 
-    <!-- ১. দৈনিক অনুপ্রেরণা কার্ড -->
-    <div class="card card-quote">
-      <div class="quote-header">
-        <span class="quote-tag" id="quoteCategory">✨ দৈনিক অনুপ্রেরণা</span>
-        <button class="btn-secondary" onclick="loadRandomQuote()" style="font-size: 10px; padding: 2px 6px; border-color: #4ade80; color: #4ade80;">🔄 নতুন বাণী</button>
-      </div>
-      <div class="quote-text" id="quoteText">"ধৈর্য ধারণ করো, নিশ্চয়ই আল্লাহর সাহায্য অত্যন্ত নিকটে।"</div>
-      <div class="quote-author" id="quoteAuthor">— আল-কোরআন</div>
+    <!-- প্রধান ট্যাব নেভিগেশন -->
+    <div class="tab-nav">
+      <button class="tab-btn active" id="tabBtnDashboard" onclick="switchTab('dashboard')">🎯 SmartDo ড্যাশবোর্ড</button>
+      <button class="tab-btn" id="tabBtnRoutine" onclick="switchTab('routine')">🕒 ২৪ ঘণ্টার ডেইলি রুটিন</button>
     </div>
-    
-    <!-- ২. ডে জাজমেন্ট ও ৭ দিনের অ্যানালিটিক্স -->
-    <div class="card card-analytics">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h2>📊 ডে জাজমেন্ট ও স্মার্ট অ্যানালিটিক্স</h2>
-        <button class="btn-secondary" onclick="manualNewDayReset()" style="font-size: 10px; padding: 3px 6px; border-color: #818cf8; color: #a5b4fc;">🔄 নতুন দিন</button>
+
+    <!-- ============================================== -->
+    <!-- ট্যাব ১: স্মার্টডু ড্যাশবোর্ড                     -->
+    <!-- ============================================== -->
+    <div id="tabDashboard" class="tab-content">
+      
+      <!-- ১. দৈনিক অনুপ্রেরণা কার্ড -->
+      <div class="card card-quote">
+        <div class="quote-header">
+          <span class="quote-tag" id="quoteCategory">✨ দৈনিক অনুপ্রেরণা</span>
+          <button class="btn-secondary" onclick="loadRandomQuote()" style="font-size: 10px; padding: 2px 6px; border-color: #4ade80; color: #4ade80;">🔄 নতুন বাণী</button>
+        </div>
+        <div class="quote-text" id="quoteText">"ধৈর্য ধারণ করো, নিশ্চয়ই আল্লাহর সাহায্য অত্যন্ত নিকটে।"</div>
+        <div class="quote-author" id="quoteAuthor">— আল-কোরআন</div>
       </div>
       
-      <div class="judgment-grid">
-        <div class="judgment-card">
-          <span style="font-size: 11px; color: var(--muted);">আজকের কাজ</span>
-          <div class="judgment-value" id="statTotal">০</div>
+      <!-- ২. ডে জাজমেন্ট ও ৭ দিনের অ্যানালিটিক্স -->
+      <div class="card card-analytics">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h2>📊 ডে জাজমেন্ট ও স্মার্ট অ্যানালিটিক্স</h2>
+          <button class="btn-secondary" onclick="manualNewDayReset()" style="font-size: 10px; padding: 3px 6px; border-color: #818cf8; color: #a5b4fc;">🔄 নতুন দিন</button>
         </div>
-        <div class="judgment-card">
-          <span style="font-size: 11px; color: var(--muted);">সম্পন্ন</span>
-          <div class="judgment-value" id="statCompleted" style="color: var(--success);">০</div>
+        
+        <div class="judgment-grid">
+          <div class="judgment-card">
+            <span style="font-size: 11px; color: var(--muted);">আজকের কাজ</span>
+            <div class="judgment-value" id="statTotal">০</div>
+          </div>
+          <div class="judgment-card">
+            <span style="font-size: 11px; color: var(--muted);">সম্পন্ন</span>
+            <div class="judgment-value" id="statCompleted" style="color: var(--success);">০</div>
+          </div>
+          <div class="judgment-card">
+            <span style="font-size: 11px; color: var(--muted);">সময়নিষ্ঠ কাজ</span>
+            <div class="judgment-value" id="statOnTime" style="color: var(--warning);">০</div>
+          </div>
+          <div class="judgment-card">
+            <span style="font-size: 11px; color: var(--muted);">নামাজ</span>
+            <div class="judgment-value" id="statNamaz" style="color: #38bdf8;">০/৫</div>
+          </div>
         </div>
-        <div class="judgment-card">
-          <span style="font-size: 11px; color: var(--muted);">সময়নিষ্ঠ কাজ</span>
-          <div class="judgment-value" id="statOnTime" style="color: var(--warning);">০</div>
+
+        <div class="judgment-bar-bg">
+          <div class="judgment-bar-fill" id="scoreBar"></div>
         </div>
-        <div class="judgment-card">
-          <span style="font-size: 11px; color: var(--muted);">নামাজ</span>
-          <div class="judgment-value" id="statNamaz" style="color: #38bdf8;">০/৫</div>
+        <div style="font-size: 13px; font-weight: 600; margin-top: 8px; text-align: center; color: #e2e8f0;" id="scoreText">সফলতা: ০%</div>
+
+        <div class="coaching-box" id="coachingAdvice">
+          💡 <b>পরামর্শ:</b> আজকের দিনটি শুরু করুন। নির্দিষ্ট সময়ে শীর্ষ ৩টি কাজের প্রথমটি শেষ করার মাধ্যমে সময়নিষ্ঠতার পয়েন্ট অর্জন করুন।
+        </div>
+
+        <div style="margin-top: 14px;">
+          <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">📈 গত ৭ দিনের ট্রেন্ড:</div>
+          <div class="chart-container" id="sevenDayChart"></div>
         </div>
       </div>
 
-      <div class="judgment-bar-bg">
-        <div class="judgment-bar-fill" id="scoreBar"></div>
-      </div>
-      <div style="font-size: 13px; font-weight: 600; margin-top: 8px; text-align: center; color: #e2e8f0;" id="scoreText">সফলতা: ০%</div>
-
-      <div class="coaching-box" id="coachingAdvice">
-        💡 <b>পরামর্শ:</b> আজকের দিনটি শুরু করুন। নির্দিষ্ট সময়ে শীর্ষ ৩টি কাজের প্রথমটি শেষ করার মাধ্যমে সময়নিষ্ঠতার পয়েন্ট অর্জন করুন।
-      </div>
-
-      <!-- ৭ দিনের ট্রেন্ড চার্ট -->
-      <div style="margin-top: 14px;">
-        <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">📈 গত ৭ দিনের সফলতার ট্রেন্ড:</div>
-        <div class="chart-container" id="sevenDayChart"></div>
+      <!-- ৩. নামাজের সময় ও কাস্টম সালাত নির্ধারণ -->
+      <div class="card card-namaz">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3>🕌 নামাজের সময় ও কাস্টম সালাত সেটিং</h3>
+          <button class="btn-secondary" onclick="enableAudioAndNotification()" style="font-size: 10px; padding: 3px 6px;">🔊 নোটিফিকেশন অন</button>
+        </div>
+        <p style="font-size: 11.5px; color: var(--muted); margin-bottom: 8px;">ওয়াক্তের সীমার ভেতর আপনি যে নির্দিষ্ট সময়ে সালাত আদায় করতে চান তা সেট করে রাখুন:</p>
+        <div class="namaz-grid" id="namazContainer"></div>
       </div>
 
-      <!-- সাপ্তাহিক পারফরম্যান্স কার্ড -->
-      <div class="report-card" id="weeklyReportCard">
-        📊 <b>সাপ্তাহিক মূল্যায়ন:</b> লোড হচ্ছে...
+      <!-- ৪. The Rule of 3 -->
+      <div class="card card-rule-of-3">
+        <div class="rule-of-3-header">
+          <h2>🎯 The Rule of 3 (চলমান শীর্ষ ৩ কাজ)</h2>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="count-tag" id="ruleCount">চলমান: ০ / ৩</span>
+            <button class="btn-secondary" onclick="openCompletedModal()" style="font-size: 11px; padding: 3px 7px;">✓ সম্পন্ন কাজ (<span id="completedCountBadge">০</span>)</button>
+          </div>
+        </div>
+        <p style="color: #94a3b8; font-size: 12px; margin-bottom: 10px;">
+          একটানা সর্বোচ্চ ৩টি চলমান কাজ থাকবে। গভীর মনোযোগের জন্য কাজের পাশের <b>"ফোকাস"</b> বাটন চাপুন।
+        </p>
+
+        <div class="input-group">
+          <div class="input-row">
+            <input type="text" id="todayTaskInput" placeholder="জরুরি কাজের বিবরণ..." />
+            <select id="todayCategory">
+              <option value="teaching">ক্লাস/টিচিং</option>
+              <option value="admin">অ্যাডমিন</option>
+              <option value="personal">ব্যক্তিগত</option>
+            </select>
+          </div>
+          <div class="input-row">
+            <input type="time" id="todayTime" title="শুরুর সময়" />
+            <input type="number" id="todayDuration" placeholder="মিনিট" style="width: 100px;" />
+            <button onclick="addTodayTaskDirect()">+ যুক্ত করুন</button>
+          </div>
+        </div>
+
+        <ul class="task-list" id="todayActiveList"></ul>
       </div>
+
+      <!-- ৫. মাস্টার লিস্ট -->
+      <div class="card card-master">
+        <h2>📋 মাস্টার লিস্ট (সব কাজের ভাণ্ডার ও ডেডলাইন)</h2>
+        <div class="input-group">
+          <div class="input-row">
+            <input type="text" id="masterTaskInput" placeholder="কাজের নাম ও বিস্তারিত..." />
+            <select id="masterCategory">
+              <option value="teaching">ক্লাস/টিচিং</option>
+              <option value="admin">অ্যাডমিন</option>
+              <option value="personal">ব্যক্তিগত</option>
+            </select>
+          </div>
+          <div class="input-row">
+            <input type="date" id="masterDueDate" title="ডেডলাইন" />
+            <button onclick="addMasterTask()">তালিকায় রাখুন</button>
+          </div>
+        </div>
+        <ul class="task-list" id="masterList"></ul>
+      </div>
+
+      <!-- ব্যাকআপ ও রিস্টোর -->
+      <div class="card" style="background: #0d1322;">
+        <h3>💾 ডাটা ব্যাকআপ ও এক্সপোর্ট</h3>
+        <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
+          <button class="btn-secondary" onclick="exportDataBackup()" style="font-size: 12px;">⬇️ ব্যাকআপ ডাউনলোড (JSON)</button>
+          <button class="btn-secondary" onclick="document.getElementById('importFile').click()" style="font-size: 12px;">⬆️ ডাটা রিস্টোর করুন</button>
+          <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importDataBackup(event)" />
+        </div>
+      </div>
+
     </div>
 
-    <!-- ৩. নামাজের লাইভ সময় ও চেকলিস্ট -->
-    <div class="card card-namaz">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h3>🕌 নামাজের সময় ও চেকলিস্ট</h3>
-        <button class="btn-secondary" onclick="enableAudioAndNotification()" style="font-size: 10px; padding: 3px 6px;">🔊 ভয়েস অন</button>
+    <!-- ============================================== -->
+    <!-- ট্যাব ২: ২৪ ঘণ্টার ডেইলি রুটিন ও AI পরামর্শ   -->
+    <!-- ============================================== -->
+    <div id="tabRoutine" class="tab-content hidden">
+
+      <!-- AI ইন্টিগ্রেশন কার্ড -->
+      <div class="card card-ai">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3>🤖 AI স্মার্ট শিডিউল কনসালট্যান্ট (Gemini API)</h3>
+          <button class="btn-secondary" onclick="toggleApiKeyInput()" style="font-size: 10px; padding: 2px 6px; border-color: #c084fc; color: #c084fc;">⚙️ API Key</button>
+        </div>
+        <p style="font-size: 12px; color: #d8b4fe; margin-top: 4px;">
+          আপনার নামাজের সময়, বর্তমান ফাঁকা স্লট এবং পেন্ডিং কাজের সমন্বয়ে কৃত্রিম বুদ্ধিমত্তা আপনাকে সময় ব্যবস্থাপনার পরামর্শ দেবে।
+        </p>
+
+        <!-- API Key বক্স -->
+        <div id="apiKeySection" style="display: none; margin-top: 10px; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 6px;">
+          <label style="font-size: 11px; color: #c084fc; display: block; margin-bottom: 4px;">Gemini API Key দিন (ব্রাউজারে সেভ থাকবে):</label>
+          <div style="display: flex; gap: 6px;">
+            <input type="password" id="geminiApiKeyInput" placeholder="AIzaSy..." style="flex: 1; font-size: 12px;" />
+            <button onclick="saveGeminiApiKey()" style="padding: 4px 10px; font-size: 12px;">সংরক্ষণ</button>
+          </div>
+        </div>
+
+        <div style="margin-top: 10px;">
+          <button class="btn-purple" id="btnAskAi" onclick="askAiForScheduleAdvice()" style="width: 100%; padding: 8px; font-size: 13px;">
+            ✨ "আমার এই সময়টুকু ফাঁকা আছে, এখন কী করা উচিত?"
+          </button>
+        </div>
+
+        <div id="aiResponseBox" style="display: none; background: rgba(15, 23, 42, 0.7); border-left: 3px solid #c084fc; padding: 10px 12px; border-radius: 6px; margin-top: 10px; font-size: 13px; line-height: 1.5; color: #f1f5f9; white-space: pre-line;"></div>
       </div>
-      <div class="namaz-grid" id="namazContainer"></div>
+
+      <!-- নতুন রুটিন স্লট যুক্ত করার ফর্ম -->
+      <div class="card card-routine">
+        <h2>🕒 নতুন রুটিন স্লট যুক্ত করুন</h2>
+        <div class="input-group">
+          <div class="input-row">
+            <input type="text" id="routineTitle" placeholder="কাজের নাম (যেমন: ফিজিক্স লেকচার তৈরি, ব্যায়াম)..." />
+            <select id="routineType">
+              <option value="recurring">🔁 Recurring (প্রতিদিনের রুটিন)</option>
+              <option value="temporary">📅 Temporary (আজকের জন্য কেবল)</option>
+            </select>
+          </div>
+          <div class="input-row">
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <span style="font-size: 11px; color: var(--muted);">শুরু:</span>
+              <input type="time" id="routineStart" />
+            </div>
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <span style="font-size: 11px; color: var(--muted);">শেষ:</span>
+              <input type="time" id="routineEnd" />
+            </div>
+            <button onclick="addRoutineSlot()">+ স্লট সংরক্ষণ</button>
+          </div>
+        </div>
+
+        <!-- টাইমলাইন লিস্ট -->
+        <h3 style="margin-top: 14px; font-size: 15px; color: #38bdf8;">📋 আজকের ২৪ ঘণ্টার সময়সূচি ও বর্তমান অবস্থা:</h3>
+        <div class="routine-timeline" id="routineTimelineContainer"></div>
+      </div>
+
     </div>
 
-    <!-- ৪. The Rule of 3 -->
-    <div class="card card-rule-of-3">
-      <div class="rule-of-3-header">
-        <h2>🎯 The Rule of 3 (চলমান শীর্ষ ৩ কাজ)</h2>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span class="count-tag" id="ruleCount">চলমান: ০ / ৩</span>
-          <button class="btn-secondary" onclick="openCompletedModal()" style="font-size: 11px; padding: 3px 7px;">✓ সম্পন্ন কাজ (<span id="completedCountBadge">০</span>)</button>
-        </div>
-      </div>
-      <p style="color: #94a3b8; font-size: 12px; margin-bottom: 10px;">
-        একটানা সর্বোচ্চ ৩টি চলমান কাজ থাকবে। গভীর মনোযোগের জন্য কাজের পাশের <b>"ফোকাস"</b> বাটন চাপুন।
-      </p>
-
-      <div class="input-group">
-        <div class="input-row">
-          <input type="text" id="todayTaskInput" placeholder="জরুরি কাজের বিবরণ..." />
-          <select id="todayCategory">
-            <option value="teaching">ক্লাস/টিচিং</option>
-            <option value="admin">অ্যাডমিন</option>
-            <option value="personal">ব্যক্তিগত</option>
-          </select>
-        </div>
-        <div class="input-row">
-          <input type="time" id="todayTime" title="শুরুর সময়" />
-          <input type="number" id="todayDuration" placeholder="মিনিট" style="width: 100px;" />
-          <button onclick="addTodayTaskDirect()">+ যুক্ত করুন</button>
-        </div>
-      </div>
-
-      <ul class="task-list" id="todayActiveList"></ul>
-    </div>
-
-    <!-- ৫. মাস্টার লিস্ট -->
-    <div class="card card-master">
-      <h2>📋 মাস্টার লিস্ট (সব কাজের ভাণ্ডার ও ডেডলাইন)</h2>
-      <p style="color: var(--muted); font-size: 12px; margin-bottom: 10px;">
-        ভবিষ্যতের কাজগুলো ডেডলাইনসহ রাখুন। যেকোনো সময় ✏️ দিয়ে সংশোধন করতে পারবেন।
-      </p>
-
-      <div class="input-group">
-        <div class="input-row">
-          <input type="text" id="masterTaskInput" placeholder="কাজের নাম ও বিস্তারিত..." />
-          <select id="masterCategory">
-            <option value="teaching">ক্লাস/টিচিং</option>
-            <option value="admin">অ্যাডমিন</option>
-            <option value="personal">ব্যক্তিগত</option>
-          </select>
-        </div>
-        <div class="input-row">
-          <input type="date" id="masterDueDate" title="ডেডলাইন" />
-          <button onclick="addMasterTask()">তালিকায় রাখুন</button>
-        </div>
-      </div>
-
-      <ul class="task-list" id="masterList"></ul>
-    </div>
-
-    <!-- ৬. ডেটা ব্যাকআপ ও সেটিংস কার্ড -->
-    <div class="card card-settings">
-      <h3>💾 ডেটা ব্যাকআপ ও সংরক্ষণ</h3>
-      <p style="font-size: 12px; color: var(--muted);">ব্রাউজারের হিস্ট্রি বা ক্যাশ ক্লিয়ার হলেও আপনার ডাটা সুরক্ষিত রাখতে ব্যাকআপ ফাইল ডাউনলোড করে রাখুন।</p>
-      <div class="backup-actions">
-        <button class="btn-secondary" onclick="exportDataBackup()" style="font-size: 12px;">⬇️ ব্যাকআপ ডাউনলোড (JSON)</button>
-        <button class="btn-secondary" onclick="document.getElementById('importFile').click()" style="font-size: 12px;">⬆️ ডাটা রিস্টোর করুন</button>
-        <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importDataBackup(event)" />
-      </div>
-    </div>
-
-    <!-- ডেভেলপার ও যোগাযোগ কার্ড -->
+    <!-- ডেভেলপার কার্ড -->
     <div class="card developer-card">
       <div class="developer-header">Developer & Creator</div>
       <div class="developer-name">Alamin Nazir</div>
       <div class="developer-title">Director, Future Academy | Educator & Creator</div>
       <div class="contact-buttons">
-        <a href="https://wa.me/8801796431795?text=Hello%20Alamin%20Sir,%20I%20am%20using%20your%20SmartDo%20App." target="_blank" class="contact-btn btn-wa">
-          💬 WhatsApp
-        </a>
-        <a href="https://www.facebook.com/alaminphysics01" target="_blank" class="contact-btn btn-fb">
-          🌐 Facebook
-        </a>
+        <a href="https://wa.me/8801796431795?text=Hello%20Alamin%20Sir,%20I%20am%20using%20your%20SmartDo%20App." target="_blank" class="contact-btn btn-wa">💬 WhatsApp</a>
+        <a href="https://www.facebook.com/alaminphysics01" target="_blank" class="contact-btn btn-fb">🌐 Facebook</a>
       </div>
     </div>
 
   </div>
 
-  <!-- সম্পন্ন কাজের আর্কাইভ মোডাল -->
+  <!-- হিস্ট্রি মোডাল -->
   <div class="modal-overlay" id="completedModal">
     <div class="modal-box">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-        <h3 style="color: var(--success); margin: 0;">✓ সম্পন্ন হওয়া কাজের আর্কাইভ</h3>
+        <h3 style="color: var(--success); margin: 0;">✓ সম্পন্ন কাজের আর্কাইভ</h3>
         <button class="btn-del" onclick="closeCompletedModal()" style="padding: 2px 8px;">✕</button>
       </div>
-      <p>আপনার সম্পন্ন হওয়া কাজগুলো স্থায়ীভাবে সংরক্ষিত আছে:</p>
       <ul class="task-list" id="modalCompletedList"></ul>
       <div style="display: flex; justify-content: flex-end; margin-top: 14px;">
         <button onclick="closeCompletedModal()" style="padding: 6px 14px; font-size: 12px;">বন্ধ করুন</button>
@@ -349,11 +480,10 @@
     </div>
   </div>
 
-  <!-- মাস্টার লিস্ট কাজ এডিট করার মোডাল -->
+  <!-- মাস্টার এডিট মোডাল -->
   <div class="modal-overlay" id="editModal">
     <div class="modal-box">
       <h3 style="color: var(--warning);">✏️ কাজের তথ্য সংশোধন</h3>
-      <p>কাজের নাম, ক্যাটাগরি বা ডেডলাইন পরিবর্তন করুন:</p>
       <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px;">
         <div>
           <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 3px;">কাজের নাম:</label>
@@ -379,11 +509,10 @@
     </div>
   </div>
 
-  <!-- সময় নির্ধারণের পপআপ -->
+  <!-- মাস্টার থেকে আজকের দিনে নেওয়ার মোডাল -->
   <div class="modal-overlay" id="timeModal">
     <div class="modal-box">
       <h3 id="modalTaskTitle">কাজের সময় নির্ধারণ</h3>
-      <p>আজকের দিনে এই কাজটি কোন সময় করবেন এবং কতক্ষণ সময় নেবেন:</p>
       <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px;">
         <div>
           <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 3px;">শুরুর সময়:</label>
@@ -408,21 +537,17 @@
       <span style="font-size: 11px; color: #64748b; text-transform: uppercase;">চলমান কাজ:</span>
       <div class="focus-task-title" id="focusCurrentTask">কাজের শিরোনাম</div>
     </div>
-
     <div>
       <div class="focus-timer-text" id="focusTimerDisplay">25:00</div>
-      <p style="font-size: 12px; color: #64748b;">পূর্ণ মনোনিবেশ বজায় রাখুন।</p>
+      <p style="font-size: 12px; color: #64748b;">পূর্ণ একাগ্রতা ধরে রাখুন।</p>
       <button id="noiseToggleBtn" class="btn-secondary" onclick="toggleWhiteNoise()" style="font-size: 11px; padding: 4px 10px; margin-top: 10px; border-radius: 20px;">🌧️ বৃষ্টির মৃদু শব্দ (অন/অফ)</button>
     </div>
-
     <div>
-      <button class="btn-del" onclick="startExitFlow()" style="font-size: 12px; padding: 8px 16px; border-radius: 20px;">
-        ⚠️ ফোকাস মোড থেকে বের হন
-      </button>
+      <button class="btn-del" onclick="startExitFlow()" style="font-size: 12px; padding: 8px 16px; border-radius: 20px;">⚠️ ফোকাস মোড থেকে বের হন</button>
     </div>
   </div>
 
-  <!-- ৫ ধাপের এক্সিট চ্যালেঞ্জ মোডাল -->
+  <!-- এক্সিট চ্যালেঞ্জ মোডাল -->
   <div class="modal-overlay" id="exitModal" style="z-index: 100000;">
     <div class="exit-modal-box">
       <h3 style="color: #ef4444; margin-bottom: 8px; font-size: 15px;" id="exitStepTitle">ধাপ ১: নিশ্চিতকরণ</h3>
@@ -439,8 +564,6 @@
       { cat: "হাদিস শরিফ", text: "যে ব্যক্তি সময়ের হেফাজত করে না, সে কখনো তার লক্ষ্য অর্জন করতে পারে না।", author: "বায়হাকি" },
       { cat: "সময় ও নিয়মানুবর্তিতা", text: "হারিয়ে যাওয়া সম্পদ আবার ফিরে পাওয়া সম্ভব, কিন্তু সময়ের অপচয় চিরতরে হারিয়ে যায়।", author: "ইমাম আল-গাজ্জালী (রহ.)" },
       { cat: "সফলতার নীতি", text: "সফলতা হলো ছোট ছোট প্রচেষ্টার সমষ্টি, যা প্রতিদিন পুনরাবৃত্তি করা হয়।", author: "রবার্ট কলিয়ার" },
-      { cat: "ঐতিহাসিক বাণী", text: "তুমি যদি সময়ের মূল্য না দাও, তবে সময়ও কখনো তোমার মূল্য দেবে না।", author: "উইলিয়াম শেক্সপিয়র" },
-      { cat: "কর্মস্পৃহা", text: "আজকের কাজ কালকের জন্য ফেলে রাখা সবচেয়ে বড় অলসতা।", author: "হযরত উমর (রা.)" },
       { cat: "মনোযোগ ও লক্ষ্য", text: "প্রতিদিন মাত্র ৩টি মূল কাজে পূর্ণ মনোযোগ দিন, ফলাফল আপনাকে নিজেই বিস্মিত করবে।", author: "The Rule of 3 Concept" }
     ];
 
@@ -463,20 +586,20 @@
     // স্টেট ও লোকালস্টোরেজ
     let todayTasks = JSON.parse(localStorage.getItem('todayTasks')) || [];
     let masterTasks = JSON.parse(localStorage.getItem('masterTasks')) || [];
-    let historyStats = JSON.parse(localStorage.getItem('historyStats')) || {}; 
+    let routineSlots = JSON.parse(localStorage.getItem('routineSlots')) || [];
+    let historyStats = JSON.parse(localStorage.getItem('historyStats')) || {};
     let completedArchive = JSON.parse(localStorage.getItem('completedArchive')) || [];
     let activeDayDate = localStorage.getItem('activeDayDate') || getTodayString();
+    let geminiApiKey = localStorage.getItem('geminiApiKey') || '';
 
-    // বগুড়া স্থানীয় সময়ের অফলাইন ফলব্যাক
     let namazData = JSON.parse(localStorage.getItem('namazData')) || {
-      Fajr: { name: 'ফজর', time: '04:35', done: false },
-      Dhuhr: { name: 'যোহর', time: '12:10', done: false },
-      Asr: { name: 'আসর', time: '16:30', done: false },
-      Maghrib: { name: 'মাগরিব', time: '18:15', done: false },
-      Isha: { name: 'ইশা', time: '19:35', done: false }
+      Fajr: { name: 'ফজর', start: '04:35', end: '05:50', customTime: '05:00', done: false },
+      Dhuhr: { name: 'যোহর', start: '12:05', end: '16:15', customTime: '13:15', done: false },
+      Asr: { name: 'আসর', start: '16:15', end: '18:15', customTime: '16:45', done: false },
+      Maghrib: { name: 'মাগরিব', start: '18:15', end: '19:30', customTime: '18:20', done: false },
+      Isha: { name: 'ইশা', start: '19:30', end: '23:30', customTime: '20:15', done: false }
     };
 
-    // রিমাইন্ডার ট্র্যাকার (মেমোরি ও লোকালস্টোরেজ ক্যাশ)
     let remindedTasks = new Set(JSON.parse(localStorage.getItem('remindedTasksCache') || '[]'));
     let selectedMasterId = null;
     let editingMasterId = null;
@@ -484,6 +607,7 @@
     function saveState() {
       localStorage.setItem('todayTasks', JSON.stringify(todayTasks));
       localStorage.setItem('masterTasks', JSON.stringify(masterTasks));
+      localStorage.setItem('routineSlots', JSON.stringify(routineSlots));
       localStorage.setItem('namazData', JSON.stringify(namazData));
       localStorage.setItem('historyStats', JSON.stringify(historyStats));
       localStorage.setItem('completedArchive', JSON.stringify(completedArchive));
@@ -492,21 +616,66 @@
       render();
     }
 
+    function switchTab(tab) {
+      document.getElementById('tabDashboard').classList.add('hidden');
+      document.getElementById('tabRoutine').classList.add('hidden');
+      document.getElementById('tabBtnDashboard').classList.remove('active');
+      document.getElementById('tabBtnRoutine').classList.remove('active');
+
+      if (tab === 'dashboard') {
+        document.getElementById('tabDashboard').classList.remove('hidden');
+        document.getElementById('tabBtnDashboard').classList.add('active');
+      } else {
+        document.getElementById('tabRoutine').classList.remove('hidden');
+        document.getElementById('tabBtnRoutine').classList.add('active');
+        renderRoutineTimeline();
+      }
+    }
+
+    function playNotificationChime() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.8);
+      } catch(e) {}
+    }
+
     function speakBangla(text) {
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'bn-BD';
         utterance.rate = 0.9;
-        utterance.pitch = 1.0;
         window.speechSynthesis.speak(utterance);
       }
     }
 
     function enableAudioAndNotification() {
-      speakBangla("স্মার্ট ডু অ্যাপের বাংলা ভয়েস রিমাইন্ডার সক্রিয় হয়েছে।");
+      playNotificationChime();
+      speakBangla("স্মার্ট ডু অ্যাপের বাংলা ভয়েস ও নোটিফিকেশন সক্রিয় হয়েছে।");
       if ("Notification" in window && Notification.permission !== "granted") {
         Notification.requestPermission();
+      }
+    }
+
+    function sendSystemNotification(title, body) {
+      playNotificationChime();
+      speakBangla(body);
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification(title, {
+          body: body,
+          icon: "https://cdn-icons-png.flaticon.com/512/906/906334.png"
+        });
       }
     }
 
@@ -516,20 +685,283 @@
         const json = await res.json();
         if (json.data && json.data.timings) {
           const t = json.data.timings;
-          namazData.Fajr.time = t.Fajr;
-          namazData.Dhuhr.time = t.Dhuhr;
-          namazData.Asr.time = t.Asr;
-          namazData.Maghrib.time = t.Maghrib;
-          namazData.Isha.time = t.Isha;
+          namazData.Fajr.start = t.Fajr;
+          namazData.Fajr.end = t.Sunrise;
+          namazData.Dhuhr.start = t.Dhuhr;
+          namazData.Dhuhr.end = t.Asr;
+          namazData.Asr.start = t.Asr;
+          namazData.Asr.end = t.Maghrib;
+          namazData.Maghrib.start = t.Maghrib;
+          namazData.Maghrib.end = t.Isha;
+          namazData.Isha.start = t.Isha;
+          namazData.Isha.end = "23:59";
           localStorage.setItem('namazData', JSON.stringify(namazData));
           renderNamaz();
         }
       } catch (e) {
-        console.log("অফলাইন/ক্যাশড নামাজের সময় ব্যবহৃত হচ্ছে।");
+        console.log("Using cached prayer times.");
       }
     }
 
-    // নিখুঁত অটো-রোলওভার (যেকোনো সময় তারিখ পাল্টালে কার্যকর)
+    function updateNamazCustomTime(key, val) {
+      if (namazData[key]) {
+        namazData[key].customTime = val;
+        saveState();
+      }
+    }
+
+    function renderNamaz() {
+      const container = document.getElementById('namazContainer');
+      container.innerHTML = '';
+      Object.keys(namazData).forEach(k => {
+        const item = namazData[k];
+        const div = document.createElement('div');
+        div.className = 'namaz-card';
+        div.innerHTML = `
+          <div class="namaz-header-row">
+            <b style="color: var(--text); font-size: 13.5px;">${item.name}</b>
+            <input type="checkbox" class="namaz-check" title="নামাজ সম্পন্ন" ${item.done ? 'checked' : ''} onchange="toggleNamaz('${k}')" />
+          </div>
+          <div class="namaz-time-range">ওয়াক্ত: ${item.start} - ${item.end}</div>
+          <div class="namaz-custom-box">
+            <label>আমার সময়:</label>
+            <input type="time" value="${item.customTime || item.start}" onchange="updateNamazCustomTime('${k}', this.value)" />
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function addRoutineSlot() {
+      const title = document.getElementById('routineTitle').value.trim();
+      const type = document.getElementById('routineType').value;
+      const start = document.getElementById('routineStart').value;
+      const end = document.getElementById('routineEnd').value;
+
+      if (!title || !start || !end) {
+        alert("দয়া করে কাজের নাম, শুরু এবং শেষ সময় নির্ধারণ করুন।");
+        return;
+      }
+      if (start >= end) {
+        alert("শুরুর সময় অবশ্যই শেষ সময়ের আগের হতে হবে।");
+        return;
+      }
+
+      routineSlots.push({
+        id: Date.now(),
+        title,
+        type,
+        start,
+        end,
+        date: type === 'temporary' ? getTodayString() : null
+      });
+
+      routineSlots.sort((a, b) => a.start.localeCompare(b.start));
+
+      document.getElementById('routineTitle').value = '';
+      document.getElementById('routineStart').value = '';
+      document.getElementById('routineEnd').value = '';
+      saveState();
+      renderRoutineTimeline();
+    }
+
+    function deleteRoutineSlot(id) {
+      routineSlots = routineSlots.filter(s => s.id !== id);
+      saveState();
+      renderRoutineTimeline();
+    }
+
+    function moveRoutineToToday(slotId) {
+      const slot = routineSlots.find(s => s.id === slotId);
+      if (!slot) return;
+      const activeTasksCount = todayTasks.filter(t => !t.completed).length;
+      if (activeTasksCount >= 3) {
+        alert("The Rule of 3: আপনার ৩টি কাজ এখনো চলমান আছে! নতুন কাজ নিতে আগের একটি কাজ সম্পন্ন করুন।");
+        return;
+      }
+
+      const [sh, sm] = slot.start.split(':').map(Number);
+      const [eh, em] = slot.end.split(':').map(Number);
+      const dur = (eh * 60 + em) - (sh * 60 + sm);
+
+      todayTasks.push({
+        id: Date.now(),
+        title: slot.title,
+        category: 'personal',
+        time: slot.start,
+        duration: dur > 0 ? dur : 30,
+        completed: false,
+        completedAt: null,
+        createdDate: activeDayDate
+      });
+
+      saveState();
+      switchTab('dashboard');
+    }
+
+    function renderRoutineTimeline() {
+      const container = document.getElementById('routineTimelineContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const now = new Date();
+      const currentHHMM = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
+      const today = getTodayString();
+
+      const applicableSlots = routineSlots.filter(s => s.type === 'recurring' || (s.type === 'temporary' && s.date === today));
+
+      if (applicableSlots.length === 0) {
+        container.innerHTML = `<div style="color: var(--muted); font-size: 13px; text-align: center; padding: 20px;">কোনো রুটিন স্লট যুক্ত করা নেই। উপরের ফর্ম থেকে আপনার দিনের স্লটগুলো তৈরি করুন।</div>`;
+        return;
+      }
+
+      applicableSlots.forEach(slot => {
+        const isCurrent = (currentHHMM >= slot.start && currentHHMM < slot.end);
+
+        const div = document.createElement('div');
+        div.className = `routine-slot ${isCurrent ? 'active-slot' : ''}`;
+        div.innerHTML = `
+          <div style="display: flex; flex-direction: column; gap: 4px; min-width: 110px;">
+            <span class="slot-time">🕒 ${slot.start} - ${slot.end}</span>
+            <div>
+              <span class="badge badge-${slot.type}">${slot.type === 'recurring' ? 'প্রতিদিনের' : 'আজকের'}</span>
+            </div>
+          </div>
+
+          <div class="slot-title">
+            <div style="font-size: 14px; font-weight: 600; color: #f8fafc;">${slot.title}</div>
+            ${isCurrent ? '<div style="margin-top: 4px;"><span class="badge-live-now">🟢 এখন এই রুটিনটি চলছে</span></div>' : ''}
+          </div>
+
+          <div class="slot-badges">
+            <button class="btn-add-rule3" onclick="moveRoutineToToday(${slot.id})" title="আজকের ৩টি মূল কাজে যুক্ত করুন">
+              + আজকের ৩ কাজে নিন
+            </button>
+            <button class="btn-icon btn-del" onclick="deleteRoutineSlot(${slot.id})" title="মুছুন">✕</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function toggleApiKeyInput() {
+      const box = document.getElementById('apiKeySection');
+      box.style.display = box.style.display === 'none' ? 'block' : 'none';
+      if (geminiApiKey) document.getElementById('geminiApiKeyInput').value = geminiApiKey;
+    }
+
+    function saveGeminiApiKey() {
+      const key = document.getElementById('geminiApiKeyInput').value.trim();
+      if (!key) return alert("সঠিক API Key দিন।");
+      geminiApiKey = key;
+      localStorage.setItem('geminiApiKey', key);
+      alert("Gemini API Key সংরক্ষিত হয়েছে!");
+      document.getElementById('apiKeySection').style.display = 'none';
+    }
+
+    async function askAiForScheduleAdvice() {
+      if (!geminiApiKey) {
+        alert("দয়া করে প্রথমে উপরের ⚙️ API Key বাটনে ক্লিক করে আপনার Gemini API Key দিন।");
+        toggleApiKeyInput();
+        return;
+      }
+
+      const btn = document.getElementById('btnAskAi');
+      const resBox = document.getElementById('aiResponseBox');
+      btn.innerText = "⏳ এআই পরামর্শ তৈরি করছে...";
+      btn.disabled = true;
+      resBox.style.display = 'none';
+
+      const now = new Date();
+      const currentHHMM = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
+      const activeRoutine = routineSlots.map(r => `${r.start}-${r.end}: ${r.title} (${r.type})`).join(', ');
+      const pendingTasks = todayTasks.filter(t => !t.completed).map(t => t.title).join(', ');
+      const namazSchedule = Object.entries(namazData).map(([k, v]) => `${v.name}: ${v.customTime || v.start}`).join(', ');
+
+      const promptText = `
+তুমি একজন পারসোনাল প্রোডাক্টিভিটি এক্সপার্ট। ব্যবহারকারীর বর্তমান অবস্থা:
+- বর্তমান সময়: ${currentHHMM}
+- নামাজের নির্ধারিত সময়: ${namazSchedule}
+- ব্যবহারকারীর ২৪ ঘণ্টার রুটিন: ${activeRoutine || 'নির্দিষ্ট কোনো রুটিন এখনও দেওয়া নেই'}
+- আজকের পেন্ডিং শীর্ষ কাজগুলো: ${pendingTasks || 'সব কাজ সম্পন্ন'}
+
+প্রশ্ন: "আমার এই সময়টুকু ফাঁকা আছে বা আমি এখন কোন কাজটিতে সর্বোচ্চ মনোযোগ দেব? আমাকে বাস্তবসম্মত ৩-৪ লাইনে স্পষ্ট বাংলায় পরামর্শ দাও।"
+      `;
+
+      try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
+        });
+
+        const data = await response.json();
+        if (data.candidates && data.candidates[0].content.parts[0].text) {
+          resBox.innerText = data.candidates[0].content.parts[0].text;
+          resBox.style.display = 'block';
+        } else {
+          resBox.innerText = "পরামর্শ তৈরি করা যায়নি। API Key বা কোটা যাচাই করুন।";
+          resBox.style.display = 'block';
+        }
+      } catch (err) {
+        resBox.innerText = "ইন্টারনেট সংযোগ বা API যোগাযোগে সমস্যা হয়েছে।";
+        resBox.style.display = 'block';
+      } finally {
+        btn.innerText = '✨ "আমার এই সময়টুকু ফাঁকা আছে, এখন কী করা উচিত?"';
+        btn.disabled = false;
+      }
+    }
+
+    function checkNotificationsAndCatchUp() {
+      const now = new Date();
+      const currentHHMM = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
+      const todayISO = getTodayString();
+
+      // ১. সালাত নোটিফিকেশন
+      Object.keys(namazData).forEach(k => {
+        const item = namazData[k];
+        const targetTime = item.customTime || item.start;
+        const key = `namaz_${k}_${todayISO}_${targetTime}`;
+
+        if (targetTime === currentHHMM && !remindedTasks.has(key)) {
+          remindedTasks.add(key);
+          saveState();
+          sendSystemNotification("নামাজের ওয়াক্ত হয়েছে!", `আসসালামু আলাইকুম। এখন ${item.name} সালাতের সময় হয়েছে।`);
+        }
+      });
+
+      // ২. শীর্ষ ৩ কাজের নোটিফিকেশন
+      todayTasks.forEach(t => {
+        if (!t.completed && t.time) {
+          const key = `task_${t.id}_${todayISO}_${t.time}`;
+          if (t.time === currentHHMM && !remindedTasks.has(key)) {
+            remindedTasks.add(key);
+            saveState();
+            sendSystemNotification("কাজের সময় হয়েছে!", `এখন "${t.title}" কাজটি শুরু করার নির্ধারিত সময়।`);
+          }
+        }
+      });
+
+      // ৩. রুটিন স্লট নোটিফিকেশন
+      const applicableSlots = routineSlots.filter(s => s.type === 'recurring' || (s.type === 'temporary' && s.date === todayISO));
+      applicableSlots.forEach(s => {
+        const key = `routine_${s.id}_${todayISO}_${s.start}`;
+        if (s.start === currentHHMM && !remindedTasks.has(key)) {
+          remindedTasks.add(key);
+          saveState();
+          sendSystemNotification("রুটিনের কাজ শুরু!", `রুটিন অনুযায়ী এখন "${s.title}" এর সময় শুরু হয়েছে।`);
+        }
+      });
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        checkAndPerformRollover();
+        checkNotificationsAndCatchUp();
+        renderRoutineTimeline();
+      }
+    });
+
     function checkAndPerformRollover() {
       const realToday = getTodayString();
       if (activeDayDate !== realToday) {
@@ -541,7 +973,6 @@
           namazCount: scoreData.completedNamaz
         };
 
-        // অসম্পূর্ণ কাজ রোলওভার হবে, সম্পন্নগুলো আর্কাইভে সংরক্ষিত থাকবে
         todayTasks = todayTasks.filter(t => !t.completed);
         Object.keys(namazData).forEach(k => namazData[k].done = false);
 
@@ -573,25 +1004,22 @@
         alert("The Rule of 3: আপনার ৩টি কাজ চলমান আছে! একটি শেষ করে নতুন কাজ আনুন।");
         return;
       }
-
       const t = document.getElementById('todayTaskInput').value.trim();
       const c = document.getElementById('todayCategory').value;
       const tm = document.getElementById('todayTime').value;
       const d = document.getElementById('todayDuration').value;
 
       if (!t) return;
-
-      todayTasks.push({ 
-        id: Date.now(), 
-        title: t, 
-        category: c, 
-        time: tm, 
-        duration: d, 
+      todayTasks.push({
+        id: Date.now(),
+        title: t,
+        category: c,
+        time: tm,
+        duration: d,
         completed: false,
         completedAt: null,
         createdDate: activeDayDate
       });
-
       document.getElementById('todayTaskInput').value = '';
       document.getElementById('todayTime').value = '';
       document.getElementById('todayDuration').value = '';
@@ -602,16 +1030,9 @@
       const input = document.getElementById('masterTaskInput');
       const category = document.getElementById('masterCategory').value;
       const dueDate = document.getElementById('masterDueDate').value;
-
       if (!input.value.trim()) return;
 
-      masterTasks.push({ 
-        id: Date.now(), 
-        title: input.value.trim(), 
-        category: category, 
-        dueDate: dueDate || '' 
-      });
-
+      masterTasks.push({ id: Date.now(), title: input.value.trim(), category, dueDate: dueDate || '' });
       input.value = '';
       document.getElementById('masterDueDate').value = '';
       saveState();
@@ -621,7 +1042,6 @@
       editingMasterId = id;
       const task = masterTasks.find(t => t.id === id);
       if (!task) return;
-
       document.getElementById('editTaskTitle').value = task.title;
       document.getElementById('editTaskCategory').value = task.category || 'teaching';
       document.getElementById('editTaskDueDate').value = task.dueDate || '';
@@ -637,7 +1057,6 @@
       const title = document.getElementById('editTaskTitle').value.trim();
       const category = document.getElementById('editTaskCategory').value;
       const dueDate = document.getElementById('editTaskDueDate').value;
-
       if (!title) return alert("কাজের নাম খালি রাখা যাবে না।");
 
       masterTasks = masterTasks.map(t => t.id === editingMasterId ? { ...t, title, category, dueDate } : t);
@@ -667,18 +1086,10 @@
     function confirmMoveToToday() {
       const tm = document.getElementById('modalTime').value;
       const dur = document.getElementById('modalDuration').value;
-
       const index = masterTasks.findIndex(t => t.id === selectedMasterId);
       if (index !== -1) {
         const item = masterTasks.splice(index, 1)[0];
-        todayTasks.push({ 
-          ...item, 
-          time: tm, 
-          duration: dur, 
-          completed: false,
-          completedAt: null,
-          createdDate: activeDayDate
-        });
+        todayTasks.push({ ...item, time: tm, duration: dur, completed: false, completedAt: null, createdDate: activeDayDate });
         saveState();
       }
       closeTimeModal();
@@ -693,25 +1104,12 @@
     function toggleTodayTask(id) {
       const now = new Date();
       const currentHHMM = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
-
       todayTasks = todayTasks.map(t => {
         if (t.id === id) {
           const isDone = !t.completed;
-          const updated = {
-            ...t,
-            completed: isDone,
-            completedAt: isDone ? currentHHMM : null,
-            completedDate: isDone ? activeDayDate : null
-          };
-
+          const updated = { ...t, completed: isDone, completedAt: isDone ? currentHHMM : null, completedDate: isDone ? activeDayDate : null };
           if (isDone) {
-            completedArchive.unshift({
-              id: t.id,
-              title: t.title,
-              category: t.category,
-              completedAt: currentHHMM,
-              completedDate: activeDayDate
-            });
+            completedArchive.unshift({ id: t.id, title: t.title, category: t.category, completedAt: currentHHMM, completedDate: activeDayDate });
           } else {
             completedArchive = completedArchive.filter(a => a.id !== t.id);
           }
@@ -736,22 +1134,13 @@
       document.getElementById('completedModal').style.display = 'none';
     }
 
-    function deleteFromArchive(archiveId) {
-      completedArchive = completedArchive.filter(a => a.id !== archiveId);
-      todayTasks = todayTasks.filter(t => t.id !== archiveId);
-      saveState();
-      renderCompletedModalList();
-    }
-
     function renderCompletedModalList() {
       const listEl = document.getElementById('modalCompletedList');
       listEl.innerHTML = '';
-
       if (completedArchive.length === 0) {
         listEl.innerHTML = `<li style="color: var(--muted); font-size: 13px; text-align: center; padding: 15px;">এখনো কোনো সম্পন্ন কাজের ইতিহাস নেই।</li>`;
         return;
       }
-
       completedArchive.forEach(item => {
         const li = document.createElement('li');
         li.className = 'task-item';
@@ -772,6 +1161,13 @@
       });
     }
 
+    function deleteFromArchive(archiveId) {
+      completedArchive = completedArchive.filter(a => a.id !== archiveId);
+      todayTasks = todayTasks.filter(t => t.id !== archiveId);
+      saveState();
+      renderCompletedModalList();
+    }
+
     function addToGoogleCalendar(title, time, duration) {
       if (!time) return alert("শুরুর সময় উল্লেখ করুন।");
       const now = new Date();
@@ -779,93 +1175,56 @@
       const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(h), parseInt(m));
       const durMinutes = parseInt(duration) || 60;
       const end = new Date(start.getTime() + durMinutes * 60000);
-
       const fmt = (d) => d.toISOString().replace(/-|:|\.\d\d\d/g, "");
       const calUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${fmt(start)}/${fmt(end)}`;
       window.open(calUrl, '_blank');
     }
 
-    function notifyWithDirectVoice(title, body, speechText) {
-      speakBangla(speechText || body);
-      if ("Notification" in window && Notification.permission === "granted") {
-        new Notification(title, { body });
-      }
-    }
-
-    // ফোকাস মোড ও ব্যাকগ্রাউন্ড অ্যাম্বিয়েন্ট সাউন্ড (Web Audio API)
-    let currentFocusTask = null;
-    let focusTimerInterval = null;
-    let focusTargetTimestamp = null;
-    let focusRemainingSeconds = 0;
-    let audioCtx = null;
-    let noiseNode = null;
-
+    let audioCtx = null, noiseNode = null;
     function toggleWhiteNoise() {
       const btn = document.getElementById('noiseToggleBtn');
       if (noiseNode) {
-        stopWhiteNoise();
+        if (noiseNode) { try { noiseNode.stop(); noiseNode.disconnect(); } catch(e){} noiseNode = null; }
+        if (audioCtx) { try { audioCtx.close(); } catch(e){} audioCtx = null; }
         btn.innerText = "🌧️ বৃষ্টির মৃদু শব্দ (অন করুন)";
-        btn.style.borderColor = "var(--accent)";
       } else {
-        startWhiteNoise();
-        btn.innerText = "🔊 বৃষ্টির শব্দ বাজছে (বন্ধ করুন)";
-        btn.style.borderColor = "var(--success)";
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new AudioContext();
+          const bufferSize = audioCtx.sampleRate * 2;
+          const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+          const output = noiseBuffer.getChannelData(0);
+          let b0 = 0, b1 = 0, b2 = 0;
+          for (let i = 0; i < bufferSize; i++) {
+            const white = Math.random() * 2 - 1;
+            b0 = 0.99 * b0 + white * 0.05;
+            b1 = 0.95 * b1 + white * 0.05;
+            b2 = 0.85 * b2 + white * 0.05;
+            output[i] = (b0 + b1 + b2) * 0.2;
+          }
+          noiseNode = audioCtx.createBufferSource();
+          noiseNode.buffer = noiseBuffer;
+          noiseNode.loop = true;
+          const filter = audioCtx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.value = 800;
+          noiseNode.connect(filter);
+          filter.connect(audioCtx.destination);
+          noiseNode.start();
+          btn.innerText = "🔊 বৃষ্টির শব্দ বাজছে (বন্ধ করুন)";
+        } catch(e) {}
       }
     }
 
-    function startWhiteNoise() {
-      try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        audioCtx = new AudioContext();
-        const bufferSize = audioCtx.sampleRate * 2;
-        const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-        const output = noiseBuffer.getChannelData(0);
-        let b0 = 0, b1 = 0, b2 = 0;
-        for (let i = 0; i < bufferSize; i++) {
-          const white = Math.random() * 2 - 1;
-          b0 = 0.99 * b0 + white * 0.05;
-          b1 = 0.95 * b1 + white * 0.05;
-          b2 = 0.85 * b2 + white * 0.05;
-          output[i] = (b0 + b1 + b2) * 0.2;
-        }
-        noiseNode = audioCtx.createBufferSource();
-        noiseNode.buffer = noiseBuffer;
-        noiseNode.loop = true;
-        
-        const filter = audioCtx.createBiquadFilter();
-        filter.type = 'lowpass';
-        filter.frequency.value = 800;
-
-        noiseNode.connect(filter);
-        filter.connect(audioCtx.destination);
-        noiseNode.start();
-      } catch (e) {
-        console.log("Audio not supported or blocked.");
-      }
-    }
-
-    function stopWhiteNoise() {
-      if (noiseNode) {
-        try { noiseNode.stop(); noiseNode.disconnect(); } catch (e) {}
-        noiseNode = null;
-      }
-      if (audioCtx) {
-        try { audioCtx.close(); } catch (e) {}
-        audioCtx = null;
-      }
-    }
-
+    let currentFocusTask = null, focusTimerInterval = null, focusRemainingSeconds = 0, focusTargetTimestamp = null;
     function enterFocusMode(taskId) {
       currentFocusTask = todayTasks.find(t => t.id === taskId);
       if (!currentFocusTask) return;
-
       const durationMinutes = parseInt(currentFocusTask.duration) || 25;
       focusRemainingSeconds = durationMinutes * 60;
       focusTargetTimestamp = Date.now() + focusRemainingSeconds * 1000;
-
       document.getElementById('focusCurrentTask').innerText = currentFocusTask.title;
       document.getElementById('focusScreen').style.display = 'flex';
-
       history.pushState({ inFocus: true }, null, "");
       updateFocusTimerDisplay();
 
@@ -873,10 +1232,8 @@
         const now = Date.now();
         focusRemainingSeconds = Math.max(0, Math.round((focusTargetTimestamp - now) / 1000));
         updateFocusTimerDisplay();
-
         if (focusRemainingSeconds <= 0) {
           clearInterval(focusTimerInterval);
-          stopWhiteNoise();
           speakBangla("আপনার নির্ধারিত ফোকাস সময় সম্পন্ন হয়েছে।");
           alert("সময় শেষ! কাজটি সম্পন্ন হলে টিক দিন।");
           exitFocusDirect(false);
@@ -887,31 +1244,19 @@
     function updateFocusTimerDisplay() {
       const m = Math.floor(focusRemainingSeconds / 60);
       const s = focusRemainingSeconds % 60;
-      document.getElementById('focusTimerDisplay').innerText = 
-        `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      document.getElementById('focusTimerDisplay').innerText = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
     }
 
-    window.addEventListener('popstate', function () {
-      if (document.getElementById('focusScreen').style.display === 'flex') {
-        history.pushState({ inFocus: true }, null, "");
-        startExitFlow();
-      }
-    });
-
-    let exitStep = 1;
-    let exitCooldownInterval = null;
-
+    let exitStep = 1, exitCooldownInterval = null;
     function startExitFlow() {
       exitStep = 1;
       document.getElementById('exitModal').style.display = 'flex';
       renderExitStep();
     }
-
     function closeExitModal() {
       if (exitCooldownInterval) clearInterval(exitCooldownInterval);
       document.getElementById('exitModal').style.display = 'none';
     }
-
     function renderExitStep() {
       const titleEl = document.getElementById('exitStepTitle');
       const descEl = document.getElementById('exitStepDesc');
@@ -920,49 +1265,30 @@
 
       if (exitStep === 1) {
         titleEl.innerText = "ধাপ ১: নিশ্চিতকরণ";
-        descEl.innerText = "আপনি মাত্র কাজে মনোনিবেশ করেছিলেন। এখনই মনোযোগ ভাঙলে লক্ষ্য পূরণ ব্যাহত হবে। সত্যিই কি বের হতে চান?";
-        actionEl.innerHTML = `
-          <div style="display: flex; gap: 8px; justify-content: center;">
-            <button onclick="closeExitModal()" style="background: #22c55e; padding: 6px 12px; font-size: 12px;">কাজে ফিরে যাই</button>
-            <button class="btn-del" onclick="nextExitStep(2)" style="padding: 6px 12px; font-size: 12px;">বের হতে চাই ➔</button>
-          </div>
-        `;
+        descEl.innerText = "মনোযোগ ভাঙলে লক্ষ্য ব্যাহত হবে। সত্যিই কি বের হতে চান?";
+        actionEl.innerHTML = `<div style="display: flex; gap: 8px; justify-content: center;"><button onclick="closeExitModal()" style="background: #22c55e; padding: 6px 12px; font-size: 12px;">কাজে ফিরে যাই</button><button class="btn-del" onclick="nextExitStep(2)" style="padding: 6px 12px; font-size: 12px;">বের হতে চাই ➔</button></div>`;
       } else if (exitStep === 2) {
         titleEl.innerText = "ধাপ ২: কাজের স্থিতি";
         descEl.innerText = `"${currentFocusTask.title}" কাজটি কি সম্পন্ন হয়েছে?`;
-        actionEl.innerHTML = `
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button onclick="exitFocusWithDone()" style="background: #22c55e; padding: 6px 12px; font-size: 12px;">হ্যাঁ, সম্পন্ন হয়েছে (Done)</button>
-            <button class="btn-del" onclick="nextExitStep(3)" style="padding: 6px 12px; font-size: 12px;">না, বাকি আছে ➔</button>
-          </div>
-        `;
+        actionEl.innerHTML = `<div style="display: flex; flex-direction: column; gap: 8px;"><button onclick="exitFocusWithDone()" style="background: #22c55e; padding: 6px 12px; font-size: 12px;">হ্যাঁ, সম্পন্ন হয়েছে (Done)</button><button class="btn-del" onclick="nextExitStep(3)" style="padding: 6px 12px; font-size: 12px;">না, বাকি আছে ➔</button></div>`;
       } else if (exitStep === 3) {
         titleEl.innerText = "ধাপ ৩: গুরুত্ব বিবেচনা";
-        descEl.innerText = "যে কারণে বের হচ্ছেন, সেটি কি এই কাজের চেয়েও বেশি গুরুত্বপূর্ণ?";
-        actionEl.innerHTML = `
-          <div style="display: flex; gap: 8px; justify-content: center;">
-            <button onclick="closeExitModal()" style="background: #22c55e; padding: 6px 12px; font-size: 12px;">কাজে ফিরে যাই</button>
-            <button class="btn-del" onclick="nextExitStep(4)" style="padding: 6px 12px; font-size: 12px;">হ্যাঁ, বেশি জরুরি ➔</button>
-          </div>
-        `;
+        descEl.innerText = "অন্য কাজটি কি এই কাজের চেয়েও বেশি জরুরি?";
+        actionEl.innerHTML = `<div style="display: flex; gap: 8px; justify-content: center;"><button onclick="closeExitModal()" style="background: #22c55e; padding: 6px 12px; font-size: 12px;">কাজে ফিরে যাই</button><button class="btn-del" onclick="nextExitStep(4)" style="padding: 6px 12px; font-size: 12px;">হ্যাঁ, জরুরি ➔</button></div>`;
       } else if (exitStep === 4) {
         titleEl.innerText = "ধাপ ৪: গভীর শ্বাস নিন";
-        descEl.innerText = "চোখ বন্ধ করে দীর্ঘ নিঃশ্বাস নিন। বাটন সক্রিয় হওয়া পর্যন্ত অপেক্ষা করুন...";
-        actionEl.innerHTML = `
-          <button id="cooldownBtn" disabled style="opacity: 0.5; cursor: not-allowed; width: 100%; padding: 8px;">অপেক্ষা করুন (১০ সেকেন্ড)</button>
-        `;
+        descEl.innerText = "দীর্ঘ নিঃশ্বাস নিন। বাটন সক্রিয় হওয়া পর্যন্ত অপেক্ষা করুন...";
+        actionEl.innerHTML = `<button id="cooldownBtn" disabled style="opacity: 0.5; width: 100%; padding: 8px;">অপেক্ষা করুন (১০ সেকেন্ড)</button>`;
         let sec = 10;
         exitCooldownInterval = setInterval(() => {
           sec--;
           const btn = document.getElementById('cooldownBtn');
           if (btn) {
-            if (sec > 0) {
-              btn.innerText = `অপেক্ষা করুন (${sec} সেকেন্ড)`;
-            } else {
+            if (sec > 0) btn.innerText = `অপেক্ষা করুন (${sec} সেকেন্ড)`;
+            else {
               clearInterval(exitCooldownInterval);
               btn.disabled = false;
               btn.style.opacity = '1';
-              btn.style.cursor = 'pointer';
               btn.className = 'btn-del';
               btn.innerText = "পরবর্তী ধাপে যান ➔";
               btn.onclick = () => nextExitStep(5);
@@ -972,158 +1298,80 @@
       } else if (exitStep === 5) {
         titleEl.innerText = "ধাপ ৫: টাইপিং চ্যালেঞ্জ";
         descEl.innerHTML = `হুবহু লিখুন:<br><b style="color: #38bdf8;">আমি সচেতনভাবে ফোকাস ভাঙছি</b>`;
-        actionEl.innerHTML = `
-          <input type="text" id="exitInputConfirm" placeholder="এখানে লিখুন..." style="width: 100%; margin-bottom: 10px; text-align: center;" />
-          <div style="display: flex; gap: 8px; justify-content: center;">
-            <button onclick="closeExitModal()" style="background: #22c55e; padding: 6px 12px; font-size: 12px;">কাজে ফিরে যাই</button>
-            <button class="btn-del" onclick="verifyExitText()" style="padding: 6px 12px; font-size: 12px;">লক খুলুন</button>
-          </div>
-        `;
+        actionEl.innerHTML = `<input type="text" id="exitInputConfirm" placeholder="এখানে লিখুন..." style="width: 100%; margin-bottom: 10px; text-align: center;" /><div style="display: flex; gap: 8px; justify-content: center;"><button onclick="closeExitModal()" style="background: #22c55e; padding: 6px 12px; font-size: 12px;">কাজে ফিরে যাই</button><button class="btn-del" onclick="verifyExitText()" style="padding: 6px 12px; font-size: 12px;">লক খুলুন</button></div>`;
       }
     }
-
-    function nextExitStep(step) {
-      exitStep = step;
-      renderExitStep();
-    }
-
+    function nextExitStep(s) { exitStep = s; renderExitStep(); }
     function verifyExitText() {
-      const val = document.getElementById('exitInputConfirm').value.trim();
-      if (val === "আমি সচেতনভাবে ফোকাস ভাঙছি") {
-        exitFocusDirect(false);
-      } else {
-        alert("বানান সঠিক হয়নি! বাক্যটি হুবহু লিখে সাবমিট করুন।");
-      }
+      if (document.getElementById('exitInputConfirm').value.trim() === "আমি সচেতনভাবে ফোকাস ভাঙছি") exitFocusDirect(false);
+      else alert("হুবহু বাক্যটি লিখে সাবমিট করুন।");
     }
-
     function exitFocusWithDone() {
       if (currentFocusTask) toggleTodayTask(currentFocusTask.id);
       exitFocusDirect(true);
     }
-
     function exitFocusDirect(isDone) {
       if (focusTimerInterval) clearInterval(focusTimerInterval);
-      stopWhiteNoise();
       closeExitModal();
       document.getElementById('focusScreen').style.display = 'none';
       currentFocusTask = null;
     }
 
-    function renderNamaz() {
-      const container = document.getElementById('namazContainer');
-      container.innerHTML = '';
-      Object.keys(namazData).forEach(k => {
-        const item = namazData[k];
-        const div = document.createElement('div');
-        div.className = 'namaz-card';
-        div.innerHTML = `
-          <div class="namaz-info">
-            <span>${item.name}</span>
-            <b>${item.time}</b>
-          </div>
-          <input type="checkbox" class="namaz-check" title="নামাজ সম্পন্ন" ${item.done ? 'checked' : ''} onchange="toggleNamaz('${k}')" />
-        `;
-        container.appendChild(div);
-      });
-    }
-
-    // ডে জাজমেন্ট মেট্রিক্স
     function calculateCurrentScore() {
-      const activeOrDoneToday = todayTasks;
-      const totalTasks = activeOrDoneToday.length;
-      const todayFinishedTasks = activeOrDoneToday.filter(t => t.completed);
+      const totalTasks = todayTasks.length;
+      const todayFinishedTasks = todayTasks.filter(t => t.completed);
       const todayFinishedCount = todayFinishedTasks.length;
-      
       let onTimeCount = 0;
       todayFinishedTasks.forEach(t => {
         if (!t.time) onTimeCount++;
         else if (t.completedAt && t.completedAt <= t.time) onTimeCount++;
         else onTimeCount += 0.8;
       });
-
       const sameDayCount = todayFinishedTasks.filter(t => t.createdDate === activeDayDate).length;
-      const totalNamaz = 5;
       const completedNamaz = Object.values(namazData).filter(n => n.done).length;
 
-      const namazScore = (completedNamaz / totalNamaz) * 40;
+      const namazScore = (completedNamaz / 5) * 40;
       const taskScore = totalTasks > 0 ? (todayFinishedCount / totalTasks) * 30 : 0;
       const onTimeScore = totalTasks > 0 ? (onTimeCount / totalTasks) * 15 : 0;
       const sameDayScore = totalTasks > 0 ? (sameDayCount / totalTasks) * 15 : 0;
-
       const finalScore = Math.round(namazScore + taskScore + onTimeScore + sameDayScore);
 
-      return {
-        finalScore,
-        totalTasks,
-        todayFinishedCount,
-        onTimeCount: Math.round(onTimeCount),
-        completedNamaz
-      };
+      return { finalScore, totalTasks, todayFinishedCount, onTimeCount: Math.round(onTimeCount), completedNamaz };
     }
 
     function updateDayJudgmentAndAnalytics() {
       const metrics = calculateCurrentScore();
-
       document.getElementById('statTotal').innerText = metrics.totalTasks;
       document.getElementById('statCompleted').innerText = metrics.todayFinishedCount;
       document.getElementById('statOnTime').innerText = metrics.onTimeCount;
       document.getElementById('statNamaz').innerText = `${metrics.completedNamaz}/5`;
 
-      const scoreBar = document.getElementById('scoreBar');
-      const scoreText = document.getElementById('scoreText');
-      scoreBar.style.width = `${metrics.finalScore}%`;
-      scoreText.innerText = `সফলতা: ${metrics.finalScore}%`;
+      document.getElementById('scoreBar').style.width = `${metrics.finalScore}%`;
+      document.getElementById('scoreText').innerText = `সফলতা: ${metrics.finalScore}%`;
 
       const yDate = new Date();
       yDate.setDate(yDate.getDate() - 1);
       const yStr = `${yDate.getFullYear()}-${String(yDate.getMonth()+1).padStart(2,'0')}-${String(yDate.getDate()).padStart(2,'0')}`;
       const yesterdayData = historyStats[yStr];
 
-      let compText = "";
-      if (yesterdayData) {
-        const diff = metrics.todayFinishedCount - yesterdayData.completedCount;
-        if (diff > 0) compText = `গতকালকের তুলনায় আজ <b>${diff}টি কাজ বেশি</b> সম্পন্ন করেছেন। দুর্দান্ত অগ্রগতি! 🚀`;
-        else if (diff < 0) compText = `গতকালকের চেয়ে আজ <b>${Math.abs(diff)}টি কাজ কম</b> হয়েছে। বাকি সময়ে গতি বাড়ান। ⏳`;
-        else compText = `গতকালকের সমান সংখ্যক কাজ শেষ হয়েছে। 📈`;
-      } else {
-        compText = `প্রতিদিন অ্যাপটি ব্যবহারের সাথে সাথে তুলনামূলক অগ্রগতি আরও সুস্পষ্ট হবে।`;
-      }
-
-      let advice = "";
-      if (metrics.completedNamaz < 3) {
-        advice = `🕌 নামাজের ওয়াক্তে যত্নবান হোন। আধ্যাত্মিক স্থিরতা কাজের ফোকাস বৃদ্ধি করে।`;
-      } else if (metrics.totalTasks > 0 && metrics.todayFinishedCount === 0) {
-        advice = `🎯 শীর্ষ তালিকার যেকোনো একটি কাজ 'ফোকাস মোড'-এ শুরু করে দিনের সূচনা করুন।`;
-      } else if (metrics.onTimeCount < metrics.todayFinishedCount * 0.7) {
-        advice = `⏰ কাজগুলো শেষ হচ্ছে, তবে কিছুটা দেরিতে। নির্ধারিত সময়ে শেষ করার চেষ্টা করুন।`;
-      } else if (metrics.finalScore >= 80) {
-        advice = `🌟 অসাধারণ পারফরম্যান্স! আপনি সর্বোচ্চ প্রোডাক্টিভিটি বজায় রাখছেন।`;
-      } else {
-        advice = `💪 একাগ্রতার সাথে ৩টি কাজ শেষ করলেই দিনের পূর্ণ সফলতা অর্জিত হবে।`;
-      }
+      let compText = yesterdayData ? `গতকালকের চেয়ে আজ <b>${metrics.todayFinishedCount - yesterdayData.completedCount}টি</b> কাজ বেশি/কম হয়েছে।` : `প্রতিদিন ব্যবহারের সাথে সাথে অগ্রগতি স্পষ্ট হবে।`;
+      let advice = metrics.completedNamaz < 3 ? `🕌 নামাজের ওয়াক্তে যত্নবান হোন, আত্মিক স্থিরতা বৃদ্ধি পাবে।` : `💪 একাগ্রতার সাথে ৩টি কাজ শেষ করলেই দিনের পূর্ণ সফলতা আসবে।`;
 
       document.getElementById('coachingAdvice').innerHTML = `💡 <b>বিশ্লেষণ ও পরামর্শ:</b> ${compText}<br>${advice}`;
-
       renderSevenDayChart(metrics.finalScore);
-      renderWeeklySummary();
     }
 
     function renderSevenDayChart(todayLiveScore) {
       const container = document.getElementById('sevenDayChart');
       container.innerHTML = '';
-
       const dayNames = ['রবি', 'সোম', 'মঙ্গল', 'বুধ', 'বৃহঃ', 'শুক্র', 'শনি'];
       const today = new Date();
 
       for (let i = 6; i >= 0; i--) {
         const d = new Date();
         d.setDate(today.getDate() - i);
-        const y = d.getFullYear();
-        const m = String(d.getMonth() + 1).padStart(2, '0');
-        const dt = String(d.getDate()).padStart(2, '0');
-        const dateKey = `${y}-${m}-${dt}`;
+        const dateKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         const dayLabel = (i === 0) ? 'আজ' : dayNames[d.getDay()];
-
         let score = (i === 0) ? todayLiveScore : (historyStats[dateKey] ? historyStats[dateKey].score : 0);
 
         const col = document.createElement('div');
@@ -1137,49 +1385,8 @@
       }
     }
 
-    function renderWeeklySummary() {
-      const card = document.getElementById('weeklyReportCard');
-      let totalScores = 0;
-      let recordedDays = 0;
-      let totalCompleted = 0;
-
-      for (let i = 6; i >= 0; i--) {
-        const d = new Date();
-        d.setDate(d.getDate() - i);
-        const y = d.getFullYear();
-        const m = String(d.getMonth() + 1).padStart(2, '0');
-        const dt = String(d.getDate()).padStart(2, '0');
-        const dateKey = `${y}-${m}-${dt}`;
-
-        if (i === 0) {
-          const live = calculateCurrentScore();
-          totalScores += live.finalScore;
-          totalCompleted += live.todayFinishedCount;
-          recordedDays++;
-        } else if (historyStats[dateKey]) {
-          totalScores += historyStats[dateKey].score;
-          totalCompleted += (historyStats[dateKey].completedCount || 0);
-          recordedDays++;
-        }
-      }
-
-      const avgScore = recordedDays > 0 ? Math.round(totalScores / recordedDays) : 0;
-      card.innerHTML = `
-        📊 <b>সাপ্তাহিক মূল্যায়ন:</b> গত ৭ দিনে আপনার গড় স্কোর <b>${avgScore}%</b> এবং আপনি মোট <b>${totalCompleted}টি</b> কাজ সফলভাবে সম্পন্ন করেছেন। ${avgScore >= 75 ? 'দুর্দান্ত গতি বজায় রেখেছেন! 🏆' : 'নিয়মানুবর্তিতা বাড়িয়ে সামনে এগিয়ে চলুন! 💪'}
-      `;
-    }
-
-    // ব্যাকআপ ডাউনলোড ও রিস্টোর
     function exportDataBackup() {
-      const fullData = {
-        todayTasks,
-        masterTasks,
-        namazData,
-        historyStats,
-        completedArchive,
-        activeDayDate,
-        exportedAt: new Date().toISOString()
-      };
+      const fullData = { todayTasks, masterTasks, routineSlots, namazData, historyStats, completedArchive, activeDayDate };
       const blob = new Blob([JSON.stringify(fullData, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -1196,20 +1403,17 @@
       reader.onload = function(evt) {
         try {
           const data = JSON.parse(evt.target.result);
-          if (data.todayTasks && data.masterTasks) {
-            todayTasks = data.todayTasks;
-            masterTasks = data.masterTasks;
-            namazData = data.namazData || namazData;
-            historyStats = data.historyStats || {};
-            completedArchive = data.completedArchive || [];
-            activeDayDate = data.activeDayDate || getTodayString();
-            saveState();
-            alert("সব ডাটা সফলভাবে রিস্টোর হয়েছে!");
-          } else {
-            alert("ফাইলটি সঠিক SmartDo ব্যাকআপ ফরম্যাটে নেই।");
-          }
+          todayTasks = data.todayTasks || [];
+          masterTasks = data.masterTasks || [];
+          routineSlots = data.routineSlots || [];
+          namazData = data.namazData || namazData;
+          historyStats = data.historyStats || {};
+          completedArchive = data.completedArchive || [];
+          activeDayDate = data.activeDayDate || getTodayString();
+          saveState();
+          alert("ডাটা সফলভাবে রিস্টোর হয়েছে!");
         } catch (err) {
-          alert("ফাইল পড়তে ত্রুটি হয়েছে। সঠিক JSON ব্যাকআপ ফাইল নির্বাচন করুন।");
+          alert("ভুল ফাইল ফরম্যাট।");
         }
       };
       reader.readAsText(file);
@@ -1221,7 +1425,6 @@
 
       const activeListEl = document.getElementById('todayActiveList');
       activeListEl.innerHTML = '';
-
       const activeTasks = todayTasks.filter(t => !t.completed);
 
       document.getElementById('ruleCount').innerText = `চলমান: ${activeTasks.length} / ৩`;
@@ -1277,77 +1480,16 @@
       });
     }
 
-    // রিয়েল-টাইম ট্র্যাকিং ও অ্যালার্ট
+    // প্রতি সেকেন্ডের টাইমার ও লাইভ ট্র্যাকার
     setInterval(() => {
-      const now = new Date();
-      const currentHHMM = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
-      const todayISO = getTodayString();
-      const currentSeconds = now.getSeconds();
-
-      // অটো-রোলওভার চেক
-      checkAndPerformRollover();
-
-      // ১. কাজের সময়সূচির ভয়েস
-      todayTasks.forEach(t => {
-        const alertKey = `task_${t.id}_${todayISO}_${currentHHMM}`;
-        if (!t.completed && t.time === currentHHMM && !remindedTasks.has(alertKey)) {
-          remindedTasks.add(alertKey);
-          localStorage.setItem('remindedTasksCache', JSON.stringify(Array.from(remindedTasks)));
-          notifyWithDirectVoice(
-            "কাজের সময় হয়েছে!",
-            `এখন "${t.title}" কাজটির সময় হয়েছে।`,
-            `এখন ${t.title} এর সময় হয়েছে, কাজটি শুরু করুন।`
-          );
-        }
-      });
-
-      // ২. নামাজের ওয়াক্তের ভয়েস
-      Object.keys(namazData).forEach(k => {
-        const item = namazData[k];
-        const prayerKey = `namaz_${k}_${todayISO}_${currentHHMM}`;
-        if (item.time === currentHHMM && !remindedTasks.has(prayerKey)) {
-          remindedTasks.add(prayerKey);
-          localStorage.setItem('remindedTasksCache', JSON.stringify(Array.from(remindedTasks)));
-          notifyWithDirectVoice(
-            "নামাজের ওয়াক্ত হয়েছে!",
-            `${item.name}-এর নামাজের সময় হয়েছে।`,
-            `আসসালামু আলাইকুম। এখন ${item.name}-এর নামাজের ওয়াক্ত হয়েছে।`
-          );
-        }
-      });
-
-      // ৩. সকালের ও রাতের নোটিফিকেশন
-      if (currentHHMM === "09:00" && currentSeconds === 0) {
-        masterTasks.forEach(t => {
-          const dueKey = `due_${t.id}_${todayISO}`;
-          if (t.dueDate === todayISO && !remindedTasks.has(dueKey)) {
-            remindedTasks.add(dueKey);
-            localStorage.setItem('remindedTasksCache', JSON.stringify(Array.from(remindedTasks)));
-            notifyWithDirectVoice(
-              "আজকের নির্ধারিত কাজ!",
-              `মাস্টার লিস্টে "${t.title}" এর ডেডলাইন আজকে।`,
-              `আজকে আপনার নির্ধারিত কাজ রয়েছে। ${t.title} কাজটি শীর্ষ তালিকায় যুক্ত করুন।`
-            );
-          }
-        });
-      }
-
-      if (currentHHMM === "08:00" && currentSeconds === 0) {
-        notifyWithDirectVoice("শুভ সকাল!", "আজকের ৩টি মূল কাজ শুরু করুন।", "শুভ সকাল। আজকের ৩টি মূল কাজ নির্ধারণ করে লক্ষ্য পূরণ শুরু করুন।");
-      }
-      if (currentHHMM === "22:00" && currentSeconds === 0) {
-        notifyWithDirectVoice("দিনের পর্যালোচনা", "আজকের সফলতার স্কোর দেখে নিন।", "শুভ রাত্রি। আজকের সফলতার স্কোর মিলিয়ে নিন এবং আগামীকালের পরিকল্পনা করুন।");
+      checkNotificationsAndCatchUp();
+      const routineTab = document.getElementById('tabRoutine');
+      if (routineTab && !routineTab.classList.contains('hidden')) {
+        renderRoutineTimeline();
       }
     }, 1000);
 
-    // ট্যাব বা স্ক্রিন পুনরায় সক্রিয় হলে অবিলম্বে রোলওভার যাচাই
-    document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "visible") {
-        checkAndPerformRollover();
-      }
-    });
-
-    // ইনিশিয়ালাইজেশন
+    // অ্যাপ চালুর সময় স্বয়ংক্রিয় লোড
     checkAndPerformRollover();
     loadRandomQuote();
     fetchLivePrayerTimes();
