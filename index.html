@@ -198,6 +198,51 @@
     .badge-admin { background: #f59e0b; color: white; }
     .badge-recurring { background: #0284c7; color: white; }
     .badge-temp { background: #d97706; color: white; }
+    .badge-overdue { background: #ef4444; color: white; }
+    .badge-onway { background: #10b981; color: white; }
+
+    /* ধারাবাহিক কাজ (Continuous Tasks) */
+    .card-continuous {
+      background: linear-gradient(135deg, #2b1a3a 0%, #160d22 100%);
+      border: 1px solid rgba(217, 119, 6, 0.45);
+    }
+    .card-continuous h2 { color: #fbbf24; }
+
+    .progress-track { background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border); border-radius: 20px; height: 8px; width: 100%; overflow: hidden; margin: 6px 0; }
+    .progress-fill { background: linear-gradient(90deg, #f59e0b, #22c55e); height: 100%; border-radius: 20px; transition: width 0.4s ease; }
+    .progress-fill.danger { background: linear-gradient(90deg, #ef4444, #f59e0b); }
+    .cont-pct-row { display: flex; align-items: center; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+    .cont-pct-row input[type="number"] { width: 78px; padding: 3px 8px; font-size: 12px; }
+    .btn-pct { background: rgba(245, 158, 11, 0.9); color: #090d16; font-size: 11px; padding: 3px 9px; }
+
+    /* এখন চলমান রুটিন কার্ড (লাইভ) */
+    .card-current {
+      background: linear-gradient(135deg, #062b21 0%, #0b1f1c 100%);
+      border: 1px solid rgba(34, 197, 94, 0.35);
+      border-left: 5px solid #22c55e;
+    }
+    .card-current h3 { color: #4ade80; margin-bottom: 6px; }
+    .status-tag { font-size: 12px; color: #d1fae5; line-height: 1.5; }
+
+    /* ফাকা স্লট তালিকা */
+    .free-slot { background: rgba(15, 23, 42, 0.5); border: 1px dashed rgba(148, 163, 184, 0.4); border-radius: 8px; padding: 8px 12px; display: flex; align-items: center; gap: 10px; font-size: 12.5px; }
+    .free-slot-time { font-family: monospace; font-weight: 700; color: #38bdf8; min-width: 105px; }
+    .free-slot-label { color: #cbd5e1; }
+
+    /* রুটিন টিক বাটন */
+    .btn-tick {
+      width: 38px; height: 38px; border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 17px; cursor: pointer; border: 2px solid rgba(148, 163, 184, 0.4);
+      background: rgba(15, 23, 42, 0.9); color: var(--muted); transition: 0.25s;
+    }
+    .btn-tick.done { background: #22c55e; border-color: #22c55e; color: #052e16; box-shadow: 0 0 12px rgba(34, 197, 94, 0.5); }
+    .routine-slot.slot-done { border-color: rgba(34, 197, 94, 0.5); background: rgba(34, 197, 94, 0.08); }
+    .routine-slot.slot-done .slot-title { text-decoration: line-through; color: #94a3b8; }
+    .day-check-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+    .day-check { display: inline-flex; align-items: center; gap: 4px; background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border); border-radius: 20px; padding: 4px 10px; font-size: 11.5px; cursor: pointer; }
+    .day-check input { width: auto; }
+    .day-check.all-days { border-color: #22c55e; color: #4ade80; }
 
     .rule-of-3-header { display: flex; justify-content: space-between; align-items: center; }
     .count-tag { font-size: 12px; color: #7dd3fc; font-weight: bold; }
@@ -289,6 +334,14 @@
             <span style="font-size: 11px; color: var(--muted);">নামাজ</span>
             <div class="judgment-value" id="statNamaz" style="color: #38bdf8;">০/৫</div>
           </div>
+          <div class="judgment-card">
+            <span style="font-size: 11px; color: var(--muted);">রুটিন</span>
+            <div class="judgment-value" id="statRoutine" style="color: #22c55e;">০/০</div>
+          </div>
+          <div class="judgment-card">
+            <span style="font-size: 11px; color: var(--muted);">ধারাবাহিক</span>
+            <div class="judgment-value" id="statContinuous" style="color: #f59e0b;">০</div>
+          </div>
         </div>
 
         <div class="judgment-bar-bg">
@@ -348,6 +401,34 @@
         <ul class="task-list" id="todayActiveList"></ul>
       </div>
 
+      <!-- ৪ক. এখন চলমান ২৪ ঘণ্টার রুটিন (লাইভ) -->
+      <div class="card card-current">
+        <h3>🎬 এখন চলমান রুটিন (২৪ ঘণ্টার স্লট অনুযায়ী)</h3>
+        <div class="status-tag" id="currentRoutineStatus">লোড হচ্ছে...</div>
+      </div>
+
+      <!-- ৪খ. ধারাবাহিক কাজ -->
+      <div class="card card-continuous">
+        <div class="rule-of-3-header">
+          <h2>📈 ধারাবাহিক কাজ (ডেডলাইন ট্র্যাকিং)</h2>
+          <span class="count-tag" id="continuousCountTag">মোট: ০</span>
+        </div>
+        <p style="color: #94a3b8; font-size: 12px; margin-bottom: 10px;">
+          দীর্ঘমেয়াদি কাজের জন্য নির্দিষ্ট ডেডলাইন দিন। প্রতিদিন কত শতাংশ শেষ করলেন তা আপডেট করুন। ডেডলাইনের ভেতর কাজ সম্পন্ন না হলে <b style="color: #f87171;">ডে জাজমেন্টে মাইনাস</b> হবে।
+        </p>
+
+        <div class="input-group">
+          <div class="input-row">
+            <input type="text" id="continuousTitle" placeholder="ধারাবাহিক কাজের নাম (যেমন: মডেল টেস্ট প্রস্তুতি)..." />
+            <input type="date" id="continuousDeadline" title="ডেডলাইন" />
+            <input type="number" id="continuousStartPct" placeholder="শুরু %" min="0" max="100" style="width: 90px;" />
+            <button onclick="addContinuousTask()">+ যুক্ত করুন</button>
+          </div>
+        </div>
+
+        <ul class="task-list" id="continuousList"></ul>
+      </div>
+
       <!-- ৫. মাস্টার লিস্ট -->
       <div class="card card-master">
         <h2>📋 মাস্টার লিস্ট (সব কাজের ভাণ্ডার ও ডেডলাইন)</h2>
@@ -391,11 +472,25 @@
         <div class="input-group">
           <div class="input-row">
             <input type="text" id="routineTitle" placeholder="কাজের নাম (যেমন: ফিজিক্স লেকচার তৈরি, ব্যায়াম)..." />
-            <select id="routineType">
-              <option value="recurring">🔁 Recurring (প্রতিদিনের রুটিন)</option>
+            <select id="routineType" onchange="toggleRoutineDaySelect()">
+              <option value="recurring">🔁 Recurring (সপ্তাহের নির্দিষ্ট দিনে)</option>
               <option value="temporary">📅 Temporary (আজকের জন্য কেবল)</option>
             </select>
           </div>
+
+          <!-- সপ্তাহের দিন নির্বাচন (Recurring এর জন্য) -->
+          <div class="day-check-row" id="routineDayRow">
+            <span style="font-size: 11px; color: var(--muted);">সপ্তাহের কোন কোন দিনে করবেন?</span>
+            <label class="day-check all-days"><input type="checkbox" id="dayChkAll" checked onchange="selectAllDays(this.checked)" /> সব দিন</label>
+            <label class="day-check"><input type="checkbox" class="day-chk" value="0" checked /> রবি</label>
+            <label class="day-check"><input type="checkbox" class="day-chk" value="1" checked /> সোম</label>
+            <label class="day-check"><input type="checkbox" class="day-chk" value="2" checked /> মঙ্গল</label>
+            <label class="day-check"><input type="checkbox" class="day-chk" value="3" checked /> বুধ</label>
+            <label class="day-check"><input type="checkbox" class="day-chk" value="4" checked /> বৃহঃ</label>
+            <label class="day-check"><input type="checkbox" class="day-chk" value="5" checked /> শুক্র</label>
+            <label class="day-check"><input type="checkbox" class="day-chk" value="6" checked /> শনি</label>
+          </div>
+
           <div class="input-row">
             <div style="display: flex; align-items: center; gap: 4px;">
               <span style="font-size: 11px; color: var(--muted);">শুরু:</span>
@@ -412,6 +507,9 @@
         <!-- টাইমলাইন লিস্ট -->
         <h3 style="margin-top: 14px; font-size: 15px; color: #38bdf8;">📋 আজকের ২৪ ঘণ্টার সময়সূচি ও বর্তমান অবস্থা:</h3>
         <div class="routine-timeline" id="routineTimelineContainer"></div>
+
+        <h3 style="margin-top: 18px; font-size: 15px; color: #818cf8;">🕊️ আজকের ফাকা স্লট</h3>
+        <div class="routine-timeline" id="freeSlotsContainer"></div>
       </div>
 
     </div>
@@ -566,10 +664,15 @@
     let selectedMasterId = null;
     let editingMasterId = null;
 
+    let routineCompletions = JSON.parse(localStorage.getItem('routineCompletions')) || {};
+    let continuousTasks = JSON.parse(localStorage.getItem('continuousTasks')) || [];
+
     function saveState() {
       localStorage.setItem('todayTasks', JSON.stringify(todayTasks));
       localStorage.setItem('masterTasks', JSON.stringify(masterTasks));
       localStorage.setItem('routineSlots', JSON.stringify(routineSlots));
+      localStorage.setItem('routineCompletions', JSON.stringify(routineCompletions));
+      localStorage.setItem('continuousTasks', JSON.stringify(continuousTasks));
       localStorage.setItem('namazData', JSON.stringify(namazData));
       localStorage.setItem('historyStats', JSON.stringify(historyStats));
       localStorage.setItem('completedArchive', JSON.stringify(completedArchive));
@@ -591,6 +694,8 @@
         document.getElementById('tabRoutine').classList.remove('hidden');
         document.getElementById('tabBtnRoutine').classList.add('active');
         renderRoutineTimeline();
+        renderFreeSlots();
+        renderCurrentRoutineStatus();
       }
     }
 
@@ -694,6 +799,16 @@
       });
     }
 
+    function toggleRoutineDaySelect() {
+      const row = document.getElementById('routineDayRow');
+      const type = document.getElementById('routineType').value;
+      row.style.display = type === 'recurring' ? 'flex' : 'none';
+    }
+
+    function selectAllDays(checked) {
+      document.querySelectorAll('.day-chk').forEach(cb => cb.checked = checked);
+    }
+
     function addRoutineSlot() {
       const title = document.getElementById('routineTitle').value.trim();
       const type = document.getElementById('routineType').value;
@@ -709,12 +824,22 @@
         return;
       }
 
+      let days = [];
+      if (type === 'recurring') {
+        days = Array.from(document.querySelectorAll('.day-chk:checked')).map(cb => parseInt(cb.value));
+        if (days.length === 0) {
+          alert("সপ্তাহের অন্তত একটি দিন নির্বাচন করুন।");
+          return;
+        }
+      }
+
       routineSlots.push({
         id: Date.now(),
         title,
         type,
         start,
         end,
+        days,
         date: type === 'temporary' ? getTodayString() : null
       });
 
@@ -723,6 +848,29 @@
       document.getElementById('routineTitle').value = '';
       document.getElementById('routineStart').value = '';
       document.getElementById('routineEnd').value = '';
+      saveState();
+      renderRoutineTimeline();
+      renderFreeSlots();
+    }
+
+    // আজকের জন্য প্রযোজ্য রুটিন স্লট (সপ্তাহের দিন ও টেম্পোরারি তারিখ অনুযায়ী)
+    function getTodaysRoutineSlots() {
+      const dow = new Date().getDay();
+      const today = getTodayString();
+      return routineSlots.filter(s => {
+        if (s.type === 'temporary') return s.date === today;
+        if (Array.isArray(s.days) && s.days.length > 0) return s.days.includes(dow);
+        return true; // পুরনো স্লট (day না থাকলে) প্রতিদিন হিসেবে ধরা
+      });
+    }
+
+    function toggleRoutineCompletion(slotId) {
+      const today = getTodayString();
+      if (!routineCompletions[today]) routineCompletions[today] = [];
+      const arr = routineCompletions[today];
+      const idx = arr.indexOf(slotId);
+      if (idx >= 0) arr.splice(idx, 1);
+      else arr.push(slotId);
       saveState();
       renderRoutineTimeline();
     }
@@ -761,16 +909,26 @@
       switchTab('dashboard');
     }
 
+    function routineDayLabel(slot) {
+      const names = ['রবি', 'সোম', 'মঙ্গল', 'বুধ', 'বৃহঃ', 'শুক্র', 'শনি'];
+      if (slot.type === 'temporary') return 'আজকের';
+      if (Array.isArray(slot.days) && slot.days.length > 0) {
+        if (slot.days.length === 7) return 'প্রতিদিন';
+        return slot.days.map(d => names[d]).join(', ');
+      }
+      return 'প্রতিদিন';
+    }
+
     function renderRoutineTimeline() {
       const container = document.getElementById('routineTimelineContainer');
       if (!container) return;
       container.innerHTML = '';
+      const doneToday = routineCompletions[getTodayString()] || [];
 
       const now = new Date();
       const currentHHMM = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
-      const today = getTodayString();
 
-      const applicableSlots = routineSlots.filter(s => s.type === 'recurring' || (s.type === 'temporary' && s.date === today));
+      const applicableSlots = getTodaysRoutineSlots();
 
       if (applicableSlots.length === 0) {
         container.innerHTML = `<div style="color: var(--muted); font-size: 13px; text-align: center; padding: 20px;">কোনো রুটিন স্লট যুক্ত করা নেই। উপরের ফর্ম থেকে আপনার দিনের স্লটগুলো তৈরি করুন।</div>`;
@@ -779,31 +937,262 @@
 
       applicableSlots.forEach(slot => {
         const isCurrent = (currentHHMM >= slot.start && currentHHMM < slot.end);
+        const isDone = doneToday.includes(slot.id);
 
         const div = document.createElement('div');
-        div.className = `routine-slot ${isCurrent ? 'active-slot' : ''}`;
+        div.className = `routine-slot ${isCurrent ? 'active-slot' : ''} ${isDone ? 'slot-done' : ''}`;
         div.innerHTML = `
           <div style="display: flex; flex-direction: column; gap: 4px; min-width: 110px;">
             <span class="slot-time">🕒 ${slot.start} - ${slot.end}</span>
             <div>
-              <span class="badge badge-${slot.type}">${slot.type === 'recurring' ? 'প্রতিদিনের' : 'আজকের'}</span>
+              <span class="badge badge-${slot.type}">${routineDayLabel(slot)}</span>
             </div>
           </div>
 
           <div class="slot-title">
             <div style="font-size: 14px; font-weight: 600; color: #f8fafc;">${slot.title}</div>
             ${isCurrent ? '<div style="margin-top: 4px;"><span class="badge-live-now">🟢 এখন এই রুটিনটি চলছে</span></div>' : ''}
+            ${isDone ? '<div style="margin-top: 4px; color: #4ade80; font-size: 11.5px;">✅ সম্পন্ন</div>' : ''}
           </div>
 
           <div class="slot-badges">
+            <button class="btn-tick ${isDone ? 'done' : ''}" onclick="toggleRoutineCompletion(${slot.id})" title="সম্পন্ন হলে টিক দিন">${isDone ? '✓' : ''}</button>
             <button class="btn-add-rule3" onclick="moveRoutineToToday(${slot.id})" title="আজকের ৩টি মূল কাজে যুক্ত করুন">
-              + আজকের ৩ কাজে নিন
+              + ৩ কাজে
             </button>
             <button class="btn-icon btn-del" onclick="deleteRoutineSlot(${slot.id})" title="মুছুন">✕</button>
           </div>
         `;
         container.appendChild(div);
       });
+    }
+
+    // আজকের ফাকা (অনির্ধারিত) স্লটসমূহ
+    function renderFreeSlots() {
+      const container = document.getElementById('freeSlotsContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const slots = getTodaysRoutineSlots().slice().sort((a, b) => a.start.localeCompare(b.start));
+      const free = [];
+      let prevEnd = '00:00';
+
+      slots.forEach(s => {
+        if (s.start > prevEnd) free.push({ start: prevEnd, end: s.start });
+        if (s.end > prevEnd) prevEnd = s.end;
+      });
+      if (prevEnd < '24:00') free.push({ start: prevEnd, end: '24:00' });
+
+      const toMin = (t) => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+      const meaningful = free.filter(f => toMin(f.end) - toMin(f.start) >= 30);
+
+      if (meaningful.length === 0) {
+        container.innerHTML = `<div class="free-slot"><span style="color:#4ade80;">✅</span><span class="free-slot-label">আজকের পুরোদিন নির্ধারিত — কোনো ফাকা স্লট নেই।</span></div>`;
+        return;
+      }
+
+      meaningful.forEach((f, i) => {
+        const durMin = toMin(f.end) - toMin(f.start);
+        const hh = Math.floor(durMin / 60), mm = durMin % 60;
+        const durLabel = (hh ? hh + 'ঘঃ ' : '') + (mm ? mm + 'মি' : (hh ? '' : ''));
+        const div = document.createElement('div');
+        div.className = 'free-slot';
+        div.innerHTML = `<span class="free-slot-time">🕊️ ${f.start} - ${f.end}</span><span class="free-slot-label">ফাকা (${durLabel})</span>`;
+        container.appendChild(div);
+      });
+    }
+
+    // ২৪ ঘণ্টার স্লট অনুযায়ী এখন চলমান কাজ (লাইভ)
+    function renderCurrentRoutineStatus() {
+      const el = document.getElementById('currentRoutineStatus');
+      if (!el) return;
+
+      const now = new Date();
+      const currentHHMM = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
+      const doneToday = routineCompletions[getTodayString()] || [];
+      const slots = getTodaysRoutineSlots();
+
+      const current = slots.find(s => currentHHMM >= s.start && currentHHMM < s.end);
+
+      if (current) {
+        const [sh, sm] = current.start.split(':').map(Number);
+        const [eh, em] = current.end.split(':').map(Number);
+        const [nh, nm] = currentHHMM.split(':').map(Number);
+        const totalMin = (eh * 60 + em) - (sh * 60 + sm);
+        const elapsedMin = Math.max(0, Math.min(totalMin, (nh * 60 + nm) - (sh * 60 + sm)));
+        const remainMin = Math.max(0, totalMin - elapsedMin);
+        const pct = totalMin > 0 ? Math.round((elapsedMin / totalMin) * 100) : 0;
+        const remainLabel = remainMin >= 60 ? `${Math.floor(remainMin/60)}ঘঃ ${remainMin%60}মি` : `${remainMin}মি`;
+
+        el.innerHTML = `
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <span class="badge-live-now" style="animation: none;">🟢 চলছে</span>
+            <b style="font-size:14px; color:#f8fafc;">${current.title}</b>
+            <span style="color:#4ade80;">(${current.start} - ${current.end})</span>
+            <span style="color:#a7f3d0;">বাকি: ${remainLabel}</span>
+          </div>
+          <div class="progress-track" style="margin-top:8px;">
+            <div class="progress-fill" style="width:${pct}%;"></div>
+          </div>
+          ${doneToday.includes(current.id) ? '<div style="margin-top:4px; color:#4ade80; font-size:11.5px;">✅ এই রুটিনটি আজ সম্পন্ন হয়েছে</div>' : ''}
+        `;
+      } else {
+        const upcoming = slots.filter(s => s.start > currentHHMM).sort((a, b) => a.start.localeCompare(b.start))[0];
+        el.innerHTML = `এই মুহূর্তে কোনো নির্ধারিত রুটিন চলছে না 🕊️<br>
+          ${upcoming ? `<span style="color:#fbbf24;">পরবর্তী রুটিন: ${upcoming.title} (${upcoming.start} - ${upcoming.end})</span>` : '<span style="color:#94a3b8;">আজ আর কোনো রুটিন বাকি নেই। ফাকা সময়টি নতুন কাজে ব্যবহার করুন।</span>'}`;
+      }
+    }
+
+    // ধারাবাহিক কাজ: যোগ, % আপডেট, সম্পন্ন, মুছন
+    function addContinuousTask() {
+      const title = document.getElementById('continuousTitle').value.trim();
+      const deadline = document.getElementById('continuousDeadline').value;
+      const startPct = parseInt(document.getElementById('continuousStartPct').value || '0');
+      if (!title || !deadline) {
+        alert("ধারাবাহিক কাজের নাম ও ডেডলাইন দিন।");
+        return;
+      }
+      if (deadline < getTodayString()) {
+        alert("ডেডলাইন আজ বা ভবিষ্যতের তারিখ হতে হবে।");
+        return;
+      }
+
+      const today = getTodayString();
+      const pct = Math.max(0, Math.min(100, startPct || 0));
+      const task = {
+        id: Date.now(),
+        title,
+        deadline,
+        progress: pct,
+        initialProgress: pct,
+        history: [],
+        createdAt: today
+      };
+      if (pct > 0) task.history.push({ date: today, progress: pct });
+
+      continuousTasks.push(task);
+      document.getElementById('continuousTitle').value = '';
+      document.getElementById('continuousDeadline').value = '';
+      document.getElementById('continuousStartPct').value = '';
+      saveState();
+    }
+
+    function updateContinuousProgress(taskId) {
+      const task = continuousTasks.find(t => t.id === taskId);
+      if (!task) return;
+      const input = document.getElementById(`contPct_${taskId}`);
+      const val = Math.max(0, Math.min(100, parseInt(input.value || '0')));
+      const today = getTodayString();
+      task.history = task.history.filter(h => h.date !== today);
+      task.history.push({ date: today, progress: val });
+      task.history.sort((a, b) => a.date.localeCompare(b.date));
+      task.progress = val;
+      saveState();
+    }
+
+    function markContinuousDone(taskId) {
+      const task = continuousTasks.find(t => t.id === taskId);
+      if (!task) return;
+      const today = getTodayString();
+      task.history = task.history.filter(h => h.date !== today);
+      task.history.push({ date: today, progress: 100 });
+      task.history.sort((a, b) => a.date.localeCompare(b.date));
+      task.progress = 100;
+      saveState();
+    }
+
+    function deleteContinuousTask(taskId) {
+      continuousTasks = continuousTasks.filter(t => t.id !== taskId);
+      saveState();
+    }
+
+    function daysBetween(from, to) {
+      const d1 = new Date(from + 'T00:00:00');
+      const d2 = new Date(to + 'T00:00:00');
+      return Math.round((d2 - d1) / 86400000);
+    }
+
+    function renderContinuousTasks() {
+      const listEl = document.getElementById('continuousList');
+      const countTag = document.getElementById('continuousCountTag');
+      if (!listEl) return;
+      listEl.innerHTML = '';
+      if (countTag) countTag.innerText = `মোট: ${continuousTasks.length}`;
+
+      if (continuousTasks.length === 0) {
+        listEl.innerHTML = `<li style="color: var(--muted); font-size: 13px; text-align: center; padding: 15px;">কোনো ধারাবাহিক কাজ যুক্ত নেই। উপরের ফর্মে কাজের নাম ও ডেডলাইন দিয়ে শুরু করুন।</li>`;
+        return;
+      }
+
+      const today = getTodayString();
+      continuousTasks.forEach(t => {
+        const done = t.progress >= 100;
+        const overdue = !done && (!t.deadline || t.deadline < today);
+        const dueToday = !done && t.deadline === today;
+        const remainingDays = t.deadline ? daysBetween(today, t.deadline) : null;
+        let deadlineHtml = '';
+        if (done) deadlineHtml = `<span style="color:#4ade80;">✅ সম্পন্ন</span>`;
+        else if (overdue) deadlineHtml = `<span style="color:#f87171;">⚠️ ডেডলাইন ${-remainingDays} দিন অতিবাহিত!</span>`;
+        else if (dueToday) deadlineHtml = `<span style="color:#fbbf24;">⏰ ডেডলাইন আজ!</span>`;
+        else if (remainingDays !== null) deadlineHtml = `<span>🗓️ বাকি ${remainingDays} দিন</span>`;
+
+        const li = document.createElement('li');
+        li.className = 'task-item';
+        li.innerHTML = `
+          <div class="task-left">
+            <div class="task-content">
+              <div class="task-title">${t.title}</div>
+              <div class="task-meta">
+                <span class="badge ${overdue ? 'badge-overdue' : (done ? 'badge-onway' : 'badge-temp')}">${overdue ? 'ডেডলাইন পার' : (done ? 'সম্পন্ন' : 'চলমান')}</span>
+                ${deadlineHtml}
+              </div>
+              <div class="progress-track"><div class="progress-fill ${overdue ? 'danger' : ''}" style="width:${t.progress}%;"></div></div>
+              <div style="font-size:11px; color:var(--muted);">অগ্রগতি: <b style="color:${t.progress>=100 ? '#4ade80' : '#fbbf24'};">${t.progress}%</b></div>
+              ${done ? '' : `
+              <div class="cont-pct-row">
+                <input type="number" id="contPct_${t.id}" min="0" max="100" value="${t.progress}" placeholder="%" />
+                <button class="btn-pct" onclick="updateContinuousProgress(${t.id})">% আপডেট</button>
+              </div>`}
+            </div>
+          </div>
+          <div class="task-actions">
+            ${done ? '' : '<button class="btn-icon" style="color:#22c55e; border-color:rgba(34,197,94,0.4);" onclick="markContinuousDone(' + t.id + ')" title="১০০% সম্পন্ন">✓</button>'}
+            <button class="btn-icon btn-del" onclick="deleteContinuousTask(${t.id})" title="মুছুন">✕</button>
+          </div>
+        `;
+        listEl.appendChild(li);
+      });
+    }
+
+    // ধারাবাহিক কাজের মার্ক হিসাব
+    function getContinuousMetrics() {
+      const today = getTodayString();
+      let workingScore = 0;
+      let overdueCount = 0;
+      let onTrackCount = 0;
+      const total = continuousTasks.length;
+
+      continuousTasks.forEach(t => {
+        const lastPct = t.progress || 0;
+        const hist = (t.history || []).slice().sort((a, b) => a.date.localeCompare(b.date));
+        const todayRecords = hist.filter(h => h.date === today);
+        if (lastPct < 100 && t.deadline && t.deadline < today) overdueCount++;
+        else if (lastPct > 0) onTrackCount++;
+
+        if (todayRecords.length > 0) {
+          const lastRecord = todayRecords[todayRecords.length - 1];
+          const firstRecord = todayRecords[0];
+          const prevIdx = hist.indexOf(firstRecord);
+          const prevPct = prevIdx > 0 ? hist[prevIdx - 1].progress : (t.initialProgress || 0);
+          const delta = Math.max(0, lastRecord.progress - prevPct);
+          if (delta > 0) {
+            const beforeDeadline = !t.deadline || t.deadline >= today;
+            workingScore += delta * (beforeDeadline ? 1 : 0.5);
+          }
+        }
+      });
+
+      return { workingScore, overdueCount, onTrackCount, total };
     }
 
     function checkNotificationsAndCatchUp() {
@@ -837,7 +1226,7 @@
       });
 
       // ৩. রুটিন স্লট নোটিফিকেশন
-      const applicableSlots = routineSlots.filter(s => s.type === 'recurring' || (s.type === 'temporary' && s.date === todayISO));
+      const applicableSlots = getTodaysRoutineSlots();
       applicableSlots.forEach(s => {
         const key = `routine_${s.id}_${todayISO}_${s.start}`;
         if (s.start === currentHHMM && !remindedTasks.has(key)) {
@@ -1211,6 +1600,14 @@
       currentFocusTask = null;
     }
 
+    function getTodaysRoutineSummary() {
+      const today = getTodayString();
+      const slots = getTodaysRoutineSlots();
+      const doneArr = routineCompletions[today] || [];
+      const done = slots.filter(s => doneArr.includes(s.id)).length;
+      return { total: slots.length, done };
+    }
+
     function calculateCurrentScore() {
       const totalTasks = todayTasks.length;
       const todayFinishedTasks = todayTasks.filter(t => t.completed);
@@ -1221,16 +1618,27 @@
         else if (t.completedAt && t.completedAt <= t.time) onTimeCount++;
         else onTimeCount += 0.8;
       });
-      const sameDayCount = todayFinishedTasks.filter(t => t.createdDate === activeDayDate).length;
       const completedNamaz = Object.values(namazData).filter(n => n.done).length;
 
-      const namazScore = (completedNamaz / 5) * 40;
-      const taskScore = totalTasks > 0 ? (todayFinishedCount / totalTasks) * 30 : 0;
-      const onTimeScore = totalTasks > 0 ? (onTimeCount / totalTasks) * 15 : 0;
-      const sameDayScore = totalTasks > 0 ? (sameDayCount / totalTasks) * 15 : 0;
-      const finalScore = Math.round(namazScore + taskScore + onTimeScore + sameDayScore);
+      const routine = getTodaysRoutineSummary();
+      const cont = getContinuousMetrics();
 
-      return { finalScore, totalTasks, todayFinishedCount, onTimeCount: Math.round(onTimeCount), completedNamaz };
+      const namazScore = (completedNamaz / 5) * 30;
+      const taskScore = totalTasks > 0 ? (todayFinishedCount / totalTasks) * 20 : 0;
+      const onTimeScore = totalTasks > 0 ? (onTimeCount / totalTasks) * 10 : 0;
+      const routineScore = routine.total > 0 ? (routine.done / routine.total) * 20 : 0;
+      const contScore = Math.min(20, cont.workingScore * 0.2);
+      let finalScore = Math.round(namazScore + taskScore + onTimeScore + routineScore + contScore);
+
+      // ডেডলাইন মিস করলে মাইনাস মার্কিং
+      finalScore = Math.max(0, Math.min(100, finalScore - cont.overdueCount * 8));
+
+      return {
+        finalScore, totalTasks, todayFinishedCount,
+        onTimeCount: Math.round(onTimeCount), completedNamaz,
+        routineDone: routine.done, routineTotal: routine.total,
+        contWorking: Math.round(cont.workingScore), contOverdue: cont.overdueCount, continuousTotal: cont.total
+      };
     }
 
     function updateDayJudgmentAndAnalytics() {
@@ -1239,6 +1647,10 @@
       document.getElementById('statCompleted').innerText = metrics.todayFinishedCount;
       document.getElementById('statOnTime').innerText = metrics.onTimeCount;
       document.getElementById('statNamaz').innerText = `${metrics.completedNamaz}/5`;
+      document.getElementById('statRoutine').innerText = `${metrics.routineDone}/${metrics.routineTotal}`;
+      document.getElementById('statContinuous').innerText = metrics.contOverdue > 0
+        ? `-${metrics.contOverdue * 8}`
+        : (metrics.continuousTotal > 0 ? `${metrics.contWorking}/100` : '০');
 
       document.getElementById('scoreBar').style.width = `${metrics.finalScore}%`;
       document.getElementById('scoreText').innerText = `সফলতা: ${metrics.finalScore}%`;
@@ -1248,10 +1660,46 @@
       const yStr = `${yDate.getFullYear()}-${String(yDate.getMonth()+1).padStart(2,'0')}-${String(yDate.getDate()).padStart(2,'0')}`;
       const yesterdayData = historyStats[yStr];
 
-      let compText = yesterdayData ? `গতকালকের চেয়ে আজ <b>${metrics.todayFinishedCount - yesterdayData.completedCount}টি</b> কাজ বেশি/কম হয়েছে।` : `প্রতিদিন ব্যবহারের সাথে সাথে অগ্রগতি স্পষ্ট হবে।`;
-      let advice = metrics.completedNamaz < 3 ? `🕌 নামাজের ওয়াক্তে যত্নবান হোন, আত্মিক স্থিরতা বৃদ্ধি পাবে।` : `💪 একাগ্রতার সাথে ৩টি কাজ শেষ করলেই দিনের পূর্ণ সফলতা আসবে।`;
+      // পরিস্থিতিভেদে ডাইনামিক বিশ্লেষণ ও পরামর্শ
+      const adviceList = [];
+      const routine = getTodaysRoutineSummary();
 
-      document.getElementById('coachingAdvice').innerHTML = `💡 <b>বিশ্লেষণ ও পরামর্শ:</b> ${compText}<br>${advice}`;
+      if (metrics.contOverdue > 0) {
+        adviceList.push(`🚨 ${metrics.contOverdue}টি ধারাবাহিক কাজের ডেডলাইন পার হয়েছে — আজই অন্তত ২৫% অগ্রগতি দিন।`);
+      } else if (metrics.continuousTotal > 0 && metrics.contWorking > 0) {
+        adviceList.push(`📈 আজ ধারাবাহিক কাজে <b>${metrics.contWorking}%</b> অগ্রগতি হয়েছে — ধারাবাহিকতা ধরে রাখুন।`);
+      }
+
+      if (routine.total > 0) {
+        if (routine.done === routine.total) adviceList.push(`✅ আজকের ${routine.total}টি রুটিনই সম্পন্ন — সময় ব্যবস্থাপনা চমৎকার!`);
+        else if (routine.done >= routine.total / 2) adviceList.push(`🎯 আজ ${routine.done}/${routine.total}টি রুটিন সম্পন্ন — বাকিগুলো শেষ করার চেষ্টা করুন।`);
+        else adviceList.push(`⏳ আজ ${routine.done}/${routine.total}টি রুটিন সম্পন্ন — টাইম-ব্লক অনুসরণ করলে স্কোর আরও বাড়বে।`);
+      }
+
+      if (metrics.completedNamaz < 3) {
+        adviceList.push(`🕌 নামাজ সম্পন্ন হয়েছে ${metrics.completedNamaz}/5 — নামাজের ওয়াক্তে যত্নবান হোন।`);
+      }
+
+      if (metrics.totalTasks > 0) {
+        const ratio = metrics.todayFinishedCount / metrics.totalTasks;
+        if (ratio >= 1) adviceList.push(`💪 [Rule of 3] আজকের সব কাজ সম্পন্ন!`);
+        else if (ratio >= 0.5) adviceList.push(`💪 অর্ধেকের বেশি কাজ শেষ — বাকিগুলো একটি একটি করে সম্পন্ন করুন।`);
+        else adviceList.push(`🎯 আজকের শীর্ষ ৩ কাজের দিকে মনোযোগ দিন — একটি করে শেষ করুন।`);
+      }
+
+      if (metrics.finalScore >= 80) adviceList.push(`🏆 আজকের সফলতার হার ${metrics.finalScore}% — এই গতি বজায় রাখুন!`);
+      else if (metrics.finalScore <= 20 && (metrics.totalTasks + routine.total + metrics.continuousTotal) > 0) {
+        adviceList.push(`🌅 দিন শুরু হয়েছে মাত্র — এখনই ভালো শুরু করলে বাকি দিনটি আরও এগিয়ে রাখা সহজ হবে।`);
+      }
+
+      if (yesterdayData) {
+        const diff = Math.round(metrics.finalScore - yesterdayData.score);
+        adviceList.push(diff >= 0
+          ? `📊 গতকালের চেয়ে আজ ${diff} পয়েন্ট ভালো করছেন।`
+          : `📊 গতকালের তুলনায় আজ ${-diff} পয়েন্ট কম — মনোযোগ বাড়ান।`);
+      }
+
+      document.getElementById('coachingAdvice').innerHTML = `💡 <b>বিশ্লেষণ ও পরামর্শ:</b><br>` + adviceList.join('<br>');
       renderSevenDayChart(metrics.finalScore);
     }
 
@@ -1280,7 +1728,7 @@
     }
 
     function exportDataBackup() {
-      const fullData = { todayTasks, masterTasks, routineSlots, namazData, historyStats, completedArchive, activeDayDate };
+      const fullData = { todayTasks, masterTasks, routineSlots, routineCompletions, continuousTasks, namazData, historyStats, completedArchive, activeDayDate };
       const blob = new Blob([JSON.stringify(fullData, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -1300,6 +1748,8 @@
           todayTasks = data.todayTasks || [];
           masterTasks = data.masterTasks || [];
           routineSlots = data.routineSlots || [];
+          routineCompletions = data.routineCompletions || {};
+          continuousTasks = data.continuousTasks || [];
           namazData = data.namazData || namazData;
           historyStats = data.historyStats || {};
           completedArchive = data.completedArchive || [];
@@ -1315,6 +1765,8 @@
 
     function render() {
       renderNamaz();
+      renderContinuousTasks();
+      renderCurrentRoutineStatus();
       updateDayJudgmentAndAnalytics();
 
       const activeListEl = document.getElementById('todayActiveList');
@@ -1377,9 +1829,11 @@
     // প্রতি সেকেন্ডের টাইমার ও লাইভ ট্র্যাকার
     setInterval(() => {
       checkNotificationsAndCatchUp();
+      renderCurrentRoutineStatus();
       const routineTab = document.getElementById('tabRoutine');
       if (routineTab && !routineTab.classList.contains('hidden')) {
         renderRoutineTimeline();
+        renderFreeSlots();
       }
     }, 1000);
 
