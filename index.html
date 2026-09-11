@@ -17,7 +17,6 @@
       --danger: #ef4444;
       --success: #22c55e;
       --warning: #f59e0b;
-      --purple: #a855f7;
       --wa-green: #25D366;
       --fb-blue: #1877F2;
     }
@@ -72,12 +71,6 @@
       background: linear-gradient(135deg, #141b2d 0%, #0b1120 100%);
       border: 1px solid rgba(56, 189, 248, 0.3);
     }
-
-    .card-ai {
-      background: linear-gradient(135deg, #24143a 0%, #130c22 100%);
-      border: 1px solid rgba(168, 85, 247, 0.4);
-    }
-    .card-ai h3 { color: #c084fc; }
 
     /* কোট টেক্সট */
     .quote-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
@@ -180,8 +173,6 @@
     button:hover { background: var(--accent-hover); }
     .btn-secondary { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
     .btn-secondary:hover { background: rgba(56, 189, 248, 0.1); }
-    .btn-purple { background: var(--purple); color: #ffffff; }
-    .btn-purple:hover { background: #9333ea; }
     
     .btn-icon { width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 14px; border: 1px solid transparent; background: #0b1120; }
     .btn-up { color: var(--accent); border-color: rgba(56, 189, 248, 0.4); }
@@ -390,37 +381,9 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- ট্যাব ২: ২৪ ঘণ্টার ডেইলি রুটিন ও AI পরামর্শ   -->
+    <!-- ট্যাব ২: ২৪ ঘণ্টার ডেইলি রুটিন   -->
     <!-- ============================================== -->
     <div id="tabRoutine" class="tab-content hidden">
-
-      <!-- AI ইন্টিগ্রেশন কার্ড -->
-      <div class="card card-ai">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h3>🤖 AI স্মার্ট শিডিউল কনসালট্যান্ট (Gemini AI)</h3>
-          <button class="btn-secondary" onclick="toggleApiKeyInput()" style="font-size: 10px; padding: 2px 6px; border-color: #c084fc; color: #c084fc;">⚙️ API Key</button>
-        </div>
-        <p style="font-size: 12px; color: #d8b4fe; margin-top: 4px;">
-          আপনার নামাজের সময়, বর্তমান ফাঁকা স্লট এবং পেন্ডিং কাজের সমন্বয়ে কৃত্রিম বুদ্ধিমত্তা আপনাকে সময় ব্যবস্থাপনার দিকনির্দেশনা দেবে।
-        </p>
-
-        <!-- API Key বক্স -->
-        <div id="apiKeySection" style="display: none; margin-top: 10px; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 6px;">
-          <label style="font-size: 11px; color: #c084fc; display: block; margin-bottom: 4px;">Gemini API Key দিন (ব্রাউজারে সেভ থাকবে):</label>
-          <div style="display: flex; gap: 6px;">
-            <input type="password" id="geminiApiKeyInput" placeholder="AIzaSy..." style="flex: 1; font-size: 12px;" />
-            <button onclick="saveGeminiApiKey()" style="padding: 4px 10px; font-size: 12px;">সংরক্ষণ</button>
-          </div>
-        </div>
-
-        <div style="margin-top: 10px;">
-          <button class="btn-purple" id="btnAskAi" onclick="askAiForScheduleAdvice()" style="width: 100%; padding: 8px; font-size: 13px;">
-            ✨ "আমার এই সময়টুকু ফাঁকা আছে, এখন কী করা উচিত?"
-          </button>
-        </div>
-
-        <div id="aiResponseBox" style="display: none; background: rgba(15, 23, 42, 0.7); border-left: 3px solid #c084fc; padding: 10px 12px; border-radius: 6px; margin-top: 10px; font-size: 13px; line-height: 1.5; color: #f1f5f9; white-space: pre-line;"></div>
-      </div>
 
       <!-- নতুন রুটিন স্লট যুক্ত করার ফর্ম -->
       <div class="card card-routine">
@@ -590,7 +553,6 @@
     let historyStats = JSON.parse(localStorage.getItem('historyStats')) || {};
     let completedArchive = JSON.parse(localStorage.getItem('completedArchive')) || [];
     let activeDayDate = localStorage.getItem('activeDayDate') || getTodayString();
-    let geminiApiKey = (localStorage.getItem('geminiApiKey') || '').trim();
 
     let namazData = JSON.parse(localStorage.getItem('namazData')) || {
       Fajr: { name: 'ফজর', start: '04:35', end: '05:50', customTime: '05:00', done: false },
@@ -842,101 +804,6 @@
         `;
         container.appendChild(div);
       });
-    }
-
-    function toggleApiKeyInput() {
-      const box = document.getElementById('apiKeySection');
-      box.style.display = box.style.display === 'none' ? 'block' : 'none';
-      if (geminiApiKey) document.getElementById('geminiApiKeyInput').value = geminiApiKey;
-    }
-
-    function saveGeminiApiKey() {
-      const key = document.getElementById('geminiApiKeyInput').value.trim();
-      if (!key) return alert("সঠিক API Key দিন।");
-      geminiApiKey = key;
-      localStorage.setItem('geminiApiKey', key);
-      localStorage.removeItem('geminiActiveModel');
-      alert("Gemini API Key সফলভাবে সংরক্ষিত হয়েছে!");
-      document.getElementById('apiKeySection').style.display = 'none';
-    }
-
-    // নির্ভুল এআই ইঞ্জিন: gemini-3.6-flash এবং ফলব্যাক মডেল চেইন
-    async function askAiForScheduleAdvice() {
-      const cleanKey = (geminiApiKey || '').trim();
-      if (!cleanKey) {
-        alert("দয়া করে প্রথমে উপরের ⚙️ API Key বাটনে ক্লিক করে আপনার Gemini API Key দিন।");
-        toggleApiKeyInput();
-        return;
-      }
-
-      const btn = document.getElementById('btnAskAi');
-      const resBox = document.getElementById('aiResponseBox');
-      btn.innerText = "⏳ এআই পরামর্শ তৈরি করছে...";
-      btn.disabled = true;
-      resBox.style.display = 'none';
-
-      const now = new Date();
-      const currentHHMM = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
-      const activeRoutine = routineSlots.map(r => `${r.start}-${r.end}: ${r.title} (${r.type})`).join(', ');
-      const pendingTasks = todayTasks.filter(t => !t.completed).map(t => t.title).join(', ');
-      const namazSchedule = Object.entries(namazData).map(([k, v]) => `${v.name}: ${v.customTime || v.start}`).join(', ');
-
-      const promptText = `
-তুমি একজন বিচক্ষণ পারসোনাল প্রোডাক্টিভিটি এক্সপার্ট। ব্যবহারকারীর বর্তমান অবস্থা:
-- বর্তমান সময়: ${currentHHMM}
-- নামাজের নির্ধারিত সময়: ${namazSchedule}
-- ব্যবহারকারীর ২৪ ঘণ্টার রুটিন: ${activeRoutine || 'নির্দিষ্ট কোনো রুটিন এখনও দেওয়া নেই'}
-- আজকের পেন্ডিং শীর্ষ কাজগুলো: ${pendingTasks || 'সব কাজ সম্পন্ন'}
-
-প্রশ্ন: "আমার এই সময়টুকু ফাঁকা আছে বা আমি এখন কোন কাজটিতে সর্বোচ্চ মনোযোগ দেব? আমাকে বাস্তবসম্মত ৩-৪ লাইনে পরিষ্কার ও ইতিবাচক বাংলায় পরামর্শ দাও।"
-      `;
-
-      // গুগলের প্রস্তাবিত gemini-3.6-flash সহ সক্রিয় মডেলের অগ্রাধিকার তালিকা
-      const candidateModels = [
-        'models/gemini-3.6-flash',
-        'models/gemini-3-flash',
-        'models/gemini-2.0-flash',
-        'models/gemini-pro'
-      ];
-
-      let success = false;
-      let lastErrorMsg = '';
-
-      try {
-        for (let model of candidateModels) {
-          const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/${model}:generateContent?key=${cleanKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
-          });
-
-          const data = await response.json();
-
-          if (data.error) {
-            lastErrorMsg = data.error.message;
-            continue; // যদি এই মডেলটি সাপোর্ট না করে, পরবর্তী মডেলে চেষ্টা করবে
-          }
-
-          if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
-            resBox.innerText = data.candidates[0].content.parts[0].text;
-            resBox.style.display = 'block';
-            success = true;
-            break;
-          }
-        }
-
-        if (!success) {
-          resBox.innerHTML = `⚠️ <b>গুগল এআই ত্রুটি:</b> ${lastErrorMsg || 'সঠিক মডেল নির্বাচন করা সম্ভব হয়নি। এপিআই কি সঠিক আছে কিনা যাচাই করুন।'}`;
-          resBox.style.display = 'block';
-        }
-
-      } catch (err) {
-        resBox.innerText = "ইন্টারনেট সংযোগ বা নেটওয়ার্ক সমস্যার কারণে যোগাযোগ করা যায়নি।";
-        resBox.style.display = 'block';
-      } finally {
-        btn.innerText = '✨ "আমার এই সময়টুকু ফাঁকা আছে, এখন কী করা উচিত?"';
-        btn.disabled = false;
-      }
     }
 
     function checkNotificationsAndCatchUp() {
