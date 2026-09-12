@@ -289,6 +289,11 @@
 
   <div class="container">
 
+    <!-- স্টোরেজ সতর্কতা -->
+    <div id="storageNotice" style="display:none; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.4); color: #fca5a5; padding: 10px 14px; border-radius: 12px; font-size: 12.5px; margin-bottom: 12px; align-items: center; gap: 8px;">
+      ⚠️ <b>সতর্কতা:</b> এই ব্রাউজারে ডাটা সেভ হচ্ছে না। প্রতিবার পেজ রিফ্রেশ করলে সব ফাঁকা হয়ে যাবে। মোবাইলে/ফাইলে নয় — একটি সাধারণ ব্রাউজারে খুলুন, অথবা ফাইলটি হোস্ট করে ব্যবহার করুন।
+    </div>
+
     <!-- প্রধান ট্যাব নেভিগেশন -->
     <div class="tab-nav">
       <button class="tab-btn active" id="tabBtnDashboard" onclick="switchTab('dashboard')">🎯 SmartDo ড্যাশবোর্ড</button>
@@ -394,7 +399,7 @@
           <div class="input-row">
             <input type="time" id="todayTime" title="শুরুর সময়" />
             <input type="number" id="todayDuration" placeholder="মিনিট" style="width: 100px;" />
-            <button onclick="addTodayTaskDirect()">+ যুক্ত করুন</button>
+            <button type="button" onclick="addTodayTaskDirect()">+ যুক্ত করুন</button>
           </div>
         </div>
 
@@ -422,7 +427,7 @@
             <input type="text" id="continuousTitle" placeholder="ধারাবাহিক কাজের নাম (যেমন: মডেল টেস্ট প্রস্তুতি)..." />
             <input type="date" id="continuousDeadline" title="ডেডলাইন" />
             <input type="number" id="continuousStartPct" placeholder="শুরু %" min="0" max="100" style="width: 90px;" />
-            <button onclick="addContinuousTask()">+ যুক্ত করুন</button>
+            <button type="button" onclick="addContinuousTask()">+ যুক্ত করুন</button>
           </div>
         </div>
 
@@ -443,7 +448,7 @@
           </div>
           <div class="input-row">
             <input type="date" id="masterDueDate" title="ডেডলাইন" />
-            <button onclick="addMasterTask()">তালিকায় রাখুন</button>
+            <button type="button" onclick="addMasterTask()">তালিকায় রাখুন</button>
           </div>
         </div>
         <ul class="task-list" id="masterList"></ul>
@@ -453,8 +458,8 @@
       <div class="card" style="background: #0d1322;">
         <h3>💾 ডাটা ব্যাকআপ ও এক্সপোর্ট</h3>
         <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
-          <button class="btn-secondary" onclick="exportDataBackup()" style="font-size: 12px;">⬇️ ব্যাকআপ ডাউনলোড (JSON)</button>
-          <button class="btn-secondary" onclick="document.getElementById('importFile').click()" style="font-size: 12px;">⬆️ ডাটা রিস্টোর করুন</button>
+          <button type="button" class="btn-secondary" onclick="exportDataBackup()" style="font-size: 12px;">⬇️ ব্যাকআপ ডাউনলোড (JSON)</button>
+          <button type="button" class="btn-secondary" onclick="document.getElementById('importFile').click()" style="font-size: 12px;">⬆️ ডাটা রিস্টোর করুন</button>
           <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importDataBackup(event)" />
         </div>
       </div>
@@ -500,11 +505,14 @@
               <span style="font-size: 11px; color: var(--muted);">শেষ:</span>
               <input type="time" id="routineEnd" />
             </div>
-            <button onclick="addRoutineSlot()">+ স্লট সংরক্ষণ</button>
+            <button type="button" onclick="addRoutineSlot()">+ স্লট সংরক্ষণ</button>
           </div>
         </div>
 
         <!-- টাইমলাইন লিস্ট -->
+        <div id="routineAddFlash" style="display:none; background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.4); color: #86efac; padding: 10px 14px; border-radius: 12px; font-size: 13px; margin: 12px 0 4px;">
+          ✅ <b>স্লট সফলভাবে যুক্ত হয়েছে!</b> নিচের সময়সূচিতে দেখুন।
+        </div>
         <h3 style="margin-top: 14px; font-size: 15px; color: #38bdf8;">📋 আজকের ২৪ ঘণ্টার সময়সূচি ও বর্তমান অবস্থা:</h3>
         <div class="routine-timeline" id="routineTimelineContainer"></div>
 
@@ -644,15 +652,24 @@
       return `${y}-${m}-${d}`;
     }
 
-    // স্টেট ও লোকালস্টোরেজ
-    let todayTasks = JSON.parse(localStorage.getItem('todayTasks')) || [];
-    let masterTasks = JSON.parse(localStorage.getItem('masterTasks')) || [];
-    let routineSlots = JSON.parse(localStorage.getItem('routineSlots')) || [];
-    let historyStats = JSON.parse(localStorage.getItem('historyStats')) || {};
-    let completedArchive = JSON.parse(localStorage.getItem('completedArchive')) || [];
-    let activeDayDate = localStorage.getItem('activeDayDate') || getTodayString();
+    // স্টেট ও লোকালস্টোরেজ (নিরাপদ)
+    let storageOK = true;
+    function safeGet(key) {
+      try { return localStorage.getItem(key); } catch (e) { storageOK = false; return null; }
+    }
+    function safeSet(key, val) {
+      try { localStorage.setItem(key, val); } catch (e) { storageOK = false; }
+    }
 
-    let namazData = JSON.parse(localStorage.getItem('namazData')) || {
+    let todayTasks = JSON.parse(safeGet('todayTasks')) || [];
+    let masterTasks = JSON.parse(safeGet('masterTasks')) || [];
+    let routineSlots = JSON.parse(safeGet('routineSlots')) || [];
+    let historyStats = JSON.parse(safeGet('historyStats')) || {};
+    let completedArchive = JSON.parse(safeGet('completedArchive')) || [];
+    let activeDayDate = safeGet('activeDayDate') || getTodayString();
+    document.getElementById('storageNotice').style.display = storageOK ? 'none' : 'flex';
+
+    let namazData = JSON.parse(safeGet('namazData')) || {
       Fajr: { name: 'ফজর', start: '04:35', end: '05:50', customTime: '05:00', done: false },
       Dhuhr: { name: 'যোহর', start: '12:05', end: '16:15', customTime: '13:15', done: false },
       Asr: { name: 'আসর', start: '16:15', end: '18:15', customTime: '16:45', done: false },
@@ -660,24 +677,28 @@
       Isha: { name: 'ইশা', start: '19:30', end: '23:30', customTime: '20:15', done: false }
     };
 
-    let remindedTasks = new Set(JSON.parse(localStorage.getItem('remindedTasksCache') || '[]'));
+    let remindedTasks = new Set(JSON.parse(safeGet('remindedTasksCache') || '[]'));
     let selectedMasterId = null;
     let editingMasterId = null;
 
-    let routineCompletions = JSON.parse(localStorage.getItem('routineCompletions')) || {};
-    let continuousTasks = JSON.parse(localStorage.getItem('continuousTasks')) || [];
+    let routineCompletions = JSON.parse(safeGet('routineCompletions')) || {};
+    let continuousTasks = JSON.parse(safeGet('continuousTasks')) || [];
 
     function saveState() {
-      localStorage.setItem('todayTasks', JSON.stringify(todayTasks));
-      localStorage.setItem('masterTasks', JSON.stringify(masterTasks));
-      localStorage.setItem('routineSlots', JSON.stringify(routineSlots));
-      localStorage.setItem('routineCompletions', JSON.stringify(routineCompletions));
-      localStorage.setItem('continuousTasks', JSON.stringify(continuousTasks));
-      localStorage.setItem('namazData', JSON.stringify(namazData));
-      localStorage.setItem('historyStats', JSON.stringify(historyStats));
-      localStorage.setItem('completedArchive', JSON.stringify(completedArchive));
-      localStorage.setItem('activeDayDate', activeDayDate);
-      localStorage.setItem('remindedTasksCache', JSON.stringify(Array.from(remindedTasks).slice(-100)));
+      safeSet('todayTasks', JSON.stringify(todayTasks));
+      safeSet('masterTasks', JSON.stringify(masterTasks));
+      safeSet('routineSlots', JSON.stringify(routineSlots));
+      safeSet('routineCompletions', JSON.stringify(routineCompletions));
+      safeSet('continuousTasks', JSON.stringify(continuousTasks));
+      safeSet('namazData', JSON.stringify(namazData));
+      safeSet('historyStats', JSON.stringify(historyStats));
+      safeSet('completedArchive', JSON.stringify(completedArchive));
+      safeSet('activeDayDate', activeDayDate);
+      safeSet('remindedTasksCache', JSON.stringify(Array.from(remindedTasks).slice(-100)));
+      if (!storageOK) {
+        const notice = document.getElementById('storageNotice');
+        if (notice) notice.style.display = 'flex';
+      }
       render();
     }
 
@@ -762,7 +783,7 @@
           namazData.Maghrib.end = t.Isha;
           namazData.Isha.start = t.Isha;
           namazData.Isha.end = "23:59";
-          localStorage.setItem('namazData', JSON.stringify(namazData));
+          safeSet('namazData', JSON.stringify(namazData));
           renderNamaz();
         }
       } catch (e) {
@@ -845,12 +866,19 @@
 
       routineSlots.sort((a, b) => a.start.localeCompare(b.start));
 
-      document.getElementById('routineTitle').value = '';
-      document.getElementById('routineStart').value = '';
-      document.getElementById('routineEnd').value = '';
       saveState();
       renderRoutineTimeline();
       renderFreeSlots();
+
+      document.getElementById('routineTitle').value = '';
+      document.getElementById('routineStart').value = '';
+      document.getElementById('routineEnd').value = '';
+
+      const flash = document.getElementById('routineAddFlash');
+      if (flash) flash.style.display = 'block';
+      const timelineEl = document.getElementById('routineTimelineContainer');
+      if (timelineEl && timelineEl.scrollIntoView) timelineEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      setTimeout(() => { if (flash) flash.style.display = 'none'; }, 2500);
     }
 
     // আজকের জন্য প্রযোজ্য রুটিন স্লট (সপ্তাহের দিন ও টেম্পোরারি তারিখ অনুযায়ী)
