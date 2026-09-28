@@ -283,6 +283,57 @@
     .focus-task-title { font-size: 22px; font-weight: 700; color: #f8fafc; max-width: 600px; margin: 10px auto; }
     .focus-timer-text { font-size: 48px; font-family: monospace; font-weight: bold; color: #ffffff; margin: 16px 0; }
     .exit-modal-box { background: #111827; border: 1px solid #ef4444; border-radius: 12px; padding: 20px; max-width: 400px; width: 90%; text-align: center; }
+
+    /* ==== মিনিমাল ড্যাশবোর্ড: হেডার, টাইল, পপ-আপ, ২৪ ঘণ্টা টেবিল ==== */
+    .app-header { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 14px 16px; border-radius: 14px; border: 1px solid rgba(56,189,248,0.25); background: linear-gradient(135deg, #0e2b45 0%, #0b1a2e 100%); }
+    .brand { font-size: 19px; font-weight: 800; color: #f8fafc; }
+    .date-line { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+    .score-pill { background: rgba(56,189,248,0.15); border: 1px solid rgba(56,189,248,0.4); color: #7dd3fc; font-weight: 700; font-size: 13px; padding: 7px 14px; border-radius: 20px; white-space: nowrap; }
+    .icon-btn { width: 38px; height: 38px; padding: 0; font-size: 15px; border-radius: 10px; background: rgba(15,23,42,0.8); border: 1px solid var(--border); }
+    .icon-btn:hover { background: rgba(15,23,42,1); }
+
+    .dash-now { border-radius: 12px; padding: 12px 14px; font-size: 13px; line-height: 1.5; background: linear-gradient(135deg, #062b21 0%, #0b1f1c 100%); border: 1px solid rgba(34,197,94,0.35); color: #d1fae5; }
+
+    .cat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+    .cat-tile { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; text-align: left; padding: 15px 14px; border-radius: 14px; border: 1px solid var(--border); color: var(--text); transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease; }
+    .cat-tile:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.35); }
+    .cat-ico { font-size: 21px; }
+    .cat-name { font-size: 13.5px; font-weight: 700; color: #f1f5f9; }
+    .cat-sub { font-size: 11px; color: var(--muted); font-weight: 600; }
+    .t-journal { background: linear-gradient(135deg, #1a1d45 0%, #10132e 100%); border-color: rgba(129,140,248,0.35); }
+    .t-namaz { background: linear-gradient(135deg, #0b2430 0%, #091820 100%); border-color: rgba(56,189,248,0.35); }
+    .t-rule3 { background: linear-gradient(135deg, #0e2b45 0%, #0a1d30 100%); border-color: rgba(56,189,248,0.55); }
+    .t-routine { background: linear-gradient(135deg, #062b21 0%, #0b2018 100%); border-color: rgba(34,197,94,0.45); }
+    .t-cont { background: linear-gradient(135deg, #2b1a3a 0%, #1a0f26 100%); border-color: rgba(217,119,6,0.5); }
+    .t-master { background: linear-gradient(135deg, #172033 0%, #10182b 100%); border-color: rgba(148,163,184,0.3); }
+    .t-settings { background: linear-gradient(135deg, #1f1233 0%, #150b24 100%); border-color: rgba(168,85,247,0.35); }
+
+    /* ক্যাটাগরি পপ-আপ */
+    #catOverlay { position: fixed; inset: 0; background: #080d18; z-index: 900; display: none; flex-direction: column; }
+    #catOverlay.open { display: flex; }
+    .cat-bar { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--border); background: #0b1120; }
+    .cat-title { font-size: 16.5px; font-weight: 700; color: #f8fafc; }
+    .cat-close { width: 40px; height: 40px; border-radius: 10px; background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.4); font-size: 16px; }
+    .cat-close:hover { background: rgba(239,68,68,0.25); }
+    #catScroll { flex: 1; overflow-y: auto; padding: 16px; width: 100%; max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; -webkit-overflow-scrolling: touch; }
+
+    /* ২৪ ঘণ্টার টেবিল */
+    .hour-table { display: flex; flex-direction: column; gap: 3px; margin-top: 10px; }
+    .hour-row { display: grid; grid-template-columns: 72px 1fr; align-items: center; gap: 10px; background: rgba(15,23,42,0.7); border: 1px solid rgba(148,163,184,0.15); border-radius: 8px; padding: 7px 12px; font-size: 12.5px; }
+    .hour-row.hour-head { background: rgba(56,189,248,0.12); border-color: rgba(56,189,248,0.3); }
+    .hour-row.hour-head .hour-label, .hour-row.hour-head div { color: #7dd3fc; font-weight: 700; font-size: 12.5px; }
+    .hour-row.hour-current { border: 2px solid #22c55e; background: rgba(34,197,94,0.14); }
+    .hour-label { font-family: monospace; font-weight: 700; color: #38bdf8; font-size: 12px; }
+    .hour-row.hour-free { opacity: 0.8; border-style: dashed; }
+    .hour-row.hour-free .hour-label { color: #64748b; }
+    .cell-free { color: #64748b; font-size: 12px; }
+    .cell-title { font-weight: 600; color: #f1f5f9; line-height: 1.3; }
+    .cell-sub { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+    .cell-done .cell-title { text-decoration: line-through; color: #86efac; }
+    .hour-actions { display: flex; gap: 6px; align-items: center; margin-top: 5px; }
+    .hour-btn { font-size: 11px; padding: 3px 9px; border-radius: 5px; }
+    .hour-btn.ok { background: rgba(34,197,94,0.85); color: #052e16; }
+    .hour-btn.del { background: rgba(239,68,68,0.85); color: #fff; }
   </style>
 </head>
 <body>
@@ -294,232 +345,58 @@
       ⚠️ <b>সতর্কতা:</b> এই ব্রাউজারে ডাটা সেভ হচ্ছে না। প্রতিবার পেজ রিফ্রেশ করলে সব ফাঁকা হয়ে যাবে। মোবাইলে/ফাইলে নয় — একটি সাধারণ ব্রাউজারে খুলুন, অথবা ফাইলটি হোস্ট করে ব্যবহার করুন।
     </div>
 
-    <!-- প্রধান ট্যাব নেভিগেশন -->
-    <div class="tab-nav">
-      <button class="tab-btn active" id="tabBtnDashboard" onclick="switchTab('dashboard')">🎯 SmartDo ড্যাশবোর্ড</button>
-      <button class="tab-btn" id="tabBtnRoutine" onclick="switchTab('routine')">🕒 ২৪ ঘণ্টার ডেইলি রুটিন</button>
+    <!-- শিরোনাম -->
+    <div class="app-header">
+      <div>
+        <div class="brand">🎯 SmartDo</div>
+        <div class="date-line" id="headerDate">লোড হচ্ছে...</div>
+      </div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <div class="score-pill" id="headerScore">০%</div>
+        <button type="button" class="icon-btn" title="ব্যাকআপ ডাউনলোড" onclick="exportDataBackup()" style="background: rgba(15,23,42,0.8); border: 1px solid var(--border); color: #7dd3fc;">⬇️</button>
+      </div>
     </div>
 
-    <!-- ============================================== -->
-    <!-- ট্যাব ১: স্মার্টডু ড্যাশবোর্ড                     -->
-    <!-- ============================================== -->
-    <div id="tabDashboard" class="tab-content">
-      
-      <!-- ১. দৈনিক অনুপ্রেরণা কার্ড -->
-      <div class="card card-quote">
-        <div class="quote-header">
-          <span class="quote-tag" id="quoteCategory">✨ দৈনিক অনুপ্রেরণা</span>
-          <button class="btn-secondary" onclick="loadRandomQuote()" style="font-size: 10px; padding: 2px 6px; border-color: #4ade80; color: #4ade80;">🔄 নতুন বাণী</button>
-        </div>
-        <div class="quote-text" id="quoteText">"ধৈর্য ধারণ করো, নিশ্চয়ই আল্লাহর সাহায্য অত্যন্ত নিকটে।"</div>
-        <div class="quote-author" id="quoteAuthor">— আল-কোরআন</div>
-      </div>
-      
-      <!-- ২. ডে জাজমেন্ট ও ৭ দিনের অ্যানালিটিক্স -->
-      <div class="card card-analytics">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h2>📊 ডে জাজমেন্ট ও স্মার্ট অ্যানালিটিক্স</h2>
-          <button class="btn-secondary" onclick="manualNewDayReset()" style="font-size: 10px; padding: 3px 6px; border-color: #818cf8; color: #a5b4fc;">🔄 নতুন দিন</button>
-        </div>
-        
-        <div class="judgment-grid">
-          <div class="judgment-card">
-            <span style="font-size: 11px; color: var(--muted);">আজকের কাজ</span>
-            <div class="judgment-value" id="statTotal">০</div>
-          </div>
-          <div class="judgment-card">
-            <span style="font-size: 11px; color: var(--muted);">সম্পন্ন</span>
-            <div class="judgment-value" id="statCompleted" style="color: var(--success);">০</div>
-          </div>
-          <div class="judgment-card">
-            <span style="font-size: 11px; color: var(--muted);">সময়নিষ্ঠ কাজ</span>
-            <div class="judgment-value" id="statOnTime" style="color: var(--warning);">০</div>
-          </div>
-          <div class="judgment-card">
-            <span style="font-size: 11px; color: var(--muted);">নামাজ</span>
-            <div class="judgment-value" id="statNamaz" style="color: #38bdf8;">০/৫</div>
-          </div>
-          <div class="judgment-card">
-            <span style="font-size: 11px; color: var(--muted);">রুটিন</span>
-            <div class="judgment-value" id="statRoutine" style="color: #22c55e;">০/০</div>
-          </div>
-          <div class="judgment-card">
-            <span style="font-size: 11px; color: var(--muted);">ধারাবাহিক</span>
-            <div class="judgment-value" id="statContinuous" style="color: #f59e0b;">০</div>
-          </div>
-        </div>
+    <!-- এখন চলছে -->
+    <div class="dash-now" id="dashNow">🕊️ লোড হচ্ছে...</div>
 
-        <div class="judgment-bar-bg">
-          <div class="judgment-bar-fill" id="scoreBar"></div>
-        </div>
-        <div style="font-size: 13px; font-weight: 600; margin-top: 8px; text-align: center; color: #e2e8f0;" id="scoreText">সফলতা: ০%</div>
-
-        <div class="coaching-box" id="coachingAdvice">
-          💡 <b>পরামর্শ:</b> আজকের দিনটি শুরু করুন। নির্দিষ্ট সময়ে শীর্ষ ৩টি কাজের প্রথমটি শেষ করার মাধ্যমে সময়নিষ্ঠতার পয়েন্ট অর্জন করুন।
-        </div>
-
-        <div style="margin-top: 14px;">
-          <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">📈 গত ৭ দিনের ট্রেন্ড:</div>
-          <div class="chart-container" id="sevenDayChart"></div>
-        </div>
-      </div>
-
-      <!-- ৩. নামাজের সময় ও কাস্টম সালাত নির্ধারণ -->
-      <div class="card card-namaz">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h3>🕌 নামাজের সময় ও কাস্টম সালাত সেটিং</h3>
-          <button class="btn-secondary" onclick="enableAudioAndNotification()" style="font-size: 10px; padding: 3px 6px;">🔊 নোটিফিকেশন অন</button>
-        </div>
-        <p style="font-size: 11.5px; color: var(--muted); margin-bottom: 8px;">ওয়াক্তের সীমার ভেতর আপনি যে নির্দিষ্ট সময়ে সালাত আদায় করতে চান তা সেট করে রাখুন:</p>
-        <div class="namaz-grid" id="namazContainer"></div>
-      </div>
-
-      <!-- ৪. The Rule of 3 -->
-      <div class="card card-rule-of-3">
-        <div class="rule-of-3-header">
-          <h2>🎯 The Rule of 3 (চলমান শীর্ষ ৩ কাজ)</h2>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span class="count-tag" id="ruleCount">চলমান: ০ / ৩</span>
-            <button class="btn-secondary" onclick="openCompletedModal()" style="font-size: 11px; padding: 3px 7px;">✓ সম্পন্ন কাজ (<span id="completedCountBadge">০</span>)</button>
-          </div>
-        </div>
-        <p style="color: #94a3b8; font-size: 12px; margin-bottom: 10px;">
-          একটানা সর্বোচ্চ ৩টি চলমান কাজ থাকবে। গভীর মনোযোগের জন্য কাজের পাশের <b>"ফোকাস"</b> বাটন চাপুন।
-        </p>
-
-        <div class="input-group">
-          <div class="input-row">
-            <input type="text" id="todayTaskInput" placeholder="জরুরি কাজের বিবরণ..." />
-            <select id="todayCategory">
-              <option value="teaching">ক্লাস/টিচিং</option>
-              <option value="admin">অ্যাডমিন</option>
-              <option value="personal">ব্যক্তিগত</option>
-            </select>
-          </div>
-          <div class="input-row">
-            <input type="time" id="todayTime" title="শুরুর সময়" />
-            <input type="number" id="todayDuration" placeholder="মিনিট" style="width: 100px;" />
-            <button type="button" onclick="addTodayTaskDirect()">+ যুক্ত করুন</button>
-          </div>
-        </div>
-
-        <ul class="task-list" id="todayActiveList"></ul>
-      </div>
-
-      <!-- ৪ক. এখন চলমান ২৪ ঘণ্টার রুটিন (লাইভ) -->
-      <div class="card card-current">
-        <h3>🎬 এখন চলমান রুটিন (২৪ ঘণ্টার স্লট অনুযায়ী)</h3>
-        <div class="status-tag" id="currentRoutineStatus">লোড হচ্ছে...</div>
-      </div>
-
-      <!-- ৪খ. ধারাবাহিক কাজ -->
-      <div class="card card-continuous">
-        <div class="rule-of-3-header">
-          <h2>📈 ধারাবাহিক কাজ (ডেডলাইন ট্র্যাকিং)</h2>
-          <span class="count-tag" id="continuousCountTag">মোট: ০</span>
-        </div>
-        <p style="color: #94a3b8; font-size: 12px; margin-bottom: 10px;">
-          দীর্ঘমেয়াদি কাজের জন্য নির্দিষ্ট ডেডলাইন দিন। প্রতিদিন কত শতাংশ শেষ করলেন তা আপডেট করুন। ডেডলাইনের ভেতর কাজ সম্পন্ন না হলে <b style="color: #f87171;">ডে জাজমেন্টে মাইনাস</b> হবে।
-        </p>
-
-        <div class="input-group">
-          <div class="input-row">
-            <input type="text" id="continuousTitle" placeholder="ধারাবাহিক কাজের নাম (যেমন: মডেল টেস্ট প্রস্তুতি)..." />
-            <input type="date" id="continuousDeadline" title="ডেডলাইন" />
-            <input type="number" id="continuousStartPct" placeholder="শুরু %" min="0" max="100" style="width: 90px;" />
-            <button type="button" onclick="addContinuousTask()">+ যুক্ত করুন</button>
-          </div>
-        </div>
-
-        <ul class="task-list" id="continuousList"></ul>
-      </div>
-
-      <!-- ৫. মাস্টার লিস্ট -->
-      <div class="card card-master">
-        <h2>📋 মাস্টার লিস্ট (সব কাজের ভাণ্ডার ও ডেডলাইন)</h2>
-        <div class="input-group">
-          <div class="input-row">
-            <input type="text" id="masterTaskInput" placeholder="কাজের নাম ও বিস্তারিত..." />
-            <select id="masterCategory">
-              <option value="teaching">ক্লাস/টিচিং</option>
-              <option value="admin">অ্যাডমিন</option>
-              <option value="personal">ব্যক্তিগত</option>
-            </select>
-          </div>
-          <div class="input-row">
-            <input type="date" id="masterDueDate" title="ডেডলাইন" />
-            <button type="button" onclick="addMasterTask()">তালিকায় রাখুন</button>
-          </div>
-        </div>
-        <ul class="task-list" id="masterList"></ul>
-      </div>
-
-      <!-- ব্যাকআপ ও রিস্টোর -->
-      <div class="card" style="background: #0d1322;">
-        <h3>💾 ডাটা ব্যাকআপ ও এক্সপোর্ট</h3>
-        <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
-          <button type="button" class="btn-secondary" onclick="exportDataBackup()" style="font-size: 12px;">⬇️ ব্যাকআপ ডাউনলোড (JSON)</button>
-          <button type="button" class="btn-secondary" onclick="document.getElementById('importFile').click()" style="font-size: 12px;">⬆️ ডাটা রিস্টোর করুন</button>
-          <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importDataBackup(event)" />
-        </div>
-      </div>
-
-    </div>
-
-    <!-- ============================================== -->
-    <!-- ট্যাব ২: ২৪ ঘণ্টার ডেইলি রুটিন   -->
-    <!-- ============================================== -->
-    <div id="tabRoutine" class="tab-content hidden">
-
-      <!-- নতুন রুটিন স্লট যুক্ত করার ফর্ম -->
-      <div class="card card-routine">
-        <h2>🕒 নতুন রুটিন স্লট যুক্ত করুন</h2>
-        <div class="input-group">
-          <div class="input-row">
-            <input type="text" id="routineTitle" placeholder="কাজের নাম (যেমন: ফিজিক্স লেকচার তৈরি, ব্যায়াম)..." />
-            <select id="routineType" onchange="toggleRoutineDaySelect()">
-              <option value="recurring">🔁 Recurring (সপ্তাহের নির্দিষ্ট দিনে)</option>
-              <option value="temporary">📅 Temporary (আজকের জন্য কেবল)</option>
-            </select>
-          </div>
-
-          <!-- সপ্তাহের দিন নির্বাচন (Recurring এর জন্য) -->
-          <div class="day-check-row" id="routineDayRow">
-            <span style="font-size: 11px; color: var(--muted);">সপ্তাহের কোন কোন দিনে করবেন?</span>
-            <label class="day-check all-days"><input type="checkbox" id="dayChkAll" checked onchange="selectAllDays(this.checked)" /> সব দিন</label>
-            <label class="day-check"><input type="checkbox" class="day-chk" value="0" checked /> রবি</label>
-            <label class="day-check"><input type="checkbox" class="day-chk" value="1" checked /> সোম</label>
-            <label class="day-check"><input type="checkbox" class="day-chk" value="2" checked /> মঙ্গল</label>
-            <label class="day-check"><input type="checkbox" class="day-chk" value="3" checked /> বুধ</label>
-            <label class="day-check"><input type="checkbox" class="day-chk" value="4" checked /> বৃহঃ</label>
-            <label class="day-check"><input type="checkbox" class="day-chk" value="5" checked /> শুক্র</label>
-            <label class="day-check"><input type="checkbox" class="day-chk" value="6" checked /> শনি</label>
-          </div>
-
-          <div class="input-row">
-            <div style="display: flex; align-items: center; gap: 4px;">
-              <span style="font-size: 11px; color: var(--muted);">শুরু:</span>
-              <input type="time" id="routineStart" />
-            </div>
-            <div style="display: flex; align-items: center; gap: 4px;">
-              <span style="font-size: 11px; color: var(--muted);">শেষ:</span>
-              <input type="time" id="routineEnd" />
-            </div>
-            <button type="button" onclick="addRoutineSlot()">+ স্লট সংরক্ষণ</button>
-          </div>
-        </div>
-
-        <!-- টাইমলাইন লিস্ট -->
-        <div id="routineAddFlash" style="display:none; background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.4); color: #86efac; padding: 10px 14px; border-radius: 12px; font-size: 13px; margin: 12px 0 4px;">
-          ✅ <b>স্লট সফলভাবে যুক্ত হয়েছে!</b> নিচের সময়সূচিতে দেখুন।
-        </div>
-        <h3 style="margin-top: 14px; font-size: 15px; color: #38bdf8;">📋 আজকের ২৪ ঘণ্টার সময়সূচি ও বর্তমান অবস্থা:</h3>
-        <div class="routine-timeline" id="routineTimelineContainer"></div>
-
-        <h3 style="margin-top: 18px; font-size: 15px; color: #818cf8;">🕊️ আজকের ফাকা স্লট</h3>
-        <div class="routine-timeline" id="freeSlotsContainer"></div>
-      </div>
-
+    <!-- ক্যাটাগরি -->
+    <div class="cat-grid">
+      <button type="button" class="cat-tile t-journal" onclick="openCat('journal')">
+        <span class="cat-ico">📊</span>
+        <span class="cat-name">ডে জাজমেন্ট</span>
+        <span class="cat-sub" id="tileScore">০%</span>
+      </button>
+      <button type="button" class="cat-tile t-namaz" onclick="openCat('namaz')">
+        <span class="cat-ico">🕌</span>
+        <span class="cat-name">নামাজ</span>
+        <span class="cat-sub" id="tileNamaz">০/৫</span>
+      </button>
+      <button type="button" class="cat-tile t-rule3" onclick="openCat('rule3')">
+        <span class="cat-ico">🎯</span>
+        <span class="cat-name">শীর্ষ ৩ কাজ</span>
+        <span class="cat-sub" id="tileTasks">০/০</span>
+      </button>
+      <button type="button" class="cat-tile t-routine" onclick="openCat('routine')">
+        <span class="cat-ico">🕒</span>
+        <span class="cat-name">২৪ ঘণ্টা রুটিন</span>
+        <span class="cat-sub" id="tileRoutine">০/০</span>
+      </button>
+      <button type="button" class="cat-tile t-cont" onclick="openCat('continuous')">
+        <span class="cat-ico">📈</span>
+        <span class="cat-name">ধারাবাহিক কাজ</span>
+        <span class="cat-sub" id="tileCont">০</span>
+      </button>
+      <button type="button" class="cat-tile t-master" onclick="openCat('master')">
+        <span class="cat-ico">📋</span>
+        <span class="cat-name">মাস্টার লিস্ট</span>
+        <span class="cat-sub" id="tileMaster">০</span>
+      </button>
+      <button type="button" class="cat-tile t-settings" onclick="openCat('settings')">
+        <span class="cat-ico">⚙️</span>
+        <span class="cat-name">সেটিংস ও ব্যাকআপ</span>
+        <span class="cat-sub">ব্যাকআপ, ভয়েস</span>
+      </button>
     </div>
 
     <!-- ডেভেলপার কার্ড -->
@@ -533,6 +410,226 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- ক্যাটাগরি পপ-আপ -->
+  <div id="catOverlay">
+    <div class="cat-bar">
+      <div class="cat-title" id="catTitle">📊 ডে জাজমেন্ট</div>
+      <button type="button" class="cat-close" onclick="closeCat()">✕</button>
+    </div>
+    <div id="catScroll">
+
+      <!-- ডে জাজমেন্ট ও অ্যানালিটিক্স -->
+      <div class="cat-panel" id="panelJournal">
+        <div class="card card-quote">
+          <div class="quote-header">
+            <span class="quote-tag" id="quoteCategory">✨ দৈনিক অনুপ্রেরণা</span>
+            <button type="button" class="btn-secondary" onclick="loadRandomQuote()" style="font-size: 10px; padding: 2px 6px; border-color: #4ade80; color: #4ade80;">🔄 নতুন</button>
+          </div>
+          <div class="quote-text" id="quoteText">"ধৈর্য ধারণ করো, নিশ্চয়ই আল্লাহর সাহায্য অত্যন্ত নিকটে।"</div>
+          <div class="quote-author" id="quoteAuthor">— আল-কোরআন</div>
+        </div>
+        <div class="card card-analytics">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2>📊 ডে জাজমেন্ট</h2>
+            <button type="button" class="btn-secondary" onclick="manualNewDayReset()" style="font-size: 10px; padding: 3px 6px; border-color: #818cf8; color: #a5b4fc;">🔄 নতুন দিন</button>
+          </div>
+          <div class="judgment-grid">
+            <div class="judgment-card">
+              <span style="font-size: 11px; color: var(--muted);">আজকের কাজ</span>
+              <div class="judgment-value" id="statTotal">০</div>
+            </div>
+            <div class="judgment-card">
+              <span style="font-size: 11px; color: var(--muted);">সম্পন্ন</span>
+              <div class="judgment-value" id="statCompleted" style="color: var(--success);">০</div>
+            </div>
+            <div class="judgment-card">
+              <span style="font-size: 11px; color: var(--muted);">সময়নিষ্ঠ</span>
+              <div class="judgment-value" id="statOnTime" style="color: var(--warning);">০</div>
+            </div>
+            <div class="judgment-card">
+              <span style="font-size: 11px; color: var(--muted);">নামাজ</span>
+              <div class="judgment-value" id="statNamaz" style="color: #38bdf8;">০/৫</div>
+            </div>
+            <div class="judgment-card">
+              <span style="font-size: 11px; color: var(--muted);">রুটিন</span>
+              <div class="judgment-value" id="statRoutine" style="color: #22c55e;">০/০</div>
+            </div>
+            <div class="judgment-card">
+              <span style="font-size: 11px; color: var(--muted);">ধারাবাহিক</span>
+              <div class="judgment-value" id="statContinuous" style="color: #f59e0b;">০</div>
+            </div>
+          </div>
+          <div class="judgment-bar-bg">
+            <div class="judgment-bar-fill" id="scoreBar"></div>
+          </div>
+          <div style="font-size: 13px; font-weight: 600; margin-top: 8px; text-align: center; color: #e2e8f0;" id="scoreText">সফলতা: ০%</div>
+          <div class="coaching-box" id="coachingAdvice">
+            💡 <b>পরামর্শ:</b> দিন শুরু করুন। শীর্ষ ৩টি কাজের প্রথমটি শুরু করলেই স্কোর বাড়বে।
+          </div>
+          <div style="margin-top: 14px;">
+            <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">📈 গত ৭ দিন:</div>
+            <div class="chart-container" id="sevenDayChart"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- নামাজ -->
+      <div class="cat-panel" id="panelNamaz" style="display:none;">
+        <div class="card card-namaz">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>🕌 নামাজ ও সালাতের সময়</h3>
+            <button type="button" class="btn-secondary" onclick="enableAudioAndNotification()" style="font-size: 10px; padding: 3px 6px;">🔊 অন</button>
+          </div>
+          <p style="font-size: 11.5px; color: var(--muted); margin-bottom: 8px;">যে সময়ে সালাত আদায় করবেন তা সেট করুন ও ✓ দিয়ে সম্পন্ন চিহ্নিত করুন।</p>
+          <div class="namaz-grid" id="namazContainer"></div>
+        </div>
+      </div>
+
+      <!-- শীর্ষ ৩ কাজ -->
+      <div class="cat-panel" id="panelRule3" style="display:none;">
+        <div class="card card-current">
+          <h3>🎬 এখন চলছে</h3>
+          <div class="status-tag" id="currentRoutineStatus">লোড হচ্ছে...</div>
+        </div>
+        <div class="card card-rule-of-3">
+          <div class="rule-of-3-header">
+            <h2>🎯 শীর্ষ ৩ কাজ</h2>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="count-tag" id="ruleCount">চলমান: ০ / ৩</span>
+              <button type="button" class="btn-secondary" onclick="openCompletedModal()" style="font-size: 11px; padding: 3px 7px;">✓ সম্পন্ন (<span id="completedCountBadge">০</span>)</button>
+            </div>
+          </div>
+          <p style="color: #94a3b8; font-size: 12px; margin-bottom: 10px;">
+            একটানা সর্বোচ্চ ৩টি চলমান কাজ। গভীর মনোযোগের জন্য <b>"ফোকাস"</b> চাপুন।
+          </p>
+          <div class="input-group">
+            <div class="input-row">
+              <input type="text" id="todayTaskInput" placeholder="জরুরি কাজ..." />
+              <select id="todayCategory">
+                <option value="teaching">ক্লাস/টিচিং</option>
+                <option value="admin">অ্যাডমিন</option>
+                <option value="personal">ব্যক্তিগত</option>
+              </select>
+            </div>
+            <div class="input-row">
+              <input type="time" id="todayTime" title="শুরুর সময়" />
+              <input type="number" id="todayDuration" placeholder="মিনিট" style="width: 100px;" />
+              <button type="button" onclick="addTodayTaskDirect()">+ যুক্ত করুন</button>
+            </div>
+          </div>
+          <ul class="task-list" id="todayActiveList"></ul>
+        </div>
+      </div>
+
+      <!-- ২৪ ঘণ্টা রুটিন -->
+      <div class="cat-panel" id="panelRoutine" style="display:none;">
+        <div class="card card-routine">
+          <h2>🕒 নতুন রুটিন স্লট</h2>
+          <div class="input-group">
+            <div class="input-row">
+              <input type="text" id="routineTitle" placeholder="কাজের নাম (যেমন: ফিজিক্স লেকচার, ব্যায়াম)..." />
+              <select id="routineType" onchange="toggleRoutineDaySelect()">
+                <option value="recurring">🔁 সাপ্তাহিক (নির্দিষ্ট দিনে)</option>
+                <option value="temporary">📅 আজকের জন্য</option>
+              </select>
+            </div>
+            <div class="day-check-row" id="routineDayRow">
+              <span style="font-size: 11px; color: var(--muted);">কোন কোন দিন?</span>
+              <label class="day-check all-days"><input type="checkbox" id="dayChkAll" checked onchange="selectAllDays(this.checked)" /> সব দিন</label>
+              <label class="day-check"><input type="checkbox" class="day-chk" value="0" checked /> রবি</label>
+              <label class="day-check"><input type="checkbox" class="day-chk" value="1" checked /> সোম</label>
+              <label class="day-check"><input type="checkbox" class="day-chk" value="2" checked /> মঙ্গল</label>
+              <label class="day-check"><input type="checkbox" class="day-chk" value="3" checked /> বুধ</label>
+              <label class="day-check"><input type="checkbox" class="day-chk" value="4" checked /> বৃহঃ</label>
+              <label class="day-check"><input type="checkbox" class="day-chk" value="5" checked /> শুক্র</label>
+              <label class="day-check"><input type="checkbox" class="day-chk" value="6" checked /> শনি</label>
+            </div>
+            <div class="input-row">
+              <div style="display: flex; align-items: center; gap: 4px;">
+                <span style="font-size: 11px; color: var(--muted);">শুরু:</span>
+                <input type="time" id="routineStart" />
+              </div>
+              <div style="display: flex; align-items: center; gap: 4px;">
+                <span style="font-size: 11px; color: var(--muted);">শেষ:</span>
+                <input type="time" id="routineEnd" />
+              </div>
+              <button type="button" onclick="addRoutineSlot()">+ স্লট সংরক্ষণ</button>
+            </div>
+          </div>
+          <div id="routineAddFlash" style="display:none; background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.4); color: #86efac; padding: 10px 14px; border-radius: 12px; font-size: 13px; margin: 12px 0 4px;">
+            ✅ <b>স্লট সফলভাবে যুক্ত হয়েছে!</b> নিচের টেবিলে দেখুন।
+          </div>
+          <h3 style="margin-top: 14px; font-size: 15px; color: #38bdf8;">📋 আজকের ২৪ ঘণ্টা (প্রতি ঘণ্টায় এক লাইন):</h3>
+          <div class="hour-table" id="routineTimelineContainer"></div>
+        </div>
+      </div>
+
+      <!-- ধারাবাহিক কাজ -->
+      <div class="cat-panel" id="panelContinuous" style="display:none;">
+        <div class="card card-continuous">
+          <div class="rule-of-3-header">
+            <h2>📈 ধারাবাহিক কাজ</h2>
+            <span class="count-tag" id="continuousCountTag">মোট: ০</span>
+          </div>
+          <p style="color: #94a3b8; font-size: 12px; margin-bottom: 10px;">
+            ডেডলাইনে % দিন। <b style="color: #f87171;">ডেডলাইন মিস করলে স্কোরে মাইনাস।</b>
+          </p>
+          <div class="input-group">
+            <div class="input-row">
+              <input type="text" id="continuousTitle" placeholder="যেমন: মডেল টেস্ট প্রস্তুতি..." />
+              <input type="date" id="continuousDeadline" title="ডেডলাইন" />
+              <input type="number" id="continuousStartPct" placeholder="শুরু %" min="0" max="100" style="width: 90px;" />
+              <button type="button" onclick="addContinuousTask()">+ যুক্ত করুন</button>
+            </div>
+          </div>
+          <ul class="task-list" id="continuousList"></ul>
+        </div>
+      </div>
+
+      <!-- মাস্টার লিস্ট -->
+      <div class="cat-panel" id="panelMaster" style="display:none;">
+        <div class="card card-master">
+          <h2>📋 মাস্টার লিস্ট</h2>
+          <div class="input-group">
+            <div class="input-row">
+              <input type="text" id="masterTaskInput" placeholder="কাজের নাম..." />
+              <select id="masterCategory">
+                <option value="teaching">ক্লাস/টিচিং</option>
+                <option value="admin">অ্যাডমিন</option>
+                <option value="personal">ব্যক্তিগত</option>
+              </select>
+            </div>
+            <div class="input-row">
+              <input type="date" id="masterDueDate" title="ডেডলাইন" />
+              <button type="button" onclick="addMasterTask()">তালিকায় রাখুন</button>
+            </div>
+          </div>
+          <ul class="task-list" id="masterList"></ul>
+        </div>
+      </div>
+
+      <!-- সেটিংস -->
+      <div class="cat-panel" id="panelSettings" style="display:none;">
+        <div class="card" style="background: #0d1322;">
+          <h3>💾 ব্যাকআপ ও রিস্টোর</h3>
+          <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
+            <button type="button" class="btn-secondary" onclick="exportDataBackup()" style="font-size: 12px;">⬇️ ব্যাকআপ (JSON)</button>
+            <button type="button" class="btn-secondary" onclick="document.getElementById('importFile').click()" style="font-size: 12px;">⬆️ রিস্টোর</button>
+            <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importDataBackup(event)" />
+          </div>
+        </div>
+        <div class="card" style="background: #0d1322;">
+          <h3>🔊 নোটিফিকেশন ও ভয়েস</h3>
+          <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
+            <button type="button" class="btn-secondary" onclick="enableAudioAndNotification()" style="font-size: 12px;">🔊 নোটিফিকেশন চালু</button>
+            <button type="button" class="btn-secondary" onclick="manualNewDayReset()" style="font-size: 12px; border-color: #818cf8; color: #a5b4fc;">🔄 নতুন দিন শুরু</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
 
   <!-- হিস্ট্রি মোডাল -->
@@ -702,22 +799,74 @@
       render();
     }
 
-    function switchTab(tab) {
-      document.getElementById('tabDashboard').classList.add('hidden');
-      document.getElementById('tabRoutine').classList.add('hidden');
-      document.getElementById('tabBtnDashboard').classList.remove('active');
-      document.getElementById('tabBtnRoutine').classList.remove('active');
+    let currentCat = null;
+    function openCat(cat) {
+      const titles = {
+        journal: '📊 ডে জাজমেন্ট',
+        namaz: '🕌 নামাজ',
+        rule3: '🎯 শীর্ষ ৩ কাজ',
+        routine: '🕒 ২৪ ঘণ্টার রুটিন',
+        continuous: '📈 ধারাবাহিক কাজ',
+        master: '📋 মাস্টার লিস্ট',
+        settings: '⚙️ সেটিংস ও ব্যাকআপ'
+      };
+      if (!titles[cat]) return;
+      currentCat = cat;
+      document.querySelectorAll('.cat-panel').forEach(p => p.style.display = 'none');
+      const panel = document.getElementById('panel' + cat.charAt(0).toUpperCase() + cat.slice(1));
+      if (panel) panel.style.display = 'block';
+      document.getElementById('catTitle').textContent = titles[cat];
+      document.getElementById('catOverlay').classList.add('open');
+      if (cat === 'routine') renderRoutineTimeline();
+      if (cat === 'journal') renderSevenDayChart(calculateCurrentScore().finalScore);
+      updateDashSummary();
+    }
+    function closeCat() {
+      currentCat = null;
+      const ov = document.getElementById('catOverlay');
+      if (ov) ov.classList.remove('open');
+    }
 
-      if (tab === 'dashboard') {
-        document.getElementById('tabDashboard').classList.remove('hidden');
-        document.getElementById('tabBtnDashboard').classList.add('active');
+    function bnDigit(d) { return '০১২৩৪৫৬৭৮৯'[Number(d)] || d; }
+    function bnText(s) { return String(s).split('').map(ch => (ch >= '0' && ch <= '9') ? bnDigit(ch) : ch).join(''); }
+
+    function updateDashSummary() {
+      const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+      const metrics = calculateCurrentScore();
+      set('headerScore', metrics.finalScore + '%');
+      set('tileScore', metrics.finalScore + '%');
+      set('tileNamaz', metrics.completedNamaz + '/5');
+      set('tileTasks', metrics.todayFinishedCount + '/' + metrics.totalTasks);
+      set('tileRoutine', metrics.routineDone + '/' + metrics.routineTotal);
+      set('tileCont', metrics.contOverdue > 0 ? '⚠️ ' + metrics.contOverdue : (metrics.continuousTotal > 0 ? metrics.contWorking + '%' : '০'));
+      set('tileMaster', masterTasks.length);
+      const d = new Date();
+      const dayNames = ['রবিবার', 'সোমবার', 'মঙ্গলবার', 'বুধবার', 'বৃহস্পতিবার', 'শুক্রবার', 'শনিবার'];
+      const months = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
+      set('headerDate', dayNames[d.getDay()] + ', ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear());
+      renderDashNow();
+    }
+
+    function renderDashNow() {
+      const el = document.getElementById('dashNow');
+      if (!el) return;
+      const now = new Date();
+      const currentHHMM = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+      const slots = getTodaysRoutineSlots();
+      const current = slots.find(s => currentHHMM >= s.start && currentHHMM < s.end);
+      if (current) {
+        el.innerHTML = '🟢 <b>এখন:</b> ' + current.title + ' <span style="color:#4ade80;">(' + current.start + '–' + current.end + ')</span>';
       } else {
-        document.getElementById('tabRoutine').classList.remove('hidden');
-        document.getElementById('tabBtnRoutine').classList.add('active');
-        renderRoutineTimeline();
-        renderFreeSlots();
-        renderCurrentRoutineStatus();
+        const upcoming = slots.filter(s => s.start > currentHHMM).sort((a, b) => a.start.localeCompare(b.start))[0];
+        el.innerHTML = upcoming
+          ? '🕒 <b>পরবর্তী:</b> ' + upcoming.title + ' <span style="color:#fbbf24;">(' + upcoming.start + ')</span>'
+          : '🕊️ এখন কোনো রুটিন নেই — ফাকা সময়টি কাজে লাগান';
       }
+    }
+
+    function switchTab(tab) {
+      if (tab === 'dashboard') closeCat();
+      else openCat(tab);
     }
 
     function playNotificationChime() {
@@ -868,7 +1017,6 @@
 
       saveState();
       renderRoutineTimeline();
-      renderFreeSlots();
 
       document.getElementById('routineTitle').value = '';
       document.getElementById('routineStart').value = '';
@@ -951,48 +1099,59 @@
       const container = document.getElementById('routineTimelineContainer');
       if (!container) return;
       container.innerHTML = '';
-      const doneToday = routineCompletions[getTodayString()] || [];
 
       const now = new Date();
-      const currentHHMM = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
+      const currentHHMM = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+      const slots = getTodaysRoutineSlots().slice().sort((a, b) => a.start.localeCompare(b.start));
+      const doneToday = routineCompletions[getTodayString()] || [];
+      const toMin = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+      const pad = n => String(n).padStart(2, '0');
 
-      const applicableSlots = getTodaysRoutineSlots();
+      const mkRow = (rowCls, labelText, cellCls, cellHtml) => {
+        const row = document.createElement('div');
+        row.className = 'hour-row ' + rowCls;
+        row.innerHTML = `<div class="hour-label">${labelText}</div><div class="${cellCls}">${cellHtml}</div>`;
+        container.appendChild(row);
+        return row;
+      };
 
-      if (applicableSlots.length === 0) {
-        container.innerHTML = `<div style="color: var(--muted); font-size: 13px; text-align: center; padding: 20px;">কোনো রুটিন স্লট যুক্ত করা নেই। উপরের ফর্ম থেকে আপনার দিনের স্লটগুলো তৈরি করুন।</div>`;
-        return;
+      mkRow('hour-head', 'সময়', 'cell-title', 'কার্যক্রম');
+
+      if (slots.length === 0) {
+        mkRow('hour-free', '—', 'cell-free', 'স্লট যোগ করুন — পুরো ২৪ ঘণ্টা ফাকা থাকবে।');
       }
 
-      applicableSlots.forEach(slot => {
-        const isCurrent = (currentHHMM >= slot.start && currentHHMM < slot.end);
-        const isDone = doneToday.includes(slot.id);
+      for (let h = 0; h < 24; h++) {
+        const hStart = h * 60;
+        const label = bnText(pad(h) + ':00');
+        const isCurrentHour = currentHHMM >= pad(h) && currentHHMM < pad(h + 1);
+        const covering = slots.filter(s => toMin(s.start) <= hStart && toMin(s.end) > hStart);
 
-        const div = document.createElement('div');
-        div.className = `routine-slot ${isCurrent ? 'active-slot' : ''} ${isDone ? 'slot-done' : ''}`;
-        div.innerHTML = `
-          <div style="display: flex; flex-direction: column; gap: 4px; min-width: 110px;">
-            <span class="slot-time">🕒 ${slot.start} - ${slot.end}</span>
-            <div>
-              <span class="badge badge-${slot.type}">${routineDayLabel(slot)}</span>
-            </div>
-          </div>
+        if (covering.length === 0) {
+          const row = mkRow('hour-free', label, 'cell-free', '🕊️ ফাকা');
+          if (isCurrentHour) row.classList.add('hour-current');
+          continue;
+        }
 
-          <div class="slot-title">
-            <div style="font-size: 14px; font-weight: 600; color: #f8fafc;">${slot.title}</div>
-            ${isCurrent ? '<div style="margin-top: 4px;"><span class="badge-live-now">🟢 এখন এই রুটিনটি চলছে</span></div>' : ''}
-            ${isDone ? '<div style="margin-top: 4px; color: #4ade80; font-size: 11.5px;">✅ সম্পন্ন</div>' : ''}
-          </div>
+        let cellHtml = '';
+        covering.forEach(s => {
+          const isStart = toMin(s.start) === hStart;
+          const isDone = doneToday.includes(s.id);
+          const isLive = currentHHMM >= s.start && currentHHMM < s.end;
+          cellHtml += `<div class="${isDone ? 'cell-done' : ''}" style="margin:3px 0 6px;">
+            <div class="cell-title">${s.title} ${isDone ? '✅' : ''} ${isLive ? ' <span class="badge-live-now" style="animation:none;">চলছে</span>' : ''}</div>
+            <div class="cell-sub">${s.start}–${s.end} · ${routineDayLabel(s)}</div>
+            ${isStart ? `<div class="hour-actions">
+              <button type="button" class="hour-btn ${isDone ? '' : 'ok'}" onclick="toggleRoutineCompletion(${s.id})">${isDone ? '✓ হয়েছে' : '✓ সম্পন্ন'}</button>
+              <button type="button" class="hour-btn" style="background: rgba(139,92,246,0.9);" onclick="moveRoutineToToday(${s.id})">+৩ কাজে</button>
+              <button type="button" class="hour-btn del" onclick="deleteRoutineSlot(${s.id})">✕</button>
+            </div>` : ''}
+          </div>`;
+        });
 
-          <div class="slot-badges">
-            <button class="btn-tick ${isDone ? 'done' : ''}" onclick="toggleRoutineCompletion(${slot.id})" title="সম্পন্ন হলে টিক দিন">${isDone ? '✓' : ''}</button>
-            <button class="btn-add-rule3" onclick="moveRoutineToToday(${slot.id})" title="আজকের ৩টি মূল কাজে যুক্ত করুন">
-              + ৩ কাজে
-            </button>
-            <button class="btn-icon btn-del" onclick="deleteRoutineSlot(${slot.id})" title="মুছুন">✕</button>
-          </div>
-        `;
-        container.appendChild(div);
-      });
+        const row = mkRow('', label, 'hour-cell', cellHtml);
+        if (isCurrentHour) row.classList.add('hour-current');
+      }
     }
 
     // আজকের ফাকা (অনির্ধারিত) স্লটসমূহ
@@ -1796,6 +1955,7 @@
       renderContinuousTasks();
       renderCurrentRoutineStatus();
       updateDayJudgmentAndAnalytics();
+      updateDashSummary();
 
       const activeListEl = document.getElementById('todayActiveList');
       activeListEl.innerHTML = '';
@@ -1858,11 +2018,8 @@
     setInterval(() => {
       checkNotificationsAndCatchUp();
       renderCurrentRoutineStatus();
-      const routineTab = document.getElementById('tabRoutine');
-      if (routineTab && !routineTab.classList.contains('hidden')) {
-        renderRoutineTimeline();
-        renderFreeSlots();
-      }
+      updateDashSummary();
+      if (currentCat === 'routine') renderRoutineTimeline();
     }, 1000);
 
     // অ্যাপ চালুর সময় স্বয়ংক্রিয় লোড
