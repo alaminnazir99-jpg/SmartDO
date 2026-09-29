@@ -363,6 +363,42 @@
     .mode-btn.active { background: rgba(56,189,248,0.15); border-color: #38bdf8; color: #7dd3fc; box-shadow: 0 0 10px rgba(56,189,248,0.15); }
     .mode-btn .mode-sub { display: block; font-size: 10px; font-weight: 400; opacity: 0.8; }
 
+    /* ১২ ঘণ্টার টাইম ফিল্ড + ঘড়ি ডায়াল */
+    .time-field { display: inline-flex; align-items: center; }
+    .time-native { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; border: 0; padding: 0; margin: 0; }
+    .time-display {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      min-width: 124px; padding: 8px 10px; border-radius: 10px;
+      border: 1px solid var(--border); background: rgba(15,23,42,0.85); color: var(--text);
+      font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums;
+      cursor: pointer; text-align: center;
+    }
+    .time-display.w-full { width: 100%; }
+    .time-display:hover { border-color: #38bdf8; color: #7dd3fc; }
+    .time-display.empty { color: var(--muted); font-weight: 600; }
+    .time-display .t-ico { font-size: 13px; }
+
+    .clock-box { max-width: 360px; text-align: center; }
+    .clock-readout { font-size: 30px; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; margin: 4px 0 10px; letter-spacing: 0.5px; }
+    .clock-ampm { display: flex; gap: 8px; justify-content: center; margin-bottom: 10px; }
+    .ampm-btn { flex: 1; padding: 7px 0; border-radius: 8px; border: 1px solid var(--border); background: rgba(15,23,42,0.8); color: var(--muted); font-size: 13px; font-weight: 800; }
+    .ampm-btn.active { background: rgba(56,189,248,0.18); border-color: #38bdf8; color: #7dd3fc; }
+    .clock-svg { width: 100%; max-width: 250px; height: auto; display: block; margin: 0 auto; touch-action: none; cursor: pointer; }
+    .clock-svg text { fill: #b6c4d8; font-size: 12px; font-weight: 700; text-anchor: middle; dominant-baseline: middle; }
+    .clock-svg .c-tick { stroke: #475569; stroke-width: 2; }
+    .clock-svg .c-tick-on { stroke: #38bdf8; stroke-width: 3.5; }
+    .clock-svg .c-sel { fill: rgba(56,189,248,0.25); stroke: #38bdf8; stroke-width: 2; }
+    .clock-svg .c-face { fill: rgba(15,23,42,0.75); stroke: #334155; }
+    .clock-svg .c-hand-h { stroke: #f8fafc; stroke-width: 5; stroke-linecap: round; }
+    .clock-svg .c-hand-m { stroke: #38bdf8; stroke-width: 3.5; stroke-linecap: round; }
+    .clock-svg .c-pin { fill: #38bdf8; }
+    .clock-fine { display: flex; gap: 6px; margin-top: 12px; }
+    .clock-fine button { flex: 1; font-size: 11px; padding: 6px 2px; border-radius: 7px; border: 1px solid var(--border); background: rgba(15,23,42,0.8); color: var(--muted); font-weight: 700; }
+    .clock-fine button:hover { border-color: #38bdf8; color: #7dd3fc; }
+    .clock-actions { display: flex; gap: 8px; margin-top: 12px; }
+    .clock-actions button { flex: 1; font-size: 13px; padding: 9px 0; border-radius: 9px; }
+    .clock-actions .ok { background: #22c55e; color: #052e16; font-weight: 800; }
+
     /* ===== লাইট মোড ===== */
     html[data-theme="light"] {
       color-scheme: light;
@@ -424,6 +460,21 @@
 
     html[data-theme="light"] .mode-btn { background: #fff; border-color: #cbd5e1; color: #475569; }
     html[data-theme="light"] .mode-btn.active { background: #e0f2fe; border-color: #38bdf8; color: #0369a1; }
+
+    html[data-theme="light"] .time-display { background: #fff; border-color: #cbd5e1; color: #0f172a; }
+    html[data-theme="light"] .time-display:hover { color: #0369a1; border-color: #38bdf8; }
+    html[data-theme="light"] .time-display.empty { color: #52617a; }
+    html[data-theme="light"] .ampm-btn { background: #fff; border-color: #cbd5e1; color: #475569; }
+    html[data-theme="light"] .ampm-btn.active { background: #e0f2fe; border-color: #38bdf8; color: #0369a1; }
+    html[data-theme="light"] .clock-svg text { fill: #334155; }
+    html[data-theme="light"] .clock-svg .c-tick { stroke: #94a3b8; }
+    html[data-theme="light"] .clock-svg .c-tick-on { stroke: #0284c7; }
+    html[data-theme="light"] .clock-svg .c-sel { fill: rgba(2,132,199,0.18); stroke: #0284c7; }
+    html[data-theme="light"] .clock-svg .c-face { fill: #f8fafc; stroke: #cbd5e1; }
+    html[data-theme="light"] .clock-svg .c-hand-h { stroke: #0f172a; }
+    html[data-theme="light"] .clock-svg .c-hand-m { stroke: #0284c7; }
+    html[data-theme="light"] .clock-fine button { background: #fff; border-color: #cbd5e1; color: #475569; }
+    html[data-theme="light"] .clock-fine button:hover { color: #0369a1; border-color: #38bdf8; }
 
     html[data-theme="light"] .group-chip { background: #fff; border-color: #cbd5e1; color: #475569; }
     html[data-theme="light"] .group-chip span { color: #52617a; }
@@ -636,7 +687,10 @@
               </select>
             </div>
             <div class="input-row">
-              <input type="time" id="todayTime" title="শুরুর সময়" />
+              <span class="time-field">
+                <input type="time" class="time-native" id="todayTime" title="শুরুর সময়" />
+                <button type="button" class="time-display" data-for="todayTime" onclick="openTimePicker('todayTime')">🕐 সময় বাছুন</button>
+              </span>
               <input type="number" id="todayDuration" placeholder="মিনিট" style="width: 100px;" />
               <button type="button" onclick="addTodayTaskDirect()">+ যুক্ত করুন</button>
             </div>
@@ -662,11 +716,17 @@
             <div class="input-row">
               <div style="display: flex; align-items: center; gap: 4px;">
                 <span style="font-size: 11px; color: var(--muted);">শুরু:</span>
-                <input type="time" id="routineStart" />
+                <span class="time-field">
+                  <input type="time" class="time-native" id="routineStart" />
+                  <button type="button" class="time-display" data-for="routineStart" onclick="openTimePicker('routineStart')">🕐 সময় বাছুন</button>
+                </span>
               </div>
               <div style="display: flex; align-items: center; gap: 4px;">
                 <span style="font-size: 11px; color: var(--muted);">শেষ:</span>
-                <input type="time" id="routineEnd" />
+                <span class="time-field">
+                  <input type="time" class="time-native" id="routineEnd" />
+                  <button type="button" class="time-display" data-for="routineEnd" onclick="openTimePicker('routineEnd')">🕐 সময় বাছুন</button>
+                </span>
               </div>
               <button type="button" onclick="addRoutineSlot()">+ স্লট সংরক্ষণ</button>
             </div>
@@ -814,7 +874,10 @@
       <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px;">
         <div>
           <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 3px;">শুরুর সময়:</label>
-          <input type="time" id="modalTime" style="width: 100%;" />
+          <span class="time-field" style="width: 100%;">
+            <input type="time" class="time-native" id="modalTime" />
+            <button type="button" class="time-display w-full" data-for="modalTime" onclick="openTimePicker('modalTime')">🕐 সময় বাছুন</button>
+          </span>
         </div>
         <div>
           <label style="font-size: 11px; color: var(--muted); display: block; margin-bottom: 3px;">স্থায়িত্ব (মিনিট):</label>
@@ -977,6 +1040,212 @@
 
     function bnDigit(d) { return '০১২৩৪৫৬৭৮৯'[Number(d)] || d; }
     function bnText(s) { return String(s).split('').map(ch => (ch >= '0' && ch <= '9') ? bnDigit(ch) : ch).join(''); }
+
+    /* ===== ১২ ঘণ্টার সময় ব্যবস্থা (একস্টাইল) ===== */
+    const pad2 = (n) => String(n).padStart(2, '0');
+    // 24 ঘণ্টা "HH:MM" -> ১২ ঘণ্টা "৯:০০ AM"
+    function fmtTime(hhmm) {
+      if (!hhmm) return '';
+      const parts = String(hhmm).split(':');
+      if (parts.length < 2) return String(hhmm);
+      let h = Number(parts[0]);
+      const m = Number(parts[1]);
+      if (isNaN(h) || isNaN(m)) return String(hhmm);
+      const suffix = h < 12 ? 'AM' : 'PM';
+      let h12 = h % 12;
+      if (h12 === 0) h12 = 12;
+      return bnText(String(h12)) + ':' + bnText(pad2(m)) + ' ' + suffix;
+    }
+    function timeToMinutes(hhmm) {
+      const p = String(hhmm || '').split(':');
+      return Number(p[0]) * 60 + Number(p[1]);
+    }
+    function minutesToTime(min) {
+      let m = ((min % 1440) + 1440) % 1440;
+      return pad2(Math.floor(m / 60)) + ':' + pad2(m % 60);
+    }
+
+    // টাইম ফিল্ড: লুকানো 24-ঘণ্টা ইনপুট + দেখানো ১২-ঘণ্টা বাটন
+    const TIME_SAVE_CB = {};
+    function timeFieldButton(id) {
+      const input = document.getElementById(id);
+      if (!input) return null;
+      let btn = document.querySelector('.time-display[data-for="' + id + '"]');
+      if (!btn) {
+        btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'time-display';
+        btn.setAttribute('data-for', id);
+        btn.addEventListener('click', () => openTimePicker(id));
+        if (input.parentElement && input.parentElement.classList.contains('time-field')) {
+          input.parentElement.appendChild(btn);
+        } else {
+          const wrap = document.createElement('span');
+          wrap.className = 'time-field';
+          input.parentNode.insertBefore(wrap, input);
+          wrap.appendChild(input);
+          wrap.appendChild(btn);
+        }
+      }
+      return btn;
+    }
+    function syncTimeField(id) {
+      const input = document.getElementById(id);
+      if (!input) return;
+      const btn = timeFieldButton(id);
+      if (!btn) return;
+      const v = input.value;
+      btn.textContent = v ? '🕐 ' + fmtTime(v) : '🕐 সময় বাছুন';
+      btn.classList.toggle('empty', !v);
+      btn.title = v ? fmtTime(v) : 'সময় বাছুন';
+    }
+    function setTimeValue(id, value) {
+      const input = document.getElementById(id);
+      if (!input) return;
+      input.value = value || '';
+      syncTimeField(id);
+    }
+    // শুধু কলব্যাক বাঁধে (রেন্ডারের সময় মান সেট না করে)
+    function bindTimeField(id, cb) {
+      TIME_SAVE_CB[id] = cb;
+      syncTimeField(id);
+    }
+    // পিকারে "ঠিক আছে" চাপলে কলব্যাক চালায়
+    function commitTimeField(id) {
+      const input = document.getElementById(id);
+      if (!input) return;
+      const cb = TIME_SAVE_CB[id];
+      if (cb && input.value) cb(input.value);
+    }
+    function syncAllTimeFields() {
+      document.querySelectorAll('input[type="time"].time-native').forEach(i => syncTimeField(i.id));
+    }
+
+    /* ঘড়ি ডায়াল */
+    let clockTargetId = null, clockMin = 0, clockPM = false, clockDragging = false;
+    function openTimePicker(id) {
+      clockTargetId = id;
+      const input = document.getElementById(id);
+      const cur = (input && input.value) || '';
+      if (cur) {
+        clockMin = timeToMinutes(cur);
+      } else {
+        const now = new Date();
+        clockMin = now.getHours() * 60 + now.getMinutes();
+        clockMin = Math.round(clockMin / 5) * 5;
+      }
+      const ov = document.getElementById('clockOverlay');
+      if (ov) ov.style.display = 'flex';
+      drawClock();
+    }
+    function closeTimePicker() {
+      const ov = document.getElementById('clockOverlay');
+      if (ov) ov.style.display = 'none';
+      clockDragging = false;
+    }
+    function confirmTimePicker() {
+      if (clockTargetId) {
+        setTimeValue(clockTargetId, minutesToTime(clockMin));
+        commitTimeField(clockTargetId);
+      }
+      closeTimePicker();
+    }
+    function setClockAmPm(ap) {
+      const isPM = ap === 'PM';
+      if (isPM === clockPM) { drawClock(); return; }
+      clockMin += isPM ? 720 : -720;
+      clockPM = isPM;
+      drawClock();
+    }
+    function nudgeClock(delta) {
+      clockMin = ((clockMin + delta) % 1440 + 1440) % 1440;
+      clockPM = clockMin >= 720;
+      drawClock();
+    }
+    function clockPointerPos(evt) {
+      const svg = document.getElementById('clockSvg');
+      const r = svg.getBoundingClientRect();
+      const cx = (evt.clientX - r.left) / r.width * 240;
+      const cy = (evt.clientY - r.top) / r.height * 240;
+      return { cx, cy, dx: cx - 120, dy: cy - 120, dist: Math.sqrt((cx - 120) * (cx - 120) + (cy - 120) * (cy - 120)) };
+    }
+    function clockPick(evt) {
+      const p = clockPointerPos(evt);
+      if (p.dist < 12) return;
+      let a = Math.atan2(p.dx, -p.dy);           // ০ = উপরে
+      if (a < 0) a += Math.PI * 2;
+      if (p.dist >= 84) {
+        // ঘণ্টার রিং
+        let idx = Math.round(a / (Math.PI / 6)) % 12;   // 0 = 12
+        const h12 = idx === 0 ? 12 : idx;
+        const h24 = ((h12 % 12) + (clockPM ? 12 : 0)) % 24;
+        clockMin = h24 * 60 + (clockMin % 60);
+      } else {
+        // মিনিটের রিং (৫ মিনিট ধাপে)
+        let step = Math.round(a / (Math.PI / 6)) % 12;
+        if (step < 0) step += 12;
+        const m = step * 5;
+        const base = Math.floor(clockMin / 60) * 60;
+        clockMin = base + m;
+      }
+      clockPM = clockMin >= 720;
+      drawClock();
+    }
+    function clockPointerDown(evt) {
+      clockDragging = true;
+      clockPick(evt);
+      if (evt.pointerId !== undefined && evt.target.setPointerCapture) {
+        try { evt.target.setPointerCapture(evt.pointerId); } catch (err) { }
+      }
+      evt.preventDefault();
+    }
+    function clockPointerMove(evt) { if (clockDragging) { clockPick(evt); evt.preventDefault(); } }
+    function clockPointerUp() { clockDragging = false; }
+    function drawClock() {
+      const svg = document.getElementById('clockSvg');
+      if (!svg) return;
+      const h = Math.floor(clockMin / 60);
+      const m = clockMin % 60;
+      const h12 = h % 12 === 0 ? 12 : h % 12;
+      const hAng = ((h % 12) * 30) + (m / 60) * 30;
+      const mAng = m * 6;
+      const pos = (r, deg) => {
+        const rad = (deg - 90) * Math.PI / 180;
+        return [120 + r * Math.cos(rad), 120 + r * Math.sin(rad)];
+      };
+      let s = '<circle class="c-face" cx="120" cy="120" r="116"/>';
+      // মিনিটের রিং (ভেতরে)
+      const selStep = Math.round(m / 5) % 12;
+      for (let i = 0; i < 12; i++) {
+        const deg = i * 30;
+        const [x1, y1] = pos(56, deg);
+        const [x2, y2] = pos(66, deg);
+        const on = selStep === i;
+        s += '<line class="' + (on ? 'c-tick-on' : 'c-tick') + '" x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '"/>';
+      }
+      const [sx, sy] = pos(61, selStep * 30);
+      s += '<circle class="c-sel" cx="' + sx + '" cy="' + sy + '" r="8"/>';
+      // ঘণ্টার সংখ্যা (বাইরে)
+      for (let i = 0; i < 12; i++) {
+        const [x, y] = pos(100, i * 30);
+        s += '<text x="' + x + '" y="' + y + '">' + bnText(i === 0 ? '12' : String(i)) + '</text>';
+      }
+      // নির্বাচিত ঘণ্টা হাইলাইট
+      const [hx, hy] = pos(100, hAng);
+      s += '<circle class="c-sel" cx="' + hx + '" cy="' + hy + '" r="14"/>';
+      // হাত
+      const [mhx, mhy] = pos(84, hAng);
+      const [mmx, mmy] = pos(94, mAng);
+      s += '<line class="c-hand-h" x1="120" y1="120" x2="' + mhx + '" y2="' + mhy + '"/>';
+      s += '<line class="c-hand-m" x1="120" y1="120" x2="' + mmx + '" y2="' + mmy + '"/>';
+      s += '<circle class="c-pin" cx="120" cy="120" r="5"/>';
+      svg.innerHTML = s;
+      const ro = document.getElementById('clockReadout');
+      if (ro) ro.textContent = fmtTime(minutesToTime(clockMin));
+      document.querySelectorAll('#clockOverlay .ampm-btn').forEach(b => {
+        b.classList.toggle('active', (b.getAttribute('data-ampm') === 'PM') === clockPM);
+      });
+    }
 
     function updateDashSummary() {
       const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
@@ -1153,18 +1422,25 @@
         const item = namazData[k];
         const div = document.createElement('div');
         div.className = 'namaz-card';
+        const tid = 'namazTime_' + k;
         div.innerHTML = `
           <div class="namaz-header-row">
             <b style="color: var(--text); font-size: 13.5px;">${item.name}</b>
             <input type="checkbox" class="namaz-check" title="নামাজ সম্পন্ন" ${item.done ? 'checked' : ''} onchange="toggleNamaz('${k}')" />
           </div>
-          <div class="namaz-time-range">ওয়াক্ত: ${item.start} - ${item.end}</div>
+          <div class="namaz-time-range">ওয়াক্ত: ${fmtTime(item.start)} - ${fmtTime(item.end)}</div>
           <div class="namaz-custom-box">
             <label>আমার সময়:</label>
-            <input type="time" value="${item.customTime || item.start}" onchange="updateNamazCustomTime('${k}', this.value)" />
+            <span class="time-field">
+              <input type="time" class="time-native" id="${tid}" />
+              <button type="button" class="time-display" data-for="${tid}" onclick="openTimePicker('${tid}')">🕐 সময় বাছুন</button>
+            </span>
           </div>
         `;
         container.appendChild(div);
+        const tInput = document.getElementById(tid);
+        if (tInput) tInput.value = item.customTime || item.start;
+        bindTimeField(tid, (v) => updateNamazCustomTime(k, v));
       });
     }
 
@@ -1218,8 +1494,10 @@
       if ("Notification" in window && Notification.permission === "granted") scheduleRoutineReminders();
 
       document.getElementById('routineTitle').value = '';
-      document.getElementById('routineStart').value = '';
-      document.getElementById('routineEnd').value = '';
+    document.getElementById('routineStart').value = '';
+    document.getElementById('routineEnd').value = '';
+    syncTimeField('routineStart');
+    syncTimeField('routineEnd');
 
       const flash = document.getElementById('routineAddFlash');
       if (flash) flash.style.display = 'block';
@@ -1337,7 +1615,7 @@
 
         for (let h = 0; h < 24; h++) {
           const hStart = h * 60;
-          const label = bnText(pad(h) + ':00');
+          const label = fmtTime(pad(h) + ':00');
           const isCurrentHour = currentHHMM >= pad(h) && currentHHMM < pad(h + 1);
           const covering = slots.filter(s => toMin(s.start) <= hStart && toMin(s.end) > hStart);
 
@@ -1354,7 +1632,7 @@
             const isLive = currentHHMM >= s.start && currentHHMM < s.end;
             cellHtml += `<div class="${isDone ? 'cell-done' : ''}" style="margin:3px 0 6px;">
               <div class="cell-title">${s.title} ${isDone ? '✅' : ''} ${isLive ? ' <span class="badge-live-now" style="animation:none;">চলছে</span>' : ''}</div>
-              <div class="cell-sub">${s.start}–${s.end} · ${routineDayLabel(s)}</div>
+              <div class="cell-sub">${fmtTime(s.start)}–${fmtTime(s.end)} · ${routineDayLabel(s)}</div>
               ${isStart ? `<div class="hour-actions">
                 <button type="button" class="hour-btn ${isDone ? '' : 'ok'}" onclick="toggleRoutineCompletion(${s.id})">${isDone ? '✓ হয়েছে' : '✓ সম্পন্ন'}</button>
                 <button type="button" class="hour-btn" style="background: rgba(139,92,246,0.9);" onclick="moveRoutineToToday(${s.id})">+৩ কাজে</button>
@@ -1408,7 +1686,7 @@
         const durLabel = (hh ? hh + 'ঘঃ ' : '') + (mm ? mm + 'মি' : (hh ? '' : ''));
         const div = document.createElement('div');
         div.className = 'free-slot';
-        div.innerHTML = `<span class="free-slot-time">🕊️ ${f.start} - ${f.end}</span><span class="free-slot-label">ফাকা (${durLabel})</span>`;
+        div.innerHTML = `<span class="free-slot-time">🕊️ ${fmtTime(f.start)} – ${fmtTime(f.end)}</span><span class="free-slot-label">ফাকা (${durLabel})</span>`;
         container.appendChild(div);
       });
     }
@@ -1439,7 +1717,7 @@
           <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
             <span class="badge-live-now" style="animation: none;">🟢 চলছে</span>
             <b style="font-size:14px; color:#f8fafc;">${current.title}</b>
-            <span style="color:#4ade80;">(${current.start} - ${current.end})</span>
+            <span style="color:#4ade80;">(${fmtTime(current.start)} – ${fmtTime(current.end)})</span>
             <span style="color:#a7f3d0;">বাকি: ${remainLabel}</span>
           </div>
           <div class="progress-track" style="margin-top:8px;">
@@ -1450,7 +1728,7 @@
       } else {
         const upcoming = slots.filter(s => s.start > currentHHMM).sort((a, b) => a.start.localeCompare(b.start))[0];
         el.innerHTML = `এই মুহূর্তে কোনো নির্ধারিত রুটিন চলছে না 🕊️<br>
-          ${upcoming ? `<span style="color:#fbbf24;">পরবর্তী রুটিন: ${upcoming.title} (${upcoming.start} - ${upcoming.end})</span>` : '<span style="color:var(--muted);">আজ আর কোনো রুটিন বাকি নেই। ফাকা সময়টি নতুন কাজে ব্যবহার করুন।</span>'}`;
+          ${upcoming ? `<span style="color:#fbbf24;">পরবর্তী রুটিন: ${upcoming.title} (${fmtTime(upcoming.start)} – ${fmtTime(upcoming.end)})</span>` : '<span style="color:var(--muted);">আজ আর কোনো রুটিন বাকি নেই। ফাকা সময়টি নতুন কাজে ব্যবহার করুন।</span>'}`;
       }
     }
 
@@ -1716,6 +1994,7 @@
       });
       document.getElementById('todayTaskInput').value = '';
       document.getElementById('todayTime').value = '';
+    syncTimeField('todayTime');
       document.getElementById('todayDuration').value = '';
       saveState();
     }
@@ -1768,6 +2047,7 @@
       const task = masterTasks.find(t => t.id === id);
       document.getElementById('modalTaskTitle').innerText = `"${task.title}"`;
       document.getElementById('modalTime').value = '';
+    syncTimeField('modalTime');
       document.getElementById('modalDuration').value = '30';
       document.getElementById('timeModal').style.display = 'flex';
     }
@@ -2200,7 +2480,7 @@
               <div class="task-title">${t.title}</div>
               <div class="task-meta">
                 <span class="badge badge-${t.category}">${t.category}</span>
-                ${t.time ? `<span>⏰ ${t.time}</span>` : ''} 
+                ${t.time ? `<span>⏰ ${fmtTime(t.time)}</span>` : ''} 
                 ${t.duration ? `<span>(${t.duration}মিনিট)</span>` : ''}
               </div>
             </div>
@@ -2250,6 +2530,10 @@
 
     // অ্যাপ চালুর সময় স্বয়ংক্রিয় লোড
     initTheme();
+    syncAllTimeFields();
+    document.addEventListener('pointermove', clockPointerMove, { passive: false });
+    document.addEventListener('pointerup', clockPointerUp);
+    document.addEventListener('pointercancel', clockPointerUp);
     checkAndPerformRollover();
     loadRandomQuote();
     fetchLivePrayerTimes();
@@ -2324,6 +2608,30 @@
       }, { passive: false });
     })();
   </script>
+  <!-- ঘড়ি ডায়াল -->
+  <div class="modal-overlay" id="clockOverlay">
+    <div class="modal-box clock-box">
+      <h3 style="color: var(--text); font-size: 15px;">🕐 সময় ঠিক করুন</h3>
+      <div class="clock-readout" id="clockReadout">--:-- AM</div>
+      <div class="clock-ampm">
+        <button type="button" class="ampm-btn" data-ampm="AM" onclick="setClockAmPm('AM')">AM</button>
+        <button type="button" class="ampm-btn" data-ampm="PM" onclick="setClockAmPm('PM')">PM</button>
+      </div>
+      <svg class="clock-svg" id="clockSvg" viewBox="0 0 240 240" onpointerdown="clockPointerDown(event)"></svg>
+      <div style="font-size: 11px; color: var(--muted); margin-top: 6px;">বাইরের গোলে ঘণ্টা · ভেতরের গোলে মিনিট · আঙুল ঘুরিয়েও দেওয়া যায়</div>
+      <div class="clock-fine">
+        <button type="button" onclick="nudgeClock(-60)">−১ ঘণ্টা</button>
+        <button type="button" onclick="nudgeClock(-5)">−৫ মিনিট</button>
+        <button type="button" onclick="nudgeClock(5)">+৫ মিনিট</button>
+        <button type="button" onclick="nudgeClock(60)">+১ ঘণ্টা</button>
+      </div>
+      <div class="clock-actions">
+        <button type="button" class="btn-secondary" onclick="closeTimePicker()">বাতিল</button>
+        <button type="button" class="ok" onclick="confirmTimePicker()">ঠিক আছে</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ইনস্টল সহায়িকা -->
   <div class="modal-overlay" id="installHelp">
     <div class="modal-box">
