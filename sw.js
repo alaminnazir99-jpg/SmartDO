@@ -1,4 +1,4 @@
-const VERSION = 'smartdo-v2';
+const VERSION = 'smartdo-v3';
 const CACHE = VERSION;
 const ASSETS = [
   './index.html',
@@ -26,6 +26,23 @@ self.addEventListener('activate', (e) => {
 
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
+
+  const isPage = e.request.mode === 'navigate' ||
+    (e.request.headers.get('accept') || '').indexOf('text/html') !== -1;
+
+  if (isPage) {
+    e.respondWith(
+      fetch(e.request)
+        .then((resp) => {
+          const copy = resp.clone();
+          caches.open(CACHE).then((c) => c.put(e.request, copy));
+          return resp;
+        })
+        .catch(() => caches.match(e.request).then((m) => m || caches.match('./index.html')))
+    );
+    return;
+  }
+
   e.respondWith(
     caches.match(e.request).then((cached) => {
       if (cached) return cached;
