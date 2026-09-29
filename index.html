@@ -5,12 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SmartDo - Focus, Routine & Day Judgment</title>
   <meta name="theme-color" content="#090d16" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/png" href="icon-192.png" />
   
   <style>
     :root {
       --bg: #090d16;
       --text: #f8fafc;
-      --muted: #94a3b8;
+      --muted: #a6b7c9;
       --border: #334155;
       --accent: #38bdf8;
       --accent-hover: #0284c7;
@@ -21,8 +23,8 @@
       --fb-blue: #1877F2;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    html { overscroll-behavior-y: none; }
-    body { background: var(--bg); color: var(--text); padding: 12px; display: flex; justify-content: center; overscroll-behavior-y: none; }
+    html { overscroll-behavior: none; }
+    body { background: var(--bg); color: var(--text); padding: 12px; display: flex; justify-content: center; overscroll-behavior: none; touch-action: pan-y; }
     .container { width: 100%; max-width: 920px; display: flex; flex-direction: column; gap: 16px; margin-bottom: 50px; }
     
     /* ট্যাব নেভিগেশন */
@@ -261,6 +263,9 @@
     .contact-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; color: white; transition: 0.2s; }
     .btn-wa { background-color: var(--wa-green); }
     .btn-wa:hover { background-color: #1ebc59; }
+    .btn-fb { background-color: var(--fb-blue); }
+    .btn-fb:hover { background-color: #1464cc; }
+    html[data-theme="light"] .btn-wa, html[data-theme="light"] .btn-fb { color: #fff; }
 
     /* ফোকাস স্ক্রিন */
     #focusScreen {
@@ -346,6 +351,104 @@
     .group-head.g2 { color: #fcd34d; }
     .group-head span { font-size: 11.5px; color: var(--muted); font-weight: 600; }
     .reminder-note { font-size: 11.5px; padding: 9px 12px; border-radius: 8px; margin-top: 12px; line-height: 1.5; }
+
+    /* রুটিন ভিউ মোড টগল */
+    .mode-toggle { display: flex; gap: 8px; margin-bottom: 4px; }
+    .mode-btn { flex: 1; padding: 10px 8px; border-radius: 10px; background: rgba(15,23,42,0.8); border: 1px solid var(--border); color: var(--muted); font-size: 12.5px; font-weight: 700; }
+    .mode-btn.active { background: rgba(56,189,248,0.15); border-color: #38bdf8; color: #7dd3fc; box-shadow: 0 0 10px rgba(56,189,248,0.15); }
+    .mode-btn .mode-sub { display: block; font-size: 10px; font-weight: 400; opacity: 0.8; }
+
+    /* ===== লাইট মোড ===== */
+    html[data-theme="light"] {
+      color-scheme: light;
+      --bg: #eef2f7;
+      --text: #0f172a;
+      --muted: #52617a;
+      --border: #cbd5e1;
+    }
+    html[data-theme="light"] body { background: var(--bg); color: var(--text); }
+    html[data-theme="light"] input, html[data-theme="light"] select, html[data-theme="light"] textarea {
+      background: #ffffff; color: #0f172a; border-color: #cbd5e1;
+    }
+    html[data-theme="light"] button.btn-secondary { border-color: #38bdf8; color: #0369a1; }
+
+    html[data-theme="light"] .app-header { background: linear-gradient(135deg,#e0eaff 0%,#dbf1ff 100%); border-color: #b7d8ff; }
+    html[data-theme="light"] .brand { color: #0f172a; }
+    html[data-theme="light"] .date-line { color: #475569; }
+    html[data-theme="light"] .score-pill { background: #e0f2fe; border-color: #7dd3fc; color: #0369a1; }
+    html[data-theme="light"] .icon-btn { background: #fff; border-color: #cbd5e1; color: #0f172a; }
+
+    html[data-theme="light"] .dash-now { background: #f0fdf4; border-color: #bbf7d0; color: #14532d; }
+
+    html[data-theme="light"] .cat-tile { box-shadow: 0 1px 2px rgba(15,23,42,0.06); }
+    html[data-theme="light"] .cat-tile.t-journal { background: linear-gradient(135deg,#eef2ff,#e0e7ff); border-color: #c7d2fe; }
+    html[data-theme="light"] .cat-tile.t-namaz { background: linear-gradient(135deg,#e0f2fe,#dbeafe); border-color: #bae6fd; }
+    html[data-theme="light"] .cat-tile.t-rule3 { background: linear-gradient(135deg,#e0f2fe,#d6e9ff); border-color: #93c5fd; }
+    html[data-theme="light"] .cat-tile.t-routine { background: linear-gradient(135deg,#f0fdf4,#dcfce7); border-color: #bbf7d0; }
+    html[data-theme="light"] .cat-tile.t-cont { background: linear-gradient(135deg,#fef3c7,#fde68a); border-color: #fcd34d; }
+    html[data-theme="light"] .cat-tile.t-master { background: linear-gradient(135deg,#eef2f7,#e2e8f0); border-color: #cbd5e1; }
+    html[data-theme="light"] .cat-tile.t-settings { background: linear-gradient(135deg,#f3e8ff,#e9d5ff); border-color: #d8b4fe; }
+    html[data-theme="light"] .cat-name { color: #0f172a; }
+    html[data-theme="light"] .cat-sub { color: #475569; }
+
+    html[data-theme="light"] #catOverlay { background: var(--bg); }
+    html[data-theme="light"] .cat-bar { background: #ffffff; border-color: #e2e8f0; }
+    html[data-theme="light"] .cat-title { color: #0f172a; }
+
+    html[data-theme="light"] .card { background: #ffffff; border-color: #d3dce6; color: #0f172a; }
+    html[data-theme="light"] .card h2, html[data-theme="light"] .card h3 { color: #0f172a; }
+    html[data-theme="light"] .card-quote { background: linear-gradient(135deg,#f0fdf4,#dcfce7); border-color: #bbf7d0; }
+    html[data-theme="light"] .card-analytics { background: linear-gradient(135deg,#eef2ff,#e0e7ff); border-color: #c7d2fe; }
+    html[data-theme="light"] .card-namaz { background: linear-gradient(135deg,#e0f2fe,#dbeafe); border-color: #bae6fd; }
+    html[data-theme="light"] .card-rule-of-3 { background: linear-gradient(135deg,#e0f2fe,#d6e9ff); border-color: #7dd3fc; }
+    html[data-theme="light"] .card-master { background: #ffffff; border-color: #cbd5e1; }
+    html[data-theme="light"] .card-routine { background: #ffffff; border-color: #cbd5e1; }
+    html[data-theme="light"] .card-current { background: linear-gradient(135deg,#f0fdf4,#dcfce7); border-color: #86efac; }
+    html[data-theme="light"] .card-continuous { background: linear-gradient(135deg,#fef3c7,#fde68a); border-color: #fcd34d; }
+    html[data-theme="light"] .quote-text { color: #14532d; }
+    html[data-theme="light"] .quote-author { color: #15803d; }
+    html[data-theme="light"] .coaching-box { background: #ffffff; border: 1px solid #e2e8f0; border-left: 3px solid #818cf8; color: #334155; }
+    html[data-theme="light"] .judgment-card { background: #ffffff; border-color: #e2e8f0; }
+    html[data-theme="light"] .judgment-value { color: #4338ca; }
+    html[data-theme="light"] .status-tag { color: #166534; }
+    html[data-theme="light"] .task-item { background: #ffffff; border-color: #e2e8f0; }
+    html[data-theme="light"] .task-title { color: #0f172a; }
+    html[data-theme="light"] .task-meta { color: #52617a; }
+    html[data-theme="light"] .namaz-card { background: #ffffff; border-color: #dbeafe; }
+    html[data-theme="light"] .namaz-time-range { color: #475569; }
+
+    html[data-theme="light"] .mode-btn { background: #fff; border-color: #cbd5e1; color: #475569; }
+    html[data-theme="light"] .mode-btn.active { background: #e0f2fe; border-color: #38bdf8; color: #0369a1; }
+
+    html[data-theme="light"] .group-chip { background: #fff; border-color: #cbd5e1; color: #475569; }
+    html[data-theme="light"] .group-chip span { color: #64748b; }
+    html[data-theme="light"] .group-chip.selected { background: #e0f2fe; border-color: #38bdf8; color: #0369a1; }
+    html[data-theme="light"] .group-head.g1 { color: #4f46e5; }
+    html[data-theme="light"] .group-head.g2 { color: #b45309; }
+    html[data-theme="light"] #routineViewDaily .group-head { color: #15803d !important; }
+    html[data-theme="light"] #routineViewDaily .group-head span { color: #475569; }
+
+    html[data-theme="light"] .hour-row { background: #ffffff; border-color: #e2e8f0; }
+    html[data-theme="light"] .hour-row.hour-head { background: #eef6ff; border-color: #bae0fd; }
+    html[data-theme="light"] .hour-row.hour-head .hour-label, html[data-theme="light"] .hour-row.hour-head .cell-title { color: #0369a1; }
+    html[data-theme="light"] .hour-label { color: #0369a1; }
+    html[data-theme="light"] .cell-free { color: #8b9cb3; }
+    html[data-theme="light"] .cell-title { color: #0f172a; }
+    html[data-theme="light"] .cell-sub { color: #52617a; }
+    html[data-theme="light"] .cell-done .cell-title { color: #15803d; }
+    html[data-theme="light"] .hour-row.hour-current { border-color: #22c55e; background: #f0fdf4; }
+    html[data-theme="light"] .hour-row.hour-free { opacity: 1; }
+    html[data-theme="light"] .hour-row.hour-free .hour-label { color: #7a8aa0; }
+
+    html[data-theme="light"] .modal-overlay { background: rgba(15,23,42,0.45); }
+    html[data-theme="light"] .modal-box { background: #ffffff; border-color: #94a3b8; color: #0f172a; }
+    html[data-theme="light"] .modal-box input, html[data-theme="light"] .modal-box select { background: #fff; color: #0f172a; border-color: #cbd5e1; }
+    html[data-theme="light"] #focusScreen { background: #ffffff; color: #0f172a; }
+    html[data-theme="light"] .developer-card { background: linear-gradient(180deg,#ffffff,#f1f5f9); border-color: #cbd5e1; }
+    html[data-theme="light"] .developer-name { color: #0f172a; }
+    html[data-theme="light"] .developer-title { color: #475569; }
+    html[data-theme="light"] .free-slot-label { color: #334155; }
+    html[data-theme="light"] .free-slot-time, html[data-theme="light"] .slot-time { color: #0369a1; }
   </style>
 </head>
 <body>
@@ -365,6 +468,7 @@
       </div>
       <div style="display:flex; gap:8px; align-items:center;">
         <div class="score-pill" id="headerScore">০%</div>
+        <button type="button" class="icon-btn" id="themeToggle" title="ডার্ক/লাইট মোড" onclick="toggleTheme()" style="background: rgba(15,23,42,0.8); border: 1px solid var(--border); color: #cbd5e1;">☀️</button>
         <button type="button" class="icon-btn" title="ব্যাকআপ ডাউনলোড" onclick="exportDataBackup()" style="background: rgba(15,23,42,0.8); border: 1px solid var(--border); color: #7dd3fc;">⬇️</button>
       </div>
     </div>
@@ -418,6 +522,7 @@
       <div class="developer-title">Director, Future Academy | Educator & Creator</div>
       <div class="contact-buttons">
         <a href="https://wa.me/8801796431795?text=Hello%20Alamin%20Sir,%20I%20am%20using%20your%20SmartDo%20App." target="_blank" class="contact-btn btn-wa">💬 WhatsApp</a>
+        <a href="https://www.facebook.com/alaminphysics01" target="_blank" class="contact-btn btn-fb">🌐 Facebook</a>
       </div>
     </div>
 
@@ -564,13 +669,25 @@
             ✅ <b>স্লট সফলভাবে যুক্ত হয়েছে!</b> নিচের টেবিলে দেখুন।
           </div>
           <div id="routineReminderNote" class="reminder-note"></div>
-          <div class="group-section">
-            <div class="group-head g1">🟣 গ্রুপ ১ <span>শনি · সোম · বুধ — ২৪ ঘণ্টা</span></div>
-            <div class="hour-table" id="hourTableG1"></div>
+          <div class="mode-toggle">
+            <button type="button" class="mode-btn active" id="modeBtnGroup" onclick="setRoutineMode('group')">🔀 ৩ দিন / ৩ দিন<span class="mode-sub">শনি·সোম·বুধ ও রবি·মঙ্গল·বৃহস্পতি</span></button>
+            <button type="button" class="mode-btn" id="modeBtnDaily" onclick="setRoutineMode('daily')">📅 প্রতিদিন<span class="mode-sub">একটাই টেবিল — আজকের সব স্লট</span></button>
           </div>
-          <div class="group-section">
-            <div class="group-head g2">🟠 গ্রুপ ২ <span>রবি · মঙ্গল · বৃহস্পতি — ২৪ ঘণ্টা</span></div>
-            <div class="hour-table" id="hourTableG2"></div>
+          <div id="routineViewGroup">
+            <div class="group-section">
+              <div class="group-head g1">🟣 গ্রুপ ১ <span>শনি · সোম · বুধ — ২৪ ঘণ্টা</span></div>
+              <div class="hour-table" id="hourTableG1"></div>
+            </div>
+            <div class="group-section">
+              <div class="group-head g2">🟠 গ্রুপ ২ <span>রবি · মঙ্গল · বৃহস্পতি — ২৪ ঘণ্টা</span></div>
+              <div class="hour-table" id="hourTableG2"></div>
+            </div>
+          </div>
+          <div id="routineViewDaily" style="display:none;">
+            <div class="group-section">
+              <div class="group-head" style="color: #4ade80;">🟢 আজকের সব <span>প্রতিদিনের স্লট — ২৪ ঘণ্টা</span></div>
+              <div class="hour-table" id="hourTableDaily"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -806,6 +923,22 @@
         if (notice) notice.style.display = 'flex';
       }
       render();
+    }
+
+    let currentTheme = 'dark';
+    function applyTheme() {
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      const b = document.getElementById('themeToggle');
+      if (b) b.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+      safeSet('theme', currentTheme);
+    }
+    function initTheme() {
+      currentTheme = safeGet('theme') || 'dark';
+      applyTheme();
+    }
+    function toggleTheme() {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      applyTheme();
     }
 
     let currentCat = null;
@@ -1161,6 +1294,19 @@
       return true;
     }
 
+    let routineMode = 'group';
+    function setRoutineMode(mode) {
+      routineMode = mode;
+      const bg = document.getElementById('modeBtnGroup');
+      const bd = document.getElementById('modeBtnDaily');
+      if (bg) bg.classList.toggle('active', mode === 'group');
+      if (bd) bd.classList.toggle('active', mode === 'daily');
+      const vg = document.getElementById('routineViewGroup');
+      const vd = document.getElementById('routineViewDaily');
+      if (vg) vg.style.display = mode === 'group' ? '' : 'none';
+      if (vd) vd.style.display = mode === 'daily' ? '' : 'none';
+    }
+
     function renderRoutineTimeline() {
       const now = new Date();
       const currentHHMM = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
@@ -1168,14 +1314,10 @@
       const toMin = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
       const pad = n => String(n).padStart(2, '0');
 
-      Object.keys(GRP).forEach(key => {
-        const g = GRP[key];
-        const tableId = key === 'g1' ? 'hourTableG1' : 'hourTableG2';
-        const container = document.getElementById(tableId);
+      const buildTable = (containerId, slots) => {
+        const container = document.getElementById(containerId);
         if (!container) return;
         container.innerHTML = '';
-
-        const slots = routineSlots.filter(s => routineSlotInGroup(s, g.days)).sort((a, b) => a.start.localeCompare(b.start));
 
         const mkRow = (rowCls, labelText, cellCls, cellHtml) => {
           const row = document.createElement('div');
@@ -1218,7 +1360,16 @@
           const row = mkRow('', label, 'hour-cell', cellHtml);
           if (isCurrentHour) row.classList.add('hour-current');
         }
+      };
+
+      Object.keys(GRP).forEach(key => {
+        const g = GRP[key];
+        const tableId = key === 'g1' ? 'hourTableG1' : 'hourTableG2';
+        const slots = routineSlots.filter(s => routineSlotInGroup(s, g.days)).sort((a, b) => a.start.localeCompare(b.start));
+        buildTable(tableId, slots);
       });
+
+      buildTable('hourTableDaily', getTodaysRoutineSlots());
     }
 
     // আজকের ফাকা (অনির্ধারিত) স্লটসমূহ
@@ -2092,10 +2243,18 @@
     }, 1000);
 
     // অ্যাপ চালুর সময় স্বয়ংক্রিয় লোড
+    initTheme();
     checkAndPerformRollover();
     loadRandomQuote();
     fetchLivePrayerTimes();
     render();
+
+    // PWA ইনস্টল ও অফলাইন
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+      });
+    }
   </script>
 </body>
 </html>
