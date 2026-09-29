@@ -21,7 +21,8 @@
       --fb-blue: #1877F2;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background: var(--bg); color: var(--text); padding: 12px; display: flex; justify-content: center; }
+    html { overscroll-behavior-y: none; }
+    body { background: var(--bg); color: var(--text); padding: 12px; display: flex; justify-content: center; overscroll-behavior-y: none; }
     .container { width: 100%; max-width: 920px; display: flex; flex-direction: column; gap: 16px; margin-bottom: 50px; }
     
     /* ট্যাব নেভিগেশন */
@@ -260,8 +261,6 @@
     .contact-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; color: white; transition: 0.2s; }
     .btn-wa { background-color: var(--wa-green); }
     .btn-wa:hover { background-color: #1ebc59; }
-    .btn-fb { background-color: var(--fb-blue); }
-    .btn-fb:hover { background-color: #1464cc; }
 
     /* ফোকাস স্ক্রিন */
     #focusScreen {
@@ -315,7 +314,7 @@
     .cat-title { font-size: 16.5px; font-weight: 700; color: #f8fafc; }
     .cat-close { width: 40px; height: 40px; border-radius: 10px; background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.4); font-size: 16px; }
     .cat-close:hover { background: rgba(239,68,68,0.25); }
-    #catScroll { flex: 1; overflow-y: auto; padding: 16px; width: 100%; max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; -webkit-overflow-scrolling: touch; }
+    #catScroll { flex: 1; overflow-y: auto; padding: 16px; width: 100%; max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; }
 
     /* ২৪ ঘণ্টার টেবিল */
     .hour-table { display: flex; flex-direction: column; gap: 3px; margin-top: 10px; }
@@ -334,6 +333,19 @@
     .hour-btn { font-size: 11px; padding: 3px 9px; border-radius: 5px; }
     .hour-btn.ok { background: rgba(34,197,94,0.85); color: #052e16; }
     .hour-btn.del { background: rgba(239,68,68,0.85); color: #fff; }
+
+    /* ২টি গ্রুপ-রুটিন */
+    .group-chip-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin-top: 6px; }
+    .group-chip { background: rgba(15,23,42,0.8); border: 1px solid var(--border); color: var(--muted); border-radius: 10px; padding: 9px 12px; font-size: 13px; font-weight: 700; display: flex; flex-direction: column; gap: 2px; text-align: left; cursor: pointer; }
+    .group-chip span { font-size: 10.5px; color: #64748b; font-weight: 400; }
+    .group-chip.selected { border-color: #38bdf8; background: rgba(56,189,248,0.15); color: #7dd3fc; box-shadow: 0 0 10px rgba(56,189,248,0.2); }
+    .group-chip.selected span { color: #bae6fd; }
+    .group-section { margin-top: 4px; }
+    .group-head { display: flex; align-items: baseline; gap: 8px; font-size: 14px; font-weight: 800; color: #e2e8f0; margin: 16px 0 6px; }
+    .group-head.g1 { color: #a5b4fc; }
+    .group-head.g2 { color: #fcd34d; }
+    .group-head span { font-size: 11.5px; color: var(--muted); font-weight: 600; }
+    .reminder-note { font-size: 11.5px; padding: 9px 12px; border-radius: 8px; margin-top: 12px; line-height: 1.5; }
   </style>
 </head>
 <body>
@@ -406,7 +418,6 @@
       <div class="developer-title">Director, Future Academy | Educator & Creator</div>
       <div class="contact-buttons">
         <a href="https://wa.me/8801796431795?text=Hello%20Alamin%20Sir,%20I%20am%20using%20your%20SmartDo%20App." target="_blank" class="contact-btn btn-wa">💬 WhatsApp</a>
-        <a href="https://www.facebook.com/alaminphysics01" target="_blank" class="contact-btn btn-fb">🌐 Facebook</a>
       </div>
     </div>
 
@@ -530,21 +541,12 @@
           <div class="input-group">
             <div class="input-row">
               <input type="text" id="routineTitle" placeholder="কাজের নাম (যেমন: ফিজিক্স লেকচার, ব্যায়াম)..." />
-              <select id="routineType" onchange="toggleRoutineDaySelect()">
-                <option value="recurring">🔁 সাপ্তাহিক (নির্দিষ্ট দিনে)</option>
-                <option value="temporary">📅 আজকের জন্য</option>
-              </select>
             </div>
-            <div class="day-check-row" id="routineDayRow">
-              <span style="font-size: 11px; color: var(--muted);">কোন কোন দিন?</span>
-              <label class="day-check all-days"><input type="checkbox" id="dayChkAll" checked onchange="selectAllDays(this.checked)" /> সব দিন</label>
-              <label class="day-check"><input type="checkbox" class="day-chk" value="0" checked /> রবি</label>
-              <label class="day-check"><input type="checkbox" class="day-chk" value="1" checked /> সোম</label>
-              <label class="day-check"><input type="checkbox" class="day-chk" value="2" checked /> মঙ্গল</label>
-              <label class="day-check"><input type="checkbox" class="day-chk" value="3" checked /> বুধ</label>
-              <label class="day-check"><input type="checkbox" class="day-chk" value="4" checked /> বৃহঃ</label>
-              <label class="day-check"><input type="checkbox" class="day-chk" value="5" checked /> শুক্র</label>
-              <label class="day-check"><input type="checkbox" class="day-chk" value="6" checked /> শনি</label>
+            <div class="group-chip-row" id="routineGroupRow">
+              <button type="button" class="group-chip selected" data-group="g1" onclick="pickRoutineGroup(this)">গ্রুপ ১<span>শনি · সোম · বুধ</span></button>
+              <button type="button" class="group-chip" data-group="g2" onclick="pickRoutineGroup(this)">গ্রুপ ২<span>রবি · মঙ্গল · বৃহস্পতি</span></button>
+              <button type="button" class="group-chip" data-group="all" onclick="pickRoutineGroup(this)">সব দিন<span>রবি–শনি</span></button>
+              <button type="button" class="group-chip" data-group="today" onclick="pickRoutineGroup(this)">আজকের জন্য<span>এক দিন (টেম্প)</span></button>
             </div>
             <div class="input-row">
               <div style="display: flex; align-items: center; gap: 4px;">
@@ -561,8 +563,15 @@
           <div id="routineAddFlash" style="display:none; background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.4); color: #86efac; padding: 10px 14px; border-radius: 12px; font-size: 13px; margin: 12px 0 4px;">
             ✅ <b>স্লট সফলভাবে যুক্ত হয়েছে!</b> নিচের টেবিলে দেখুন।
           </div>
-          <h3 style="margin-top: 14px; font-size: 15px; color: #38bdf8;">📋 আজকের ২৪ ঘণ্টা (প্রতি ঘণ্টায় এক লাইন):</h3>
-          <div class="hour-table" id="routineTimelineContainer"></div>
+          <div id="routineReminderNote" class="reminder-note"></div>
+          <div class="group-section">
+            <div class="group-head g1">🟣 গ্রুপ ১ <span>শনি · সোম · বুধ — ২৪ ঘণ্টা</span></div>
+            <div class="hour-table" id="hourTableG1"></div>
+          </div>
+          <div class="group-section">
+            <div class="group-head g2">🟠 গ্রুপ ২ <span>রবি · মঙ্গল · বৃহস্পতি — ২৪ ঘণ্টা</span></div>
+            <div class="hour-table" id="hourTableG2"></div>
+          </div>
         </div>
       </div>
 
@@ -817,7 +826,7 @@
       if (panel) panel.style.display = 'block';
       document.getElementById('catTitle').textContent = titles[cat];
       document.getElementById('catOverlay').classList.add('open');
-      if (cat === 'routine') renderRoutineTimeline();
+      if (cat === 'routine') { renderRoutineTimeline(); updateReminderNote(); }
       if (cat === 'journal') renderSevenDayChart(calculateCurrentScore().finalScore);
       updateDashSummary();
     }
@@ -900,8 +909,59 @@
     function enableAudioAndNotification() {
       playNotificationChime();
       speakBangla("স্মার্ট ডু অ্যাপের বাংলা ভয়েস ও নোটিফিকেশন সক্রিয় হয়েছে।");
-      if ("Notification" in window && Notification.permission !== "granted") {
-        Notification.requestPermission();
+      if ("Notification" in window) {
+        if (Notification.permission === "granted") {
+          scheduleRoutineReminders();
+        } else {
+          Notification.requestPermission().then(p => {
+            if (p === "granted") scheduleRoutineReminders();
+            updateReminderNote();
+          });
+        }
+      }
+      updateReminderNote();
+    }
+
+    function notificationTriggersSupported() {
+      return "Notification" in window && "showTrigger" in Notification.prototype && "TimestampTrigger" in window;
+    }
+
+    function scheduleRoutineReminders() {
+      try {
+        if (!notificationTriggersSupported()) return false;
+        if (Notification.permission !== "granted") return false;
+        const now = new Date();
+        getTodaysRoutineSlots().forEach(s => {
+          const [h, m] = s.start.split(':').map(Number);
+          const at = new Date();
+          at.setHours(h, m, 0, 0);
+          if (at <= now) return;
+          new Notification("🕒 SmartDo: " + s.title, {
+            body: s.start + " – " + s.end,
+            tag: "smartdo-slot-" + s.id,
+            renotify: true,
+            showTrigger: new TimestampTrigger(at)
+          });
+        });
+        return true;
+      } catch (e) {
+        console.warn("Reminder schedule failed:", e);
+        return false;
+      }
+    }
+
+    function updateReminderNote() {
+      const el = document.getElementById('routineReminderNote');
+      if (!el) return;
+      if (!notificationTriggersSupported()) {
+        el.innerHTML = '🔕 <b>বন্ধ-অবস্থা রিমাইন্ডার</b> এই ব্রাউজারে নেই। সেরা ফলাফলের জন্য অ্যান্ড্রয়েড Chrome-এ অ্যাপটি <b>Install</b> (ইনস্টল) করুন।';
+        el.style.cssText = 'background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.4); color: #fcd34d;';
+      } else if (Notification.permission !== 'granted') {
+        el.innerHTML = '🔔 <b>রিমাইন্ডার:</b> অ্যাপ বন্ধ থাকলেও স্লট-সময়ে বাজবে। চালু করুন: <button type="button" class="btn-secondary" onclick="enableAudioAndNotification()" style="font-size:11px; padding:3px 8px;">🔔 চালু</button>';
+        el.style.cssText = 'background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.4); color: #bae6fd;';
+      } else {
+        el.innerHTML = '🔔 <b>রিমাইন্ডার সক্রিয়</b> — অ্যাপ বন্ধ থাকলেও প্রতিটি স্লটের শুরুতে নোটিফিকেশন বাজবে।';
+        el.style.cssText = 'background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.4); color: #86efac;';
       }
     }
 
@@ -969,19 +1029,20 @@
       });
     }
 
-    function toggleRoutineDaySelect() {
-      const row = document.getElementById('routineDayRow');
-      const type = document.getElementById('routineType').value;
-      row.style.display = type === 'recurring' ? 'flex' : 'none';
-    }
+    let routineGroup = 'g1';
+    const GRP = {
+      g1: { label: 'গ্রুপ ১', sub: 'শনি · সোম · বুধ', days: [6, 1, 3] },
+      g2: { label: 'গ্রুপ ২', sub: 'রবি · মঙ্গল · বৃহস্পতি', days: [0, 2, 4] }
+    };
 
-    function selectAllDays(checked) {
-      document.querySelectorAll('.day-chk').forEach(cb => cb.checked = checked);
+    function pickRoutineGroup(btn) {
+      routineGroup = btn.getAttribute('data-group');
+      document.querySelectorAll('#routineGroupRow .group-chip').forEach(c => c.classList.remove('selected'));
+      btn.classList.add('selected');
     }
 
     function addRoutineSlot() {
       const title = document.getElementById('routineTitle').value.trim();
-      const type = document.getElementById('routineType').value;
       const start = document.getElementById('routineStart').value;
       const end = document.getElementById('routineEnd').value;
 
@@ -995,13 +1056,11 @@
       }
 
       let days = [];
-      if (type === 'recurring') {
-        days = Array.from(document.querySelectorAll('.day-chk:checked')).map(cb => parseInt(cb.value));
-        if (days.length === 0) {
-          alert("সপ্তাহের অন্তত একটি দিন নির্বাচন করুন।");
-          return;
-        }
-      }
+      let type = 'recurring';
+      if (routineGroup === 'g1') days = [6, 1, 3];
+      else if (routineGroup === 'g2') days = [0, 2, 4];
+      else if (routineGroup === 'all') days = [0, 1, 2, 3, 4, 5, 6];
+      else { type = 'temporary'; days = [new Date().getDay()]; }
 
       routineSlots.push({
         id: Date.now(),
@@ -1017,6 +1076,7 @@
 
       saveState();
       renderRoutineTimeline();
+      if ("Notification" in window && Notification.permission === "granted") scheduleRoutineReminders();
 
       document.getElementById('routineTitle').value = '';
       document.getElementById('routineStart').value = '';
@@ -1024,7 +1084,7 @@
 
       const flash = document.getElementById('routineAddFlash');
       if (flash) flash.style.display = 'block';
-      const timelineEl = document.getElementById('routineTimelineContainer');
+      const timelineEl = document.getElementById('hourTableG1');
       if (timelineEl && timelineEl.scrollIntoView) timelineEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       setTimeout(() => { if (flash) flash.style.display = 'none'; }, 2500);
     }
@@ -1095,63 +1155,70 @@
       return 'প্রতিদিন';
     }
 
-    function renderRoutineTimeline() {
-      const container = document.getElementById('routineTimelineContainer');
-      if (!container) return;
-      container.innerHTML = '';
+    function routineSlotInGroup(s, groupDays) {
+      if (s.type === 'temporary') return groupDays.includes(new Date().getDay());
+      if (Array.isArray(s.days) && s.days.length > 0) return s.days.some(d => groupDays.includes(d));
+      return true;
+    }
 
+    function renderRoutineTimeline() {
       const now = new Date();
       const currentHHMM = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-      const slots = getTodaysRoutineSlots().slice().sort((a, b) => a.start.localeCompare(b.start));
       const doneToday = routineCompletions[getTodayString()] || [];
       const toMin = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
       const pad = n => String(n).padStart(2, '0');
 
-      const mkRow = (rowCls, labelText, cellCls, cellHtml) => {
-        const row = document.createElement('div');
-        row.className = 'hour-row ' + rowCls;
-        row.innerHTML = `<div class="hour-label">${labelText}</div><div class="${cellCls}">${cellHtml}</div>`;
-        container.appendChild(row);
-        return row;
-      };
+      Object.keys(GRP).forEach(key => {
+        const g = GRP[key];
+        const tableId = key === 'g1' ? 'hourTableG1' : 'hourTableG2';
+        const container = document.getElementById(tableId);
+        if (!container) return;
+        container.innerHTML = '';
 
-      mkRow('hour-head', 'সময়', 'cell-title', 'কার্যক্রম');
+        const slots = routineSlots.filter(s => routineSlotInGroup(s, g.days)).sort((a, b) => a.start.localeCompare(b.start));
 
-      if (slots.length === 0) {
-        mkRow('hour-free', '—', 'cell-free', 'স্লট যোগ করুন — পুরো ২৪ ঘণ্টা ফাকা থাকবে।');
-      }
+        const mkRow = (rowCls, labelText, cellCls, cellHtml) => {
+          const row = document.createElement('div');
+          row.className = 'hour-row ' + rowCls;
+          row.innerHTML = `<div class="hour-label">${labelText}</div><div class="${cellCls}">${cellHtml}</div>`;
+          container.appendChild(row);
+          return row;
+        };
 
-      for (let h = 0; h < 24; h++) {
-        const hStart = h * 60;
-        const label = bnText(pad(h) + ':00');
-        const isCurrentHour = currentHHMM >= pad(h) && currentHHMM < pad(h + 1);
-        const covering = slots.filter(s => toMin(s.start) <= hStart && toMin(s.end) > hStart);
+        mkRow('hour-head', 'সময়', 'cell-title', 'কার্যক্রম');
 
-        if (covering.length === 0) {
-          const row = mkRow('hour-free', label, 'cell-free', '🕊️ ফাকা');
+        for (let h = 0; h < 24; h++) {
+          const hStart = h * 60;
+          const label = bnText(pad(h) + ':00');
+          const isCurrentHour = currentHHMM >= pad(h) && currentHHMM < pad(h + 1);
+          const covering = slots.filter(s => toMin(s.start) <= hStart && toMin(s.end) > hStart);
+
+          if (covering.length === 0) {
+            const row = mkRow('hour-free', label, 'cell-free', '🕊️ ফাকা');
+            if (isCurrentHour) row.classList.add('hour-current');
+            continue;
+          }
+
+          let cellHtml = '';
+          covering.forEach(s => {
+            const isStart = toMin(s.start) === hStart;
+            const isDone = doneToday.includes(s.id);
+            const isLive = currentHHMM >= s.start && currentHHMM < s.end;
+            cellHtml += `<div class="${isDone ? 'cell-done' : ''}" style="margin:3px 0 6px;">
+              <div class="cell-title">${s.title} ${isDone ? '✅' : ''} ${isLive ? ' <span class="badge-live-now" style="animation:none;">চলছে</span>' : ''}</div>
+              <div class="cell-sub">${s.start}–${s.end} · ${routineDayLabel(s)}</div>
+              ${isStart ? `<div class="hour-actions">
+                <button type="button" class="hour-btn ${isDone ? '' : 'ok'}" onclick="toggleRoutineCompletion(${s.id})">${isDone ? '✓ হয়েছে' : '✓ সম্পন্ন'}</button>
+                <button type="button" class="hour-btn" style="background: rgba(139,92,246,0.9);" onclick="moveRoutineToToday(${s.id})">+৩ কাজে</button>
+                <button type="button" class="hour-btn del" onclick="deleteRoutineSlot(${s.id})">✕</button>
+              </div>` : ''}
+            </div>`;
+          });
+
+          const row = mkRow('', label, 'hour-cell', cellHtml);
           if (isCurrentHour) row.classList.add('hour-current');
-          continue;
         }
-
-        let cellHtml = '';
-        covering.forEach(s => {
-          const isStart = toMin(s.start) === hStart;
-          const isDone = doneToday.includes(s.id);
-          const isLive = currentHHMM >= s.start && currentHHMM < s.end;
-          cellHtml += `<div class="${isDone ? 'cell-done' : ''}" style="margin:3px 0 6px;">
-            <div class="cell-title">${s.title} ${isDone ? '✅' : ''} ${isLive ? ' <span class="badge-live-now" style="animation:none;">চলছে</span>' : ''}</div>
-            <div class="cell-sub">${s.start}–${s.end} · ${routineDayLabel(s)}</div>
-            ${isStart ? `<div class="hour-actions">
-              <button type="button" class="hour-btn ${isDone ? '' : 'ok'}" onclick="toggleRoutineCompletion(${s.id})">${isDone ? '✓ হয়েছে' : '✓ সম্পন্ন'}</button>
-              <button type="button" class="hour-btn" style="background: rgba(139,92,246,0.9);" onclick="moveRoutineToToday(${s.id})">+৩ কাজে</button>
-              <button type="button" class="hour-btn del" onclick="deleteRoutineSlot(${s.id})">✕</button>
-            </div>` : ''}
-          </div>`;
-        });
-
-        const row = mkRow('', label, 'hour-cell', cellHtml);
-        if (isCurrentHour) row.classList.add('hour-current');
-      }
+      });
     }
 
     // আজকের ফাকা (অনির্ধারিত) স্লটসমূহ
@@ -1956,6 +2023,8 @@
       renderCurrentRoutineStatus();
       updateDayJudgmentAndAnalytics();
       updateDashSummary();
+      updateReminderNote();
+      if ("Notification" in window && Notification.permission === "granted") scheduleRoutineReminders();
 
       const activeListEl = document.getElementById('todayActiveList');
       activeListEl.innerHTML = '';
