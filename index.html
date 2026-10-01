@@ -1043,18 +1043,26 @@
         const res = await fetch(syncUrl() + '?t=' + Date.now());
         const j = await res.json();
         if (!j || j.ok === false) throw new Error((j && j.error) || 'ডাউনলোড ব্যর্থ');
+        const localAt = syncLocalAt();
         const remoteAt = Number(j.updatedAt) || 0;
-        if (remoteAt > syncLocalAt()) {
+        const hasRemote = !!(j.data && Object.keys(j.data).length);
+        if (hasRemote && remoteAt > localAt) {
           applySnapshot(j.data);
           syncSetLocalAt(remoteAt);
           if (!quiet) { syncMsg('✅ ক্লাউড থেকে ডেটা আসছে...', true); }
           syncBusy = false;
           return 'pulled';
         }
-        if (remoteAt < syncLocalAt()) {
+        if (hasRemote && remoteAt < localAt) {
           syncBusy = false;
           await pushToCloud(true);
           return 'pushed';
+        }
+        if (!hasRemote) {
+          syncBusy = false;
+          if (Object.keys(collectSnapshot()).length) { await pushToCloud(true); return 'pushed'; }
+          syncMsg('✅ ক্লাউড প্রস্তুত — অ্যাপে কিছু সেভ করলেই ডেটা চলে যাবে।', true);
+          return 'ready';
         }
         syncMsg('✅ সব ডেটা আপ টু ডেট (' + new Date(remoteAt || Date.now()).toLocaleString('bn-BD') + ')', true);
       } catch (e) {
