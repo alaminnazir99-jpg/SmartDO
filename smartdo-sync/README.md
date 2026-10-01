@@ -1,28 +1,37 @@
-// SmartDo — Apps Script সেটআপ নির্দেশনা (বাংলায়)
+// SmartDo — Apps Script সেটআপ (৩টি ধাপ, ২ মিনিট)
 
 অ্যাপ খোলা: https://alaminnazir99-jpg.github.io/SmartDO/
 
-## একবারই করতে হবে (৫ মিনিট)
+## ধাপ ১
+https://script.google.com খুলুন → **New project**
 
-1. **https://script.google.com** খুলে → **New project**
-2. বাঁ পাশের `Code.gs` ফাইলে এই ফোল্ডারের **`Code.gs`** ফাইলের পুরো কোড কপি করে পেস্ট করুন
-3. উপরে **Deploy** → **New deployment** → টাইপ **Web app** → **Add new deployment**
-   - **Execute as:** `Me`
-   - **Who has access:** `Anyone`
-   - **Deploy** চাপুন
-4. যে **Web app URL** পাবেন সেটা কপি করুন (এরকম শুরু হবে: `https://script.google.com/macros/s/...../exec`)
-5. SmartDo অ্যাপ → ⚙️ **সেটিংস** → **☁️ ক্লাউড সিঙ্ক** → লিংকটি পেস্ট করে **সংরক্ষণ ও টেস্ট** চাপুন
+## ধাপ ২
+এই ফোল্ডারের **`Code.gs`** ফাইলের পুরো কোড কপি করে বাঁ পাশের `Code.gs`-এ পেস্ট করুন
+(কোড পেতে: https://github.com/alaminnazir99-jpg/SmartDO/blob/main/smartdo-sync/Code.gs → Raw)
 
-ব্যস! এরপর মোবাইল ও ল্যাপটপে একই ডেটা দেখা যাবে। অ্যাপ খুললেই নিজে থেকেই সিঙ্ক হবে।
+## ধাপ ৩
+উপরে **Deploy** → **New deployment** → টাইপ **Web app** → **Add new deployment**
 
-## গুরুত্বপূর্ণ
+- **Execute as:** `Me`
+- **Who has access:** `Anyone` ← **এটি না দিলে অ্যাপ কাজ করবে না**
+- **Deploy** চাপুন
 
-- লিংকটি যারা জানবে, তারা ডেটা দেখতে/বদলাতে পারবে — তাই লিংকটি গোপন রাখুন।
-- "Anyone" অপশন না দিলে অ্যাপ কাজ করবে না।
-- ডেটা Google Sheet-এ সেভ হয় (আপনার নিজের Google অ্যাকাউন্টে)।
+প্রাপ্ত `https://script.google.com/macros/s/......../exec` লিংকটি কপি করুন।
+
+## ধাপ ৪ (অ্যাপে)
+SmartDo অ্যাপ → ⚙️ **সেটিংস** → **☁️ ক্লাউড সিঙ্ক** → লিংক পেস্ট → **💾 সংরক্ষণ ও টেস্ট**
+
+✅ এরপর অ্যাপ খুললেই নিজে থেকেই সিঙ্ক হবে — মোবাইল ও ল্যাপটপে একই ডেটা।
+
+## তথ্য
+
+- কোনো Google Sheet লাগে না; ডেটা যায় আপনার Drive-এর `smartdo-sync-data.json` ফাইলে
+- লিংকটি যারা জানবে তারা ডেটা পড়তে/বদলাতে পারবে — **লিংকটি গোপন রাখুন**
+- সিঙ্ক করতে ইন্টারনেট লাগে (অফলাইনে ডেটা নিজের ডিভাইসেই থাকে)
+- ফ্রি Apps Script কোটা: প্রতিদিন ~৫০,০০০ কল — দৈনিক ব্যবহারে যথেষ্ট
 
 ## কাজ না করলে
 
-- অ্যাপে স্ট্যাটাস লাল হলে লিংকে `/exec` আছে কিনা দেখুন
-- Apps Script প্রজেক্টে **Deploy → Manage deployments** থেকে লিংকটি আবার দেখুন
-- ইন্টারনেট সংযোগ দরকার (সিঙ্কের জন্য)
+- অ্যাপে লাল বার্তা এলে লিংকের শেষে `/exec` আছে কিনা দেখুন
+- Deploy → **Manage deployments** থেকে লিংকটি আবার দেখুন
+- Apps Script-এ ফাংশন ড্রপডাউন থেকে `testRun` একবার Run করুন, Execution log-এ **"SmartDo sync ready"** এলে সব ঠিক আছে

@@ -1,19 +1,18 @@
 /**
  * SmartDo — ক্লাউড সিঙ্ক ব্যাকএন্ড (Google Apps Script, ফ্রি)
  *
- * সেটআপ:
- *  1) https://script.google.com → নতুন প্রজেক্ট
- *  2) এই পুরো কোডটি Code.gs ফাইলে পেস্ট করুন
- *  3) "Deploy" → "New deployment" → টাইপ "Web app"
- *     - Execute as: Me
- *     - Who has access: Anyone
- *  4) Deploy করুন, তারপর যে লিংক পাবেন সেটা SmartDo অ্যাপের
- *     সেটিংস → "ক্লাউড সিঙ্ক"-এ পেস্ট করে সেভ করুন।
+ * সেটআপ (৩টি ধাপ):
+ *  1) https://script.google.com → New project
+ *  2) এই কোডটি Code.gs-এ পেস্ট করুন
+ *  3) Deploy → New deployment → Web app
+ *        - Execute as: Me
+ *        - Who has access: Anyone
+ *     → Deploy করলে যে /exec লিংক পাবেন সেটাই অ্যাপে বসাতে হবে।
  *
- * ডেটা যায় একটি শীটে: A1 = updatedAt, B1 = ডেটা JSON
+ * কোনো Google Sheet লাগে না — ডেটা যায় Drive-এর একটি ফাইলে।
  */
 
-var SHEET_NAME = 'SmartDo';
+var FILE_NAME = 'smartdo-sync-data.json';
 
 function jsonOut(obj) {
   return ContentService
@@ -21,42 +20,59 @@ function jsonOut(obj) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-function getSheet_() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  return ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
+function findFile_() {
+  var files = DriveApp.getFilesByName(FILE_NAME);
+  return files.hasNext() ? files.next() : null;
 }
 
-/** অ্যাপ খুললে এটি চালু হয় (ফ্রি কোয়োটার ৫০K ডেটা ধরে) */
+function readStore_() {
+  var f = findFile_();
+  if (!f) return { updatedAt: 0, data: {} };
+  try {
+    var j = JSON.parse(f.getBlob().getContentAsString('UTF-8'));
+    return { updatedAt: Number(j.updatedAt) || 0, data: j.data || {} };
+  } catch (e) {
+    return { updatedAt: 0, data: {} };
+  }
+}
+
+function writeStore_(obj) {
+  var text = JSON.stringify(obj);
+  if (text.length > 400000) {
+    throw new Error('ডেটা অনেক বড়');
+  }
+  var f = findFile_();
+  if (f) {
+    f.setContent(text);
+  } else {
+    DriveApp.createFile(Utilities.newBlob(text, 'application/json', FILE_NAME));
+  }
+}
+
+/** অ্যাপ খুললে চালু হয় */
 function doGet(e) {
   try {
-    var sh = getSheet_();
-    var stamp = sh.getRange('A1').getValue();
-    var payload = sh.getRange('B1').getValue();
-    var data = {};
-    if (payload) {
-      try { data = JSON.parse(String(payload)); } catch (err) { data = {}; }
-    }
-    return jsonOut({ ok: true, updatedAt: Number(stamp) || 0, data: data });
+    var s = readStore_();
+    return jsonOut({ ok: true, updatedAt: s.updatedAt, data: s.data });
   } catch (err) {
     return jsonOut({ ok: false, error: String(err) });
   }
 }
 
-/** অ্যাপে কিছু সেভ হলে এটি চালু হয় */
+/** অ্যাপে কিছু সেভ হলে চালু হয় */
 function doPost(e) {
   try {
     var body = JSON.parse((e && e.postData && e.postData.contents) || '{}');
     var at = Number(body.updatedAt) || Date.now();
-    var data = body.data || {};
-    var text = JSON.stringify(data);
-    if (text.length > 45000) {
-      return jsonOut({ ok: false, error: 'ডেটা অনেক বড় (সর্বোচ্চ ~৪৫ হাজার অক্ষর)' });
-    }
-    var sh = getSheet_();
-    sh.getRange('A1').setValue(at);
-    sh.getRange('B1').setValue(text);
-    return jsonOut({ ok: true, updatedAt: at, size: text.length });
+    writeStore_({ updatedAt: at, data: body.data || {} });
+    return jsonOut({ ok: true, updatedAt: at });
   } catch (err) {
     return jsonOut({ ok: false, error: String(err) });
   }
+}
+
+/** লিংক যাচাই: এই ফাংশনটি রান করলে Execution log-এ "SmartDo sync ready" দেখাবে */
+function testRun() {
+  var s = readStore_();
+  Logger.log('SmartDo sync ready. file=' + !!findFile_() + ' updatedAt=' + s.updatedAt);
 }
