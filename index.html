@@ -378,6 +378,9 @@
     .time-display.empty { color: var(--muted); font-weight: 600; }
     .time-display .t-ico { font-size: 13px; }
 
+    .card-plain { background: #0d1322; }
+    html[data-theme="light"] .card-plain { background: #fff; border-color: #d3dce6; }
+
     .clock-box { max-width: 360px; text-align: center; }
     .clock-readout { font-size: 30px; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; margin: 4px 0 10px; letter-spacing: 0.5px; }
     .clock-ampm { display: flex; gap: 8px; justify-content: center; margin-bottom: 10px; }
@@ -804,7 +807,22 @@
 
       <!-- সেটিংস -->
       <div class="cat-panel" id="panelSettings" style="display:none;">
-        <div class="card" style="background: #0d1322;">
+        <div class="card card-plain">
+          <h3>☁️ ক্লাউড সিঙ্ক (মোবাইল ⇄ ল্যাপটপ)</h3>
+          <p style="color: var(--muted); font-size: 12px; margin-top: 6px; line-height: 1.6;">
+            Google Apps Script লিংক একবার বসালে অ্যাপ খুললেই নিজে থেকেই ডেটা আপডেট হবে — দুই ডিভাইসে একই তথ্য থাকবে।
+          </p>
+          <div style="display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; align-items: center;">
+            <input type="url" id="syncUrlInput" placeholder="https://script.google.com/macros/s/.../exec" style="flex: 1; min-width: 220px; font-size: 12px;" />
+            <button type="button" class="btn-secondary" onclick="saveSyncUrl()" style="font-size: 12px;">💾 সংরক্ষণ ও টেস্ট</button>
+            <button type="button" class="btn-secondary" onclick="syncManual()" style="font-size: 12px; border-color: #22c55e; color: #86efac;">🔄 এখনই সিঙ্ক</button>
+          </div>
+          <div id="syncStatus" style="font-size: 12px; margin-top: 10px; color: var(--muted); line-height: 1.5;">অভিযোজন করা হয়নি।</div>
+          <p style="color: var(--muted); font-size: 11px; margin-top: 8px; line-height: 1.5;">
+            সেটআপ নির্দেশনা: <a href="https://github.com/alaminnazir99-jpg/SmartDO/tree/main/smartdo-sync" target="_blank" style="color: #7dd3fc;">smartdo-sync/README.md</a>
+          </p>
+        </div>
+        <div class="card card-plain">
           <h3>💾 ব্যাকআপ ও রিস্টোর</h3>
           <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
             <button type="button" class="btn-secondary" onclick="exportDataBackup()" style="font-size: 12px;">⬇️ ব্যাকআপ (JSON)</button>
@@ -812,7 +830,7 @@
             <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importDataBackup(event)" />
           </div>
         </div>
-        <div class="card" style="background: #0d1322;">
+        <div class="card card-plain">
           <h3>🔊 নোটিফিকেশন ও ভয়েস</h3>
           <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
             <button type="button" class="btn-secondary" onclick="enableAudioAndNotification()" style="font-size: 12px;">🔊 নোটিফিকেশন চালু</button>
@@ -951,6 +969,121 @@
     }
     function safeSet(key, val) {
       try { localStorage.setItem(key, val); } catch (e) { storageOK = false; }
+      if (key.indexOf('sdSync') !== 0) scheduleSyncPush();
+    }
+
+    /* ===== ক্লাউড সিঙ্ক (Google Apps Script) ===== */
+    const SYNC_OWN_KEYS = ['sdSyncUrl', 'sdSyncAt', 'sdSyncBusy', 'sdSyncMsg'];
+    let syncBusy = false, syncTimer = null;
+    function syncUrl() { return (safeGet('sdSyncUrl') || '').trim(); }
+    function syncOn() { return !!syncUrl() && storageOK; }
+    function syncLocalAt() { return Number(safeGet('sdSyncAt') || 0); }
+    function syncSetLocalAt(t) { safeSet('sdSyncAt', String(t)); }
+
+    function collectSnapshot() {
+      const data = {};
+      if (!storageOK) return data;
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (!k || SYNC_OWN_KEYS.indexOf(k) !== -1) continue;
+        data[k] = localStorage.getItem(k);
+      }
+      return data;
+    }
+    function applySnapshot(data) {
+      if (!storageOK || !data) return;
+      for (let i = localStorage.length - 1; i >= 0; i--) {
+        const k = localStorage.key(i);
+        if (k && SYNC_OWN_KEYS.indexOf(k) === -1 && !(k in data)) localStorage.removeItem(k);
+      }
+      Object.keys(data).forEach(k => { try { localStorage.setItem(k, data[k]); } catch (e) { } });
+    }
+    function syncMsg(text, ok) {
+      const el = document.getElementById('syncStatus');
+      if (!el) return;
+      el.textContent = text;
+      el.style.color = ok ? '#86efac' : '#fca5a5';
+    }
+    function scheduleSyncPush() {
+      if (!syncOn() || syncBusy) return;
+      clearTimeout(syncTimer);
+      syncTimer = setTimeout(() => { pushToCloud(true); }, 5000);
+    }
+    async function pushToCloud(quiet) {
+      if (!syncOn() || syncBusy) return;
+      syncBusy = true;
+      const at = Date.now();
+      try {
+        const res = await fetch(syncUrl(), {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ updatedAt: at, data: collectSnapshot() })
+        });
+        const j = await res.json();
+        if (j && j.ok === false) throw new Error(j.error || 'আপলোড ব্যর্থ');
+        syncSetLocalAt(at);
+        if (!quiet) syncMsg('✅ আপলোড সফল: ' + new Date(at).toLocaleString('bn-BD'), true);
+      } catch (e) {
+        syncMsg('❌ আপলোড ব্যর্থ: ' + (e && e.message ? e.message : e), false);
+      }
+      syncBusy = false;
+    }
+    async function pullFromCloud(quiet) {
+      if (!syncOn() || syncBusy) return 'skip';
+      syncBusy = true;
+      try {
+        const res = await fetch(syncUrl() + '?t=' + Date.now());
+        const j = await res.json();
+        if (!j || j.ok === false) throw new Error((j && j.error) || 'ডাউনলোড ব্যর্থ');
+        const remoteAt = Number(j.updatedAt) || 0;
+        if (remoteAt > syncLocalAt()) {
+          applySnapshot(j.data);
+          syncSetLocalAt(remoteAt);
+          if (!quiet) { syncMsg('✅ ক্লাউড থেকে ডেটা আসছে...', true); }
+          syncBusy = false;
+          return 'pulled';
+        }
+        if (remoteAt < syncLocalAt()) {
+          syncBusy = false;
+          await pushToCloud(true);
+          return 'pushed';
+        }
+        syncMsg('✅ সব ডেটা আপ টু ডেট (' + new Date(remoteAt || Date.now()).toLocaleString('bn-BD') + ')', true);
+      } catch (e) {
+        syncMsg('❌ ডাউনলোড ব্যর্থ: ' + (e && e.message ? e.message : e), false);
+      }
+      syncBusy = false;
+      return 'error';
+    }
+    // অ্যাপ খোলামাত্র সিঙ্ক
+    async function autoSyncOnOpen() {
+      if (!syncOn()) return;
+      const r = await pullFromCloud(true);
+      if (r === 'pulled') { location.reload(); return; }
+      if (r === 'skip' || r === 'error') return;
+      if (r === 'pushed') syncMsg('☁️ এই ডিভাইসের নতুন ডেটা ক্লাউডে পাঠানো হয়েছে।', true);
+    }
+    function saveSyncUrl() {
+      const input = document.getElementById('syncUrlInput');
+      if (!input) return;
+      const url = input.value.trim();
+      if (!url || url.indexOf('script.google.com') === -1) {
+        syncMsg('❌ সঠিক Apps Script লিংক দিন (যেমন https://script.google.com/macros/s/.../exec)', false);
+        return;
+      }
+      safeSet('sdSyncUrl', url);
+      syncMsg('⏳ লিংক যাচাই করা হচ্ছে...', true);
+      pullFromCloud(false).then((r) => {
+        if (r === 'pulled') location.reload();
+      });
+    }
+    function syncManual() {
+      if (!syncOn()) { syncMsg('❌ আগে Apps Script লিংক সেভ করুন।', false); return; }
+      syncMsg('⏳ সিঙ্ক হচ্ছে...', true);
+      pullFromCloud(false).then((r) => {
+        if (r === 'pulled') location.reload();
+        else if (r === 'pushed') { /* push ইতোমধ্যে হয়েছে */ }
+      });
     }
 
     let todayTasks = JSON.parse(safeGet('todayTasks')) || [];
@@ -1030,6 +1163,12 @@
       document.getElementById('catOverlay').classList.add('open');
       if (cat === 'routine') { renderRoutineTimeline(); updateReminderNote(); }
       if (cat === 'journal') renderSevenDayChart(calculateCurrentScore().finalScore);
+      if (cat === 'settings') {
+        const inp = document.getElementById('syncUrlInput');
+        if (inp && !inp.value) inp.value = syncUrl();
+        const el = document.getElementById('syncStatus');
+        if (el && !el.textContent) el.textContent = syncOn() ? '✅ ক্লাউড সিঙ্ক চালু' : 'অভিযোজন করা হয়নি।';
+      }
       updateDashSummary();
     }
     function closeCat() {
@@ -2531,6 +2670,7 @@
     // অ্যাপ চালুর সময় স্বয়ংক্রিয় লোড
     initTheme();
     syncAllTimeFields();
+    autoSyncOnOpen();
     document.addEventListener('pointermove', clockPointerMove, { passive: false });
     document.addEventListener('pointerup', clockPointerUp);
     document.addEventListener('pointercancel', clockPointerUp);

@@ -1,4 +1,4 @@
-const VERSION = 'smartdo-v3';
+const VERSION = 'smartdo-v4';
 const CACHE = VERSION;
 const ASSETS = [
   './index.html',
