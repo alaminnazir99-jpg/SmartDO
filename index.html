@@ -1012,6 +1012,15 @@
       el.textContent = text;
       el.style.color = ok ? '#86efac' : '#fca5a5';
     }
+    async function readJson(res) {
+      const ct = (res.headers && res.headers.get && res.headers.get('content-type')) || '';
+      if (ct && ct.indexOf('json') === -1) {
+        const txt = '';
+        try { txt = (await res.text()).slice(0, 90); } catch (e) { }
+        throw new Error('লিংকটি সঠিক নয় (অ্যাপ JSON ছাড়া কিছু ফেরত দিচ্ছে)। লিংকের শেষে /exec আছে কিনা দেখুন।' + (txt ? ' উত্তর: ' + txt : ''));
+      }
+      return res.json();
+    }
     function scheduleSyncPush() {
       if (!syncOn() || syncBusy) return;
       clearTimeout(syncTimer);
@@ -1027,7 +1036,7 @@
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({ updatedAt: at, data: collectSnapshot() })
         });
-        const j = await res.json();
+        const j = await readJson(res);
         if (j && j.ok === false) throw new Error(j.error || 'আপলোড ব্যর্থ');
         syncSetLocalAt(at);
         if (!quiet) syncMsg('✅ আপলোড সফল: ' + new Date(at).toLocaleString('bn-BD'), true);
@@ -1041,7 +1050,7 @@
       syncBusy = true;
       try {
         const res = await fetch(syncUrl() + '?t=' + Date.now());
-        const j = await res.json();
+        const j = await readJson(res);
         if (!j || j.ok === false) throw new Error((j && j.error) || 'ডাউনলোড ব্যর্থ');
         const localAt = syncLocalAt();
         const remoteAt = Number(j.updatedAt) || 0;

@@ -1,20 +1,23 @@
 /**
  * SmartDo — ক্লাউড সিঙ্ক ব্যাকএন্ড (Google Apps Script, ফ্রি)
  *
- * সেটআপ (৩টি ধাপ):
+ * সেটআপ (২টি ধাপ):
  *  1) https://script.google.com → New project
- *  2) এই কোডটি Code.gs-এ পেস্ট করুন
- *  3) Deploy → New deployment → Web app
+ *  2) এই কোডটি Code.gs-এ পেস্ট করুন → Deploy → New deployment → Web app
  *        - Execute as: Me
  *        - Who has access: Anyone
- *     → Deploy করলে যে /exec লিংক পাবেন সেটাই অ্যাপে বসাতে হবে।
- *     (কোড আপডেট করলে: Deploy → Manage deployments → ✏️ → Version: New version → Deploy)
+ *     → যে /exec লিংক পাবেন সেটাই অ্যাপে বসাতে হবে।
+ *     (কোড বদলালে: Deploy → Manage deployments → ✏️ → Version: New version → Deploy)
  *
- * কোনো Google Sheet লাগে না — ডেটা যায় Drive-এর একটি ফাইলে।
+ * ডেটা কোথায় জমা হয়: এই স্ক্রিপ্টের নিজস্ব স্টোরেজে (Script Properties)।
+ * কোনো Google Sheet, কোনো Drive ফাইল, কোনো বাড়তি অনুমতি — কিছুই লাগে না।
  */
 
-var FILE_NAME = 'smartdo-sync-data.json';
-var PROP_ID = 'smartdoFileId';   // ফাইলের ID এখানে মনে রাখা হয় (খোঁজা দ্রুত ও নির্ভরযোগ্য হয়)
+var CHUNK = 2000;      // প্রতি টুকরায় ২০০০ অক্ষর (নিরাপদ)
+var MAX_CHUNKS = 150;  // সর্বোচ্চ ~৩ লাখ অক্ষর
+var KEY_COUNT = 'sdChunkCount';
+var KEY_HEAD = 'sdChunk';
+var KEY_AT = 'sdUpdatedAt';
 
 function jsonOut(obj) {
   return ContentService
@@ -22,31 +25,20 @@ function jsonOut(obj) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-function findFile_() {
-  var props = PropertiesService.getScriptProperties();
-  var id = props.getProperty(PROP_ID);
-  if (id) {
-    try {
-      return DriveApp.getFileById(id);
-    } catch (e) {
-      props.deleteProperty(PROP_ID);
-    }
-  }
-  var files = DriveApp.getFilesByName(FILE_NAME);
-  if (!files.hasNext()) return null;
-  var f = files.next();
-  try { props.setProperty(PROP_ID, f.getId()); } catch (e) { }
-  return f;
-}
-
 function readStore_() {
-  var f = findFile_();
-  if (!f) return { updatedAt: 0, data: {}, note: 'no-file' };
+  var props = PropertiesService.getScriptProperties();
+  var n = Number(props.getProperty(KEY_COUNT) || 0);
+  if (!n) return { updatedAt: 0, data: {}, note: 'store-empty' };
+  var text = '';
+  for (var i = 0; i < n; i++) text += (props.getProperty(KEY_HEAD + i) || '');
   try {
-    var txt = f.getBlob().getContentAsString('UTF-8');
-    if (!txt) return { updatedAt: 0, data: {}, note: 'file-empty' };
-    var j = JSON.parse(txt);
-    return { updatedAt: Number(j.updatedAt) || 0, data: j.data || {}, note: 'ok' };
+    var j = JSON.parse(text);
+    return {
+      updatedAt: Number(j.updatedAt) || Number(props.getProperty(KEY_AT) || 0) || 0,
+      data: j.data || {},
+      note: 'ok',
+      bytes: text.length
+    };
   } catch (e) {
     return { updatedAt: 0, data: {}, note: 'parse-error: ' + String(e) };
   }
@@ -54,16 +46,14 @@ function readStore_() {
 
 function writeStore_(obj) {
   var text = JSON.stringify(obj);
-  if (text.length > 400000) {
-    throw new Error('ডেটা অনেক বড়');
-  }
-  var f = findFile_();
-  if (f) {
-    f.setContent(text);
-    return;
-  }
-  var nf = DriveApp.createFile(Utilities.newBlob(text, 'application/json', FILE_NAME));
-  try { PropertiesService.getScriptProperties().setProperty(PROP_ID, nf.getId()); } catch (e) { }
+  var n = Math.ceil(text.length / CHUNK);
+  if (n > MAX_CHUNKS) throw new Error('ডেটা অনেক বড় (' + text.length + ' অক্ষর)');
+  var props = PropertiesService.getScriptProperties();
+  var old = Number(props.getProperty(KEY_COUNT) || 0);
+  for (var i = old - 1; i >= 0; i--) props.deleteProperty(KEY_HEAD + i);
+  for (var k = 0; k < n; k++) props.setProperty(KEY_HEAD + k, text.substr(k * CHUNK, CHUNK));
+  props.setProperty(KEY_COUNT, String(n));
+  props.setProperty(KEY_AT, String(Number(obj.updatedAt) || Date.now()));
 }
 
 /** অ্যাপ খুললে চালু হয় */
@@ -89,9 +79,8 @@ function doPost(e) {
   }
 }
 
-/** লিংক যাচাই: এই ফাংশনটি রান করলে Execution log-এ "SmartDo sync ready" দেখাবে */
+/** লিংক যাচাই: ফাংশন ড্রপডাউন থেকে testRun একবার Run করুন, Execution log-এ "SmartDo sync ready" দেখাবে */
 function testRun() {
-  var f = findFile_();
   var s = readStore_();
-  Logger.log('SmartDo sync ready | file=' + (f ? f.getId() : 'none') + ' | note=' + s.note + ' | bytes=' + (f ? f.getSize() : 0));
+  Logger.log('SmartDo sync ready | note=' + s.note + ' | updatedAt=' + s.updatedAt + ' | bytes=' + (s.bytes || 0));
 }
