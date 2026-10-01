@@ -381,6 +381,11 @@
     .card-plain { background: #0d1322; }
     html[data-theme="light"] .card-plain { background: #fff; border-color: #d3dce6; }
 
+    .warn-box { margin-top: 12px; padding: 11px 13px; border-radius: 10px; border: 1px solid rgba(239,68,68,0.55); background: rgba(239,68,68,0.12); color: #fca5a5; font-size: 12px; line-height: 1.6; }
+    .warn-box b { color: #f87171; }
+    html[data-theme="light"] .warn-box { background: #fef2f2; border-color: #fca5a5; color: #991b1b; }
+    html[data-theme="light"] .warn-box b { color: #b91c1c; }
+
     .clock-box { max-width: 360px; text-align: center; }
     .clock-readout { font-size: 30px; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; margin: 4px 0 10px; letter-spacing: 0.5px; }
     .clock-ampm { display: flex; gap: 8px; justify-content: center; margin-bottom: 10px; }
@@ -818,6 +823,9 @@
             <button type="button" class="btn-secondary" onclick="syncManual()" style="font-size: 12px; border-color: #22c55e; color: #86efac;">🔄 এখনই সিঙ্ক</button>
           </div>
           <div id="syncStatus" style="font-size: 12px; margin-top: 10px; color: var(--muted); line-height: 1.5;">অভিযোজন করা হয়নি।</div>
+          <div class="warn-box">
+            ⚠️ <b>সতর্কতা:</b> এই লিংকটি <b>পাসওয়ার্ডের মতো</b> — কেউ জানতে পারলে সে আপনার সব ডেটা <b>দেখতে, মুছতে ও বদলাতে</b> পারবে। অ্যাপটি অন্যদের দিলে <b>এই লিংকটি দেবেন না</b>; প্রত্যেকে নিজের লিংক বানাবে (২ মিনিট)।
+          </div>
           <p style="color: var(--muted); font-size: 11px; margin-top: 8px; line-height: 1.5;">
             সেটআপ নির্দেশনা: <a href="https://github.com/alaminnazir99-jpg/SmartDO/tree/main/smartdo-sync" target="_blank" style="color: #7dd3fc;">smartdo-sync/README.md</a>
           </p>
